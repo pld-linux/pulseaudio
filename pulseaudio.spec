@@ -1,8 +1,9 @@
+%bcond_without  broken_rpm # dont BC packages because of logic error in Ac
 Summary:	Modular sound server
 Summary(pl):	Modularny serwer d¼wiêku
 Name:		polypaudio
 Version:	0.7
-Release:	3
+Release:	4
 License:	LGPL
 Group:		Libraries
 Source0:	http://0pointer.de/lennart/projects/polypaudio/%{name}-%{version}.tar.gz
@@ -26,6 +27,10 @@ BuildRequires:	sed >= 4.0
 Requires:	glib2 >= 1:2.4.0
 Requires:	libsamplerate >= 0.1.0
 Requires:	libsndfile >= 1.0.10
+Obsoletes:	polypaudio < 0.7-4
+%if %{with broken_rpm}
+BuildConflicts:	polypaudio < 0.7-4
+%endif
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
@@ -39,11 +44,22 @@ polypaudio to serwer d¼wiêku dla Linuksa i innych uniksowych systemów
 operacyjnych. Ma byæ zamiennikiem O¶wieconego Demona D¼wiêku (EsounD),
 a ambicj± autora jest zast±pienie EsounD w GNOME.
 
+%package libs
+Summary:	Libraries for polypaudio
+Summary(pl):	Biblioteki dla polypaudio
+Group:		Libraries
+
+%description
+Libraries for polypaudio.
+
+%description libs -l pl
+Biblioteki dla polypaudio.
+
 %package devel
 Summary:	Development files for polypaudio
 Summary(pl):	Pliki programistyczne polyaudio
 Group:		Development/Libraries
-Requires:	%{name} = %{version}-%{release}
+Requires:	%{name}-libs = %{version}-%{release}
 Requires:	XFree86-devel
 Requires:	glib2-devel >= 1:2.4.0
 
@@ -51,7 +67,7 @@ Requires:	glib2-devel >= 1:2.4.0
 Development files for polypaudio.
 
 %description devel -l pl
-Pliki programistyczne polyaudio.
+Pliki programistyczne polypaudio.
 
 %package static
 Summary:	Static polypaudio libraries
@@ -79,7 +95,7 @@ ALSA modules for polypaudio.
 Modu³y ALSA dla polypaudio.
 
 %prep
-%setup -q 
+%setup -q
 %patch0 -p1
 
 # glib2 version should be sufficient
@@ -112,11 +128,14 @@ rm -rf $RPM_BUILD_ROOT
 %files
 %defattr(644,root,root,755)
 %doc README
-%dir /etc/polypaudio
-%config(noreplace) %verify(not md5 mtime size) /etc/polypaudio/daemon.conf
-%config(noreplace) %verify(not md5 mtime size) /etc/polypaudio/default.pa
-%config(noreplace) %verify(not md5 mtime size) /etc/polypaudio/client.conf
+%dir %{_sysconfdir}/polypaudio
+%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/polypaudio/daemon.conf
+%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/polypaudio/default.pa
+%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/polypaudio/client.conf
 %attr(755,root,root) %{_bindir}/*
+
+%files libs
+%defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/lib*-*.so.*.*.*
 %dir %{_libdir}/%{name}-%{version}
 %attr(755,root,root) %{_libdir}/%{name}-%{version}/*.so

@@ -2,7 +2,7 @@ Summary:	Modular sound server
 Summary(pl):	Modularny serwer d¼wiêku
 Name:		polypaudio
 Version:	0.7
-Release:	1
+Release:	2
 License:	LGPL
 Group:		Libraries
 Source0:	http://0pointer.de/lennart/projects/polypaudio/%{name}-%{version}.tar.gz
@@ -23,6 +23,9 @@ BuildRequires:	libwrap-devel
 BuildRequires:	lynx
 BuildRequires:	pkgconfig
 BuildRequires:	sed >= 4.0
+Requires:	glib2 >= 1:2.4.0
+Requires:	libsamplerate >= 0.1.0
+Requires:	libsndfile >= 1.0.10
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
@@ -67,6 +70,7 @@ Summary:	ALSA modules for polypaudio
 Summary(pl):	Modu³y ALSA dla polypaudio
 Group:		Libraries
 Requires:	%{name} = %{version}-%{release}
+BuildRequires:	alsa-lib >= 1.0.0
 
 %description alsa
 ALSA modules for polypaudio.

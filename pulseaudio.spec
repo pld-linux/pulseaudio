@@ -2,7 +2,7 @@ Summary:	Modular sound server
 Summary(pl):	Modularny serwer d¼wiêku
 Name:		polypaudio
 Version:	0.7
-Release:	2
+Release:	3
 License:	LGPL
 Group:		Libraries
 Source0:	http://0pointer.de/lennart/projects/polypaudio/%{name}-%{version}.tar.gz
@@ -137,6 +137,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/lib*-*.a
 
 %files alsa
+%defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/%{name}-%{version}/libalsa-util.so
 %attr(755,root,root) %{_libdir}/%{name}-%{version}/module-alsa-sink.so
 %attr(755,root,root) %{_libdir}/%{name}-%{version}/module-alsa-source.so

@@ -28,6 +28,7 @@ BuildRequires:	lynx
 BuildRequires:	pkgconfig
 BuildRequires:	sed >= 4.0
 %{?with_autoreqdep:BuildConflicts:	polypaudio < 0.7-4}
+Requires:	%{name}-libs = %{version}-%{release}
 Requires:	glib2 >= 1:2.4.0
 Requires:	libsamplerate >= 0.1.0
 Requires:	libsndfile >= 1.0.10
@@ -87,7 +88,7 @@ Summary:	ALSA modules for polypaudio
 Summary(pl):	Modu³y ALSA dla polypaudio
 Group:		Libraries
 Requires:	%{name} = %{version}-%{release}
-BuildRequires:	alsa-lib >= 1.0.0
+Requires:	alsa-lib >= 1.0.0
 
 %description alsa
 ALSA modules for polypaudio.
@@ -129,21 +130,21 @@ rm -rf $RPM_BUILD_ROOT
 %files
 %defattr(644,root,root,755)
 %doc README
-%dir %{_sysconfdir}/polypaudio
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/polypaudio/daemon.conf
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/polypaudio/default.pa
-%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/polypaudio/client.conf
 %attr(755,root,root) %{_bindir}/*
-
-%files libs
-%defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/lib*-*.so.*.*.*
 %dir %{_libdir}/%{name}-%{version}
 %attr(755,root,root) %{_libdir}/%{name}-%{version}/*.so
 %{_libdir}/%{name}-%{version}/*.la
 %exclude %{_libdir}/%{name}-%{version}/libalsa-util.*
 %exclude %{_libdir}/%{name}-%{version}/module-alsa-sink.*
 %exclude %{_libdir}/%{name}-%{version}/module-alsa-source.*
+
+%files libs
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_libdir}/lib*-*.so.*.*.*
+%dir %{_sysconfdir}/polypaudio
+%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/polypaudio/client.conf
 
 %files devel
 %defattr(644,root,root,755)

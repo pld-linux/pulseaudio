@@ -1,4 +1,7 @@
+#
+# Conditional build:
 %bcond_without  broken_rpm # dont BC packages because of logic error in Ac
+#
 Summary:	Modular sound server
 Summary(pl):	Modularny serwer d¼wiêku
 Name:		polypaudio
@@ -27,7 +30,6 @@ BuildRequires:	sed >= 4.0
 Requires:	glib2 >= 1:2.4.0
 Requires:	libsamplerate >= 0.1.0
 Requires:	libsndfile >= 1.0.10
-Obsoletes:	polypaudio < 0.7-4
 %if %{with broken_rpm}
 BuildConflicts:	polypaudio < 0.7-4
 %endif
@@ -48,6 +50,7 @@ a ambicj± autora jest zast±pienie EsounD w GNOME.
 Summary:	Libraries for polypaudio
 Summary(pl):	Biblioteki dla polypaudio
 Group:		Libraries
+Conflicts:	polypaudio < 0.7-4
 
 %description
 Libraries for polypaudio.

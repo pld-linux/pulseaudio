@@ -6,14 +6,13 @@ Summary:	Modular sound server
 Summary(pl):	Modularny serwer d¼wiêku
 Name:		polypaudio
 Version:	0.7
-Release:	4
+Release:	5
 License:	LGPL
 Group:		Libraries
 Source0:	http://0pointer.de/lennart/projects/polypaudio/%{name}-%{version}.tar.gz
 # Source0-md5:	1c3693ab9c6904dbed6dfa7656778de4
 Patch0:		%{name}-suid.patch
 URL:		http://0pointer.de/lennart/projects/polypaudio/
-BuildRequires:	XFree86-devel
 BuildRequires:	alsa-lib-devel >= 1.0.0
 BuildRequires:	autoconf >= 2.57
 BuildRequires:	automake
@@ -27,6 +26,7 @@ BuildRequires:	libwrap-devel
 BuildRequires:	lynx
 BuildRequires:	pkgconfig
 BuildRequires:	sed >= 4.0
+BuildRequires:	xorg-lib-libX11-devel
 %{?with_autoreqdep:BuildConflicts:	polypaudio < 0.7-4}
 Requires:	%{name}-libs = %{version}-%{release}
 Requires:	glib2 >= 1:2.4.0
@@ -62,7 +62,7 @@ Summary:	Development files for polypaudio
 Summary(pl):	Pliki programistyczne polyaudio
 Group:		Development/Libraries
 Requires:	%{name}-libs = %{version}-%{release}
-Requires:	XFree86-devel
+Requires:	xorg-lib-libX11-devel
 Requires:	glib2-devel >= 1:2.4.0
 
 %description devel

@@ -6,7 +6,7 @@ Summary:	Modular sound server
 Summary(pl):	Modularny serwer d¼wiêku
 Name:		polypaudio
 Version:	0.7
-Release:	5
+Release:	6
 License:	LGPL
 Group:		Libraries
 Source0:	http://0pointer.de/lennart/projects/polypaudio/%{name}-%{version}.tar.gz

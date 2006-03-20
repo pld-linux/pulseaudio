@@ -1,0 +1,66 @@
+diff -uNr polypaudio-0.7.orig/polyplib-error.pc.in polypaudio-0.7/polyplib-error.pc.in
+--- polypaudio-0.7.orig/polyplib-error.pc.in	2004-09-11 01:23:03.000000000 +0200
++++ polypaudio-0.7/polyplib-error.pc.in	2006-03-20 01:18:33.000000000 +0100
+@@ -1,6 +1,5 @@
+ prefix=@prefix@
+-exec_prefix=${prefix}
+-libdir=${exec_prefix}/lib
++libdir=@libdir@
+ includedir=${prefix}/include
+ 
+ Name: polyplib-error
+diff -uNr polypaudio-0.7.orig/polyplib-glib12-mainloop.pc.in polypaudio-0.7/polyplib-glib12-mainloop.pc.in
+--- polypaudio-0.7.orig/polyplib-glib12-mainloop.pc.in	2004-09-11 01:23:03.000000000 +0200
++++ polypaudio-0.7/polyplib-glib12-mainloop.pc.in	2006-03-20 01:19:01.000000000 +0100
+@@ -1,6 +1,5 @@
+ prefix=@prefix@
+-exec_prefix=${prefix}
+-libdir=${exec_prefix}/lib
++libdir=@libdir@
+ includedir=${prefix}/include
+ 
+ Name: polyplib-glib12-mainloop
+diff -uNr polypaudio-0.7.orig/polyplib-glib-mainloop.pc.in polypaudio-0.7/polyplib-glib-mainloop.pc.in
+--- polypaudio-0.7.orig/polyplib-glib-mainloop.pc.in	2004-09-11 01:23:03.000000000 +0200
++++ polypaudio-0.7/polyplib-glib-mainloop.pc.in	2006-03-20 01:18:47.000000000 +0100
+@@ -1,6 +1,5 @@
+ prefix=@prefix@
+-exec_prefix=${prefix}
+-libdir=${exec_prefix}/lib
++libdir=@libdir@
+ includedir=${prefix}/include
+ 
+ Name: polyplib-glib-mainloop
+diff -uNr polypaudio-0.7.orig/polyplib-mainloop.pc.in polypaudio-0.7/polyplib-mainloop.pc.in
+--- polypaudio-0.7.orig/polyplib-mainloop.pc.in	2004-09-11 01:23:03.000000000 +0200
++++ polypaudio-0.7/polyplib-mainloop.pc.in	2006-03-20 01:19:10.000000000 +0100
+@@ -1,6 +1,5 @@
+ prefix=@prefix@
+-exec_prefix=${prefix}
+-libdir=${exec_prefix}/lib
++libdir=@libdir@
+ includedir=${prefix}/include
+ 
+ Name: polyplib-mainloop
+diff -uNr polypaudio-0.7.orig/polyplib.pc.in polypaudio-0.7/polyplib.pc.in
+--- polypaudio-0.7.orig/polyplib.pc.in	2004-09-11 01:23:14.000000000 +0200
++++ polypaudio-0.7/polyplib.pc.in	2006-03-20 01:19:25.000000000 +0100
+@@ -1,6 +1,5 @@
+ prefix=@prefix@
+-exec_prefix=${prefix}
+-libdir=${exec_prefix}/lib
++libdir=@libdir@
+ includedir=${prefix}/include
+ 
+ Name: polyplib
+diff -uNr polypaudio-0.7.orig/polyplib-simple.pc.in polypaudio-0.7/polyplib-simple.pc.in
+--- polypaudio-0.7.orig/polyplib-simple.pc.in	2004-09-11 01:23:03.000000000 +0200
++++ polypaudio-0.7/polyplib-simple.pc.in	2006-03-20 01:19:17.000000000 +0100
+@@ -1,6 +1,5 @@
+ prefix=@prefix@
+-exec_prefix=${prefix}
+-libdir=${exec_prefix}/lib
++libdir=@libdir@
+ includedir=${prefix}/include
+ 
+ Name: polyplib-simple

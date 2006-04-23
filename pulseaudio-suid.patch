@@ -1,23 +1,20 @@
-diff -ur o-polypaudio-0.7/polyp/Makefile.am polypaudio-0.7/polyp/Makefile.am
---- o-polypaudio-0.7/polyp/Makefile.am	2004-11-21 15:25:28.000000000 -0700
-+++ polypaudio-0.7/polyp/Makefile.am	2004-12-17 01:46:01.577604443 -0700
-@@ -709,10 +709,6 @@
- 
- ### Some minor stuff
+--- polypaudio-0.8/src/Makefile.am.orig	2006-04-18 21:13:11.000000000 +0200
++++ polypaudio-0.8/src/Makefile.am	2006-04-22 09:35:12.915500250 +0200
+@@ -1097,10 +1097,6 @@
+ #        Some minor stuff         #
+ ###################################
  
 -suid: polypaudio
 -	chown root $<
 -	chmod u+s $<
 -
- esdcompat.sh: esdcompat.sh.in Makefile
- 	sed -e 's,@PACKAGE_VERSION\@,$(PACKAGE_VERSION),g' \
- 		-e 's,@PACKAGE_NAME\@,$(PACKAGE_NAME),g' \
-@@ -729,8 +725,6 @@
- 		-e 's,@DEFAULT_CONFIG_FILE\@,$(polypconfdir)/daemon.conf,g' < $< > $@
+ CLEANFILES=esdcompat.sh client.conf default.pa daemon.conf
+ 
+ esdcompat.sh: daemon/esdcompat.sh.in Makefile
+@@ -1124,6 +1120,4 @@
+ 		-e 's,@DEFAULT_CONFIG_FILE\@,$(DEFAULT_CONFIG_DIR),g' < $< > $@
  
  install-exec-hook:
--	chown root $(DESTDIR)$(bindir)/polypaudio
+-	chown root $(DESTDIR)$(bindir)/polypaudio ; true
 -	chmod u+s $(DESTDIR)$(bindir)/polypaudio
- 	ln -s pacat $(DESTDIR)$(bindir)/parec
- 
- $(SYMDEF_FILES): module-defs.h.m4
+ 	ln -sf pacat $(DESTDIR)$(bindir)/parec

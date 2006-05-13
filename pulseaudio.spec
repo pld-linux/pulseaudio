@@ -5,12 +5,12 @@
 Summary:	Modular sound server
 Summary(pl):	Modularny serwer d¼wiêku
 Name:		polypaudio
-Version:	0.8
+Version:	0.8.1
 Release:	1
 License:	LGPL
 Group:		Libraries
 Source0:	http://0pointer.de/lennart/projects/polypaudio/%{name}-%{version}.tar.gz
-# Source0-md5:	f15a351c125c1953ec5c4c8b42ac13f7
+# Source0-md5:	e10a69f39d70aeaa9f2fddd1dab574fc
 Patch0:		%{name}-suid.patch
 Patch1:		%{name}-libdir.patch
 URL:		http://0pointer.de/lennart/projects/polypaudio/

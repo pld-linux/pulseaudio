@@ -1,12 +1,12 @@
 Summary:	Modular sound server
 Summary(pl):	Modularny serwer d¼wiêku
 Name:		polypaudio
-Version:	0.7
-Release:	3
+Version:	0.9.0
+Release:	1
 License:	LGPL
 Group:		Libraries
 Source0:	http://0pointer.de/lennart/projects/polypaudio/%{name}-%{version}.tar.gz
-# Source0-md5:	1c3693ab9c6904dbed6dfa7656778de4
+# Source0-md5:	dc2703235ad12234f8da19ecd0c9c560
 Patch0:		%{name}-suid.patch
 URL:		http://0pointer.de/lennart/projects/polypaudio/
 BuildRequires:	XFree86-devel
@@ -14,6 +14,7 @@ BuildRequires:	alsa-lib-devel >= 1.0.0
 BuildRequires:	autoconf >= 2.57
 BuildRequires:	automake
 BuildRequires:	glib2-devel >= 1:2.4.0
+BuildRequires:	howl-devel
 BuildRequires:	libcap-devel
 BuildRequires:	libltdl-devel
 BuildRequires:	libtool
@@ -27,6 +28,8 @@ Requires:	glib2 >= 1:2.4.0
 Requires:	libsamplerate >= 0.1.0
 Requires:	libsndfile >= 1.0.10
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
+
+%define major %(echo %{version} | sed -e 's/\.[0-9]$//')
 
 %description
 polypaudio is a sound server for Linux and other Unix like operating
@@ -117,30 +120,32 @@ rm -rf $RPM_BUILD_ROOT
 %config(noreplace) %verify(not md5 mtime size) /etc/polypaudio/default.pa
 %config(noreplace) %verify(not md5 mtime size) /etc/polypaudio/client.conf
 %attr(755,root,root) %{_bindir}/*
-%attr(755,root,root) %{_libdir}/lib*-*.so.*.*.*
-%dir %{_libdir}/%{name}-%{version}
-%attr(755,root,root) %{_libdir}/%{name}-%{version}/*.so
-%{_libdir}/%{name}-%{version}/*.la
-%exclude %{_libdir}/%{name}-%{version}/libalsa-util.*
-%exclude %{_libdir}/%{name}-%{version}/module-alsa-sink.*
-%exclude %{_libdir}/%{name}-%{version}/module-alsa-source.*
-
+%attr(755,root,root) %{_libdir}/lib*.so.*.*.*
+%dir %{_libdir}/%{name}-%{major}
+%dir %{_libdir}/%{name}-%{major}/modules
+%attr(755,root,root) %{_libdir}/%{name}-%{major}/modules/*.so
+%{_libdir}/%{name}-%{major}/modules/*.la
+%exclude %{_libdir}/%{name}-%{major}/modules/libalsa-util.*
+%exclude %{_libdir}/%{name}-%{major}/modules/module-alsa-sink.*
+%exclude %{_libdir}/%{name}-%{major}/modules/module-alsa-source.*
+   
 %files devel
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/lib*-*.so
-%{_libdir}/lib*-*.la
+%attr(755,root,root) %{_libdir}/lib*.so
+%{_libdir}/lib*.la
 %{_includedir}/polyp
+%{_includedir}/polypcore
 %{_pkgconfigdir}/*
 
 %files static
 %defattr(644,root,root,755)
-%{_libdir}/lib*-*.a
+%{_libdir}/lib*.a
 
 %files alsa
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/%{name}-%{version}/libalsa-util.so
-%attr(755,root,root) %{_libdir}/%{name}-%{version}/module-alsa-sink.so
-%attr(755,root,root) %{_libdir}/%{name}-%{version}/module-alsa-source.so
-%{_libdir}/%{name}-%{version}/libalsa-util.la
-%{_libdir}/%{name}-%{version}/module-alsa-sink.la
-%{_libdir}/%{name}-%{version}/module-alsa-source.la
+%attr(755,root,root) %{_libdir}/%{name}-%{major}/modules/libalsa-util.so
+%attr(755,root,root) %{_libdir}/%{name}-%{major}/modules/module-alsa-sink.so
+%attr(755,root,root) %{_libdir}/%{name}-%{major}/modules/module-alsa-source.so
+%{_libdir}/%{name}-%{major}/modules/libalsa-util.la
+%{_libdir}/%{name}-%{major}/modules/module-alsa-sink.la
+%{_libdir}/%{name}-%{major}/modules/module-alsa-source.la

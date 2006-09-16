@@ -10,13 +10,15 @@
 Summary:	Modular sound server
 Summary(pl):	Modularny serwer d¼wiêku
 Name:		pulseaudio
-Version:	0.9.4
+Version:	0.9.5
 Release:	1
 License:	GPL (server and libpulsecore), LGPL (libpulse)
 Group:		Libraries
 Source0:	http://0pointer.de/lennart/projects/pulseaudio/%{name}-%{version}.tar.gz
-# Source0-md5:	aadbbc68306653f9052872c11e0cc707
+# Source0-md5:	99b5d9efd4fce35cabb4ae5d0ebb230d
 Patch0:		%{name}-suid.patch
+Patch1:		%{name}-path.patch
+Patch2:		%{name}-link.patch
 URL:		http://pulseaudio.org/
 BuildRequires:	alsa-lib-devel >= 1.0.0
 BuildRequires:	autoconf >= 2.59-9
@@ -36,7 +38,6 @@ BuildRequires:	libwrap-devel
 BuildRequires:	lynx
 BuildRequires:	m4
 BuildRequires:	pkgconfig
-BuildRequires:	sed >= 4.0
 BuildRequires:	xorg-lib-libX11-devel
 Requires:	%{name}-libs = %{version}-%{release}
 Obsoletes:	polypaudio
@@ -123,6 +124,34 @@ ALSA modules for PulseAudio.
 %description alsa -l pl
 Modu³y ALSA dla PulseAudio.
 
+%package gconf
+Summary:	GConf module for PulseAudio
+Summary(pl):	Modu³ GConf dla PulseAudio
+License:	GPL
+Group:		Libraries
+Requires:	%{name} = %{version}-%{release}
+
+%description gconf
+GConf adapter for PulseAudio.
+
+%description gconf -l pl
+Interfejs do GConfa dla PulseAudio.
+
+%package hal
+Summary:	HAL module for PulseAudio
+Summary(pl):	Modu³ HAL dla PulseAudio
+License:	GPL
+Group:		Libraries
+Requires:	%{name} = %{version}-%{release}
+
+%description hal
+HAL module for PulseAudio to detect available audio hardware and load
+matching drivers.
+
+%description hal -l pl
+Modu³ HAL dla PulseAudio wykrywaj±cy dostêpny sprzêt d¼wiêkowy i
+wczytuj±cy pasuj±ce sterowniki.
+
 %package jack
 Summary:	JACK modules for PulseAudio
 Summary(pl):	Modu³y JACK dla PulseAudio
@@ -155,9 +184,8 @@ Modu³ LIRC dla PulseAudio.
 %prep
 %setup -q
 %patch0 -p1
-
-# no need for -lSM -lICE
-sed -i -e 's/ \$(X_PRE_LIBS)//' src/Makefile.am
+%patch1 -p1
+%patch2 -p1
 
 %build
 %{__libtoolize}
@@ -208,41 +236,121 @@ fi
 %attr(755,root,root) %{_bindir}/*
 %dir %{_libdir}/pulse-*
 %dir %{_libdir}/pulse-*/modules
-%attr(755,root,root) %{_libdir}/pulse-*/modules/*.so
-%exclude %{_libdir}/pulse-*/modules/libalsa-util.*
-%exclude %{_libdir}/pulse-*/modules/module-alsa-sink.*
-%exclude %{_libdir}/pulse-*/modules/module-alsa-source.*
-%exclude %{_libdir}/pulse-*/modules/module-jack-sink.*
-%exclude %{_libdir}/pulse-*/modules/module-jack-source.*
-%if %{with lirc}
-%exclude %{_libdir}/pulse-*/modules/module-lirc.*
-%endif
+%attr(755,root,root) %{_libdir}/pulse-*/modules/libauthkey.so
+%attr(755,root,root) %{_libdir}/pulse-*/modules/libauthkey-prop.so
+%attr(755,root,root) %{_libdir}/pulse-*/modules/libavahi-wrap.so
+%attr(755,root,root) %{_libdir}/pulse-*/modules/libcli.so
+%attr(755,root,root) %{_libdir}/pulse-*/modules/libdbus-util.so
+%attr(755,root,root) %{_libdir}/pulse-*/modules/libiochannel.so
+%attr(755,root,root) %{_libdir}/pulse-*/modules/libioline.so
+%attr(755,root,root) %{_libdir}/pulse-*/modules/libipacl.so
+%attr(755,root,root) %{_libdir}/pulse-*/modules/liboss-util.so
+%attr(755,root,root) %{_libdir}/pulse-*/modules/libpacket.so
+%attr(755,root,root) %{_libdir}/pulse-*/modules/libparseaddr.so
+%attr(755,root,root) %{_libdir}/pulse-*/modules/libpdispatch.so
+%attr(755,root,root) %{_libdir}/pulse-*/modules/libprotocol-cli.so
+%attr(755,root,root) %{_libdir}/pulse-*/modules/libprotocol-esound.so
+%attr(755,root,root) %{_libdir}/pulse-*/modules/libprotocol-http.so
+%attr(755,root,root) %{_libdir}/pulse-*/modules/libprotocol-native.so
+%attr(755,root,root) %{_libdir}/pulse-*/modules/libprotocol-simple.so
+%attr(755,root,root) %{_libdir}/pulse-*/modules/libpstream.so
+%attr(755,root,root) %{_libdir}/pulse-*/modules/libpstream-util.so
+%attr(755,root,root) %{_libdir}/pulse-*/modules/librtp.so
+%attr(755,root,root) %{_libdir}/pulse-*/modules/libsocket-client.so
+%attr(755,root,root) %{_libdir}/pulse-*/modules/libsocket-server.so
+%attr(755,root,root) %{_libdir}/pulse-*/modules/libsocket-util.so
+%attr(755,root,root) %{_libdir}/pulse-*/modules/libstrlist.so
+%attr(755,root,root) %{_libdir}/pulse-*/modules/libtagstruct.so
+%attr(755,root,root) %{_libdir}/pulse-*/modules/libx11prop.so
+%attr(755,root,root) %{_libdir}/pulse-*/modules/libx11wrap.so
+%attr(755,root,root) %{_libdir}/pulse-*/modules/module-cli.so
+%attr(755,root,root) %{_libdir}/pulse-*/modules/module-cli-protocol-tcp.so
+%attr(755,root,root) %{_libdir}/pulse-*/modules/module-cli-protocol-unix.so
+%attr(755,root,root) %{_libdir}/pulse-*/modules/module-combine.so
+%attr(755,root,root) %{_libdir}/pulse-*/modules/module-detect.so
+%attr(755,root,root) %{_libdir}/pulse-*/modules/module-esound-compat-spawnfd.so
+%attr(755,root,root) %{_libdir}/pulse-*/modules/module-esound-compat-spawnpid.so
+%attr(755,root,root) %{_libdir}/pulse-*/modules/module-esound-protocol-tcp.so
+%attr(755,root,root) %{_libdir}/pulse-*/modules/module-esound-protocol-unix.so
+%attr(755,root,root) %{_libdir}/pulse-*/modules/module-esound-sink.so
+%attr(755,root,root) %{_libdir}/pulse-*/modules/module-http-protocol-tcp.so
+%attr(755,root,root) %{_libdir}/pulse-*/modules/module-http-protocol-unix.so
+%attr(755,root,root) %{_libdir}/pulse-*/modules/module-match.so
+%attr(755,root,root) %{_libdir}/pulse-*/modules/module-mmkbd-evdev.so
+%attr(755,root,root) %{_libdir}/pulse-*/modules/module-native-protocol-fd.so
+%attr(755,root,root) %{_libdir}/pulse-*/modules/module-native-protocol-tcp.so
+%attr(755,root,root) %{_libdir}/pulse-*/modules/module-native-protocol-unix.so
+%attr(755,root,root) %{_libdir}/pulse-*/modules/module-null-sink.so
+%attr(755,root,root) %{_libdir}/pulse-*/modules/module-oss.so
+%attr(755,root,root) %{_libdir}/pulse-*/modules/module-oss-mmap.so
+%attr(755,root,root) %{_libdir}/pulse-*/modules/module-pipe-sink.so
+%attr(755,root,root) %{_libdir}/pulse-*/modules/module-pipe-source.so
+%attr(755,root,root) %{_libdir}/pulse-*/modules/module-rescue-streams.so
+%attr(755,root,root) %{_libdir}/pulse-*/modules/module-rtp-recv.so
+%attr(755,root,root) %{_libdir}/pulse-*/modules/module-rtp-send.so
+%attr(755,root,root) %{_libdir}/pulse-*/modules/module-simple-protocol-tcp.so
+%attr(755,root,root) %{_libdir}/pulse-*/modules/module-simple-protocol-unix.so
+%attr(755,root,root) %{_libdir}/pulse-*/modules/module-sine.so
+%attr(755,root,root) %{_libdir}/pulse-*/modules/module-tunnel-sink.so
+%attr(755,root,root) %{_libdir}/pulse-*/modules/module-tunnel-source.so
+%attr(755,root,root) %{_libdir}/pulse-*/modules/module-volume-restore.so
+%attr(755,root,root) %{_libdir}/pulse-*/modules/module-x11-bell.so
+%attr(755,root,root) %{_libdir}/pulse-*/modules/module-x11-publish.so
+%attr(755,root,root) %{_libdir}/pulse-*/modules/module-zeroconf-publish.so
 
 %files libs
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/lib*.so.*.*.*
+%attr(755,root,root) %{_libdir}/libpulse.so.*.*.*
+%attr(755,root,root) %{_libdir}/libpulse-browse.so.*.*.*
+%attr(755,root,root) %{_libdir}/libpulse-mainloop-glib.so.*.*.*
+%attr(755,root,root) %{_libdir}/libpulse-simple.so.*.*.*
+%attr(755,root,root) %{_libdir}/libpulsecore.so.*.*.*
 %attr(755,root,root) %{_libdir}/libpulsedsp.so
 %dir %{_sysconfdir}/pulse
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/pulse/client.conf
 
 %files devel
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/lib*.so
-%exclude %{_libdir}/libpulsedsp.so
-%{_libdir}/lib*.la
+%attr(755,root,root) %{_libdir}/libpulse.so
+%attr(755,root,root) %{_libdir}/libpulse-browse.so
+%attr(755,root,root) %{_libdir}/libpulse-mainloop-glib.so
+%attr(755,root,root) %{_libdir}/libpulse-simple.so
+%attr(755,root,root) %{_libdir}/libpulsecore.so
+%{_libdir}/libpulse.la
+%{_libdir}/libpulse-browse.la
+%{_libdir}/libpulse-mainloop-glib.la
+%{_libdir}/libpulse-simple.la
+%{_libdir}/libpulsecore.la
 %{_includedir}/pulse
 %{_includedir}/pulsecore
-%{_pkgconfigdir}/*.pc
+%{_pkgconfigdir}/libpulse.pc
+%{_pkgconfigdir}/libpulse-browse.pc
+%{_pkgconfigdir}/libpulse-mainloop-glib.pc
+%{_pkgconfigdir}/libpulse-simple.pc
 
 %files static
 %defattr(644,root,root,755)
-%{_libdir}/lib*.a
+%{_libdir}/libpulse.a
+%{_libdir}/libpulse-browse.a
+%{_libdir}/libpulse-mainloop-glib.a
+%{_libdir}/libpulse-simple.a
+%{_libdir}/libpulsecore.a
 
 %files alsa
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/pulse-*/modules/libalsa-util.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-alsa-sink.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-alsa-source.so
+
+%files gconf
+%defattr(644,root,root,755)
+%dir %{_libdir}/pulse
+%attr(755,root,root) %{_libdir}/pulse/gconf-helper
+%attr(755,root,root) %{_libdir}/pulse-*/modules/module-gconf.so
+
+%files hal
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_libdir}/pulse-*/modules/module-hal-detect.so
 
 %files jack
 %defattr(644,root,root,755)

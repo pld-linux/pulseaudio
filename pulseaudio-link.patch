@@ -1,0 +1,50 @@
+--- pulseaudio-0.9.5/src/Makefile.am.orig	2006-08-18 21:56:48.000000000 +0200
++++ pulseaudio-0.9.5/src/Makefile.am	2006-08-29 19:49:38.782353250 +0200
+@@ -170,7 +170,7 @@
+ 
+ pax11publish_SOURCES = utils/pax11publish.c
+ pax11publish_CFLAGS = $(AM_CFLAGS) $(X_CFLAGS)
+-pax11publish_LDADD = $(AM_LDADD) libpulse.la $(X_PRE_LIBS) -lX11 $(X_LIBS) $(X_EXTRA_LIBS)
++pax11publish_LDADD = $(AM_LDADD) libpulse.la -lX11 $(X_LIBS) $(X_EXTRA_LIBS)
+ pax11publish_LDFLAGS = $(AM_LDFLAGS) $(BINLDFLAGS)
+ 
+ pabrowse_SOURCES = utils/pabrowse.c
+@@ -440,7 +440,7 @@
+ 
+ if HAVE_X11
+ libpulse_la_CFLAGS += $(X_CFLAGS)
+-libpulse_la_LDFLAGS += $(X_PRE_LIBS) -lX11 $(X_LIBS) $(X_EXTRA_LIBS)
++libpulse_la_LDFLAGS += -lX11 $(X_LIBS) $(X_EXTRA_LIBS)
+ endif
+ 
+ if HAVE_LIBASYNCNS
+@@ -788,12 +788,12 @@
+ libx11wrap_la_SOURCES = pulsecore/x11wrap.c pulsecore/x11wrap.h
+ libx11wrap_la_LDFLAGS = -avoid-version
+ libx11wrap_la_CFLAGS = $(AM_CFLAGS) $(X_CFLAGS)
+-libx11wrap_la_LIBADD = $(AM_LIBADD) $(X_PRE_LIBS) -lX11 $(X_LIBS) $(X_EXTRA_LIBS) libpulsecore.la
++libx11wrap_la_LIBADD = $(AM_LIBADD) -lX11 $(X_LIBS) $(X_EXTRA_LIBS) libpulsecore.la
+ 
+ libx11prop_la_SOURCES = pulsecore/x11prop.c pulsecore/x11prop.h
+ libx11prop_la_LDFLAGS = -avoid-version
+ libx11prop_la_CFLAGS = $(AM_CFLAGS) $(X_CFLAGS)
+-libx11prop_la_LIBADD = $(AM_LIBADD) $(X_PRE_LIBS) -lX11 $(X_LIBS) $(X_EXTRA_LIBS)
++libx11prop_la_LIBADD = $(AM_LIBADD) -lX11 $(X_LIBS) $(X_EXTRA_LIBS)
+ 
+ # Avahi
+ 
+@@ -1100,12 +1100,12 @@
+ module_x11_bell_la_SOURCES = modules/module-x11-bell.c
+ module_x11_bell_la_CFLAGS = $(AM_CFLAGS) $(X_CFLAGS)
+ module_x11_bell_la_LDFLAGS = -module -avoid-version
+-module_x11_bell_la_LIBADD = $(AM_LIBADD) $(X_PRE_LIBS) -lX11 $(X_LIBS) $(X_EXTRA_LIBS) libx11wrap.la libpulsecore.la
++module_x11_bell_la_LIBADD = $(AM_LIBADD) -lX11 $(X_LIBS) $(X_EXTRA_LIBS) libx11wrap.la libpulsecore.la
+ 
+ module_x11_publish_la_SOURCES = modules/module-x11-publish.c
+ module_x11_publish_la_CFLAGS = $(AM_CFLAGS) $(X_CFLAGS)
+ module_x11_publish_la_LDFLAGS = -module -avoid-version
+-module_x11_publish_la_LIBADD = $(AM_LIBADD) $(X_PRE_LIBS) -lX11 $(X_LIBS) $(X_EXTRA_LIBS) libx11wrap.la libauthkey.la libauthkey-prop.la libx11prop.la libstrlist.la
++module_x11_publish_la_LIBADD = $(AM_LIBADD) -lX11 $(X_LIBS) $(X_EXTRA_LIBS) libx11wrap.la libauthkey.la libauthkey-prop.la libx11prop.la libstrlist.la
+ 
+ # OSS
+ 

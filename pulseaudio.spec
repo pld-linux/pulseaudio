@@ -71,7 +71,7 @@ Requires:	libsndfile >= 1.0.10
 Obsoletes:	polypaudio-libs
 Conflicts:	polypaudio < 0.7-4
 
-%description
+%description libs
 PulseAudio libraries.
 
 %description libs -l pl

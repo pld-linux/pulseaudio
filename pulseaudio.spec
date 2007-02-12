@@ -8,7 +8,7 @@
 %bcond_without	lirc	# without lirc module
 #
 Summary:	Modular sound server
-Summary(pl.UTF-8):   Modularny serwer dźwięku
+Summary(pl.UTF-8):	Modularny serwer dźwięku
 Name:		pulseaudio
 Version:	0.9.5
 Release:	1
@@ -62,7 +62,7 @@ kilku dźwięków w jeden.
 
 %package libs
 Summary:	PulseAudio libraries
-Summary(pl.UTF-8):   Biblioteki PulseAudio
+Summary(pl.UTF-8):	Biblioteki PulseAudio
 Group:		Libraries
 Requires:	glib2 >= 1:2.4.0
 Requires:	libasyncns >= 0.1
@@ -79,7 +79,7 @@ Biblioteki PulseAudio.
 
 %package devel
 Summary:	Development files for PulseAudio libraries
-Summary(pl.UTF-8):   Pliki programistyczne bibliotek PulseAudio
+Summary(pl.UTF-8):	Pliki programistyczne bibliotek PulseAudio
 License:	GPL (libpulsecore), LGPL (libpulse)
 Group:		Development/Libraries
 Requires:	%{name}-libs = %{version}-%{release}
@@ -97,7 +97,7 @@ Pliki programistyczne bibliotek PulseAudio.
 
 %package static
 Summary:	Static PulseAudio libraries
-Summary(pl.UTF-8):   Statyczne biblioteki PulseAudio
+Summary(pl.UTF-8):	Statyczne biblioteki PulseAudio
 License:	GPL (libpulsecore), LGPL (libpulse)
 Group:		Development/Libraries
 Requires:	%{name}-devel = %{version}-%{release}
@@ -111,7 +111,7 @@ Statyczne biblioteki PulseAudio.
 
 %package alsa
 Summary:	ALSA modules for PulseAudio
-Summary(pl.UTF-8):   Moduły ALSA dla PulseAudio
+Summary(pl.UTF-8):	Moduły ALSA dla PulseAudio
 License:	GPL
 Group:		Libraries
 Requires:	%{name} = %{version}-%{release}
@@ -126,7 +126,7 @@ Moduły ALSA dla PulseAudio.
 
 %package gconf
 Summary:	GConf module for PulseAudio
-Summary(pl.UTF-8):   Moduł GConf dla PulseAudio
+Summary(pl.UTF-8):	Moduł GConf dla PulseAudio
 License:	GPL
 Group:		Libraries
 Requires:	%{name} = %{version}-%{release}
@@ -139,7 +139,7 @@ Interfejs do GConfa dla PulseAudio.
 
 %package hal
 Summary:	HAL module for PulseAudio
-Summary(pl.UTF-8):   Moduł HAL dla PulseAudio
+Summary(pl.UTF-8):	Moduł HAL dla PulseAudio
 License:	GPL
 Group:		Libraries
 Requires:	%{name} = %{version}-%{release}
@@ -154,7 +154,7 @@ wczytujący pasujące sterowniki.
 
 %package jack
 Summary:	JACK modules for PulseAudio
-Summary(pl.UTF-8):   Moduły JACK dla PulseAudio
+Summary(pl.UTF-8):	Moduły JACK dla PulseAudio
 License:	GPL
 Group:		Libraries
 Requires:	%{name} = %{version}-%{release}
@@ -169,7 +169,7 @@ Moduły JACK dla PulseAudio.
 
 %package lirc
 Summary:	LIRC module for PulseAudio
-Summary(pl.UTF-8):   Moduł LIRC dla PulseAudio
+Summary(pl.UTF-8):	Moduł LIRC dla PulseAudio
 License:	GPL
 Group:		Libraries
 Requires:	%{name} = %{version}-%{release}

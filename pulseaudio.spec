@@ -8,7 +8,7 @@
 %bcond_without	lirc	# without lirc module
 #
 Summary:	Modular sound server
-Summary(pl):	Modularny serwer d¼wiêku
+Summary(pl.UTF-8):   Modularny serwer dÅºwiÄ™ku
 Name:		pulseaudio
 Version:	0.9.5
 Release:	1
@@ -51,18 +51,18 @@ and your hardware. Things like transferring the audio to a different
 machine, changing the sample format or channel count and mixing
 several sounds into one are easily achieved using a sound server.
 
-%description -l pl
-PulseAudio (poprzednio znany jako PolypAudio) to serwer d¼wiêku dla
-systemów operacyjnych zgodnych z POSIX oraz Win32. Pozwala na
-wykonywanie zaawansowanych operacji na danych d¼wiêkowych
-przekazywanych miêdzy aplikacjami a sprzêtem. Przy u¿yciu tego serwera
-mo¿na ³atwo osi±gn±æ takie rzeczy jak przesy³anie d¼wiêku na inn±
-maszynê, zmiana formatu próbek czy liczby kana³ów oraz miksowanie
-kilku d¼wiêków w jeden.
+%description -l pl.UTF-8
+PulseAudio (poprzednio znany jako PolypAudio) to serwer dÅºwiÄ™ku dla
+systemÃ³w operacyjnych zgodnych z POSIX oraz Win32. Pozwala na
+wykonywanie zaawansowanych operacji na danych dÅºwiÄ™kowych
+przekazywanych miÄ™dzy aplikacjami a sprzÄ™tem. Przy uÅ¼yciu tego serwera
+moÅ¼na Å‚atwo osiÄ…gnÄ…Ä‡ takie rzeczy jak przesyÅ‚anie dÅºwiÄ™ku na innÄ…
+maszynÄ™, zmiana formatu prÃ³bek czy liczby kanaÅ‚Ã³w oraz miksowanie
+kilku dÅºwiÄ™kÃ³w w jeden.
 
 %package libs
 Summary:	PulseAudio libraries
-Summary(pl):	Biblioteki PulseAudio
+Summary(pl.UTF-8):   Biblioteki PulseAudio
 Group:		Libraries
 Requires:	glib2 >= 1:2.4.0
 Requires:	libasyncns >= 0.1
@@ -74,12 +74,12 @@ Conflicts:	polypaudio < 0.7-4
 %description libs
 PulseAudio libraries.
 
-%description libs -l pl
+%description libs -l pl.UTF-8
 Biblioteki PulseAudio.
 
 %package devel
 Summary:	Development files for PulseAudio libraries
-Summary(pl):	Pliki programistyczne bibliotek PulseAudio
+Summary(pl.UTF-8):   Pliki programistyczne bibliotek PulseAudio
 License:	GPL (libpulsecore), LGPL (libpulse)
 Group:		Development/Libraries
 Requires:	%{name}-libs = %{version}-%{release}
@@ -92,12 +92,12 @@ Obsoletes:	polypaudio-devel
 %description devel
 Development files for PulseAudio libraries.
 
-%description devel -l pl
+%description devel -l pl.UTF-8
 Pliki programistyczne bibliotek PulseAudio.
 
 %package static
 Summary:	Static PulseAudio libraries
-Summary(pl):	Statyczne biblioteki PulseAudio
+Summary(pl.UTF-8):   Statyczne biblioteki PulseAudio
 License:	GPL (libpulsecore), LGPL (libpulse)
 Group:		Development/Libraries
 Requires:	%{name}-devel = %{version}-%{release}
@@ -106,12 +106,12 @@ Obsoletes:	polypaudio-static
 %description static
 Static PulseAudio libraries.
 
-%description static -l pl
+%description static -l pl.UTF-8
 Statyczne biblioteki PulseAudio.
 
 %package alsa
 Summary:	ALSA modules for PulseAudio
-Summary(pl):	Modu³y ALSA dla PulseAudio
+Summary(pl.UTF-8):   ModuÅ‚y ALSA dla PulseAudio
 License:	GPL
 Group:		Libraries
 Requires:	%{name} = %{version}-%{release}
@@ -121,12 +121,12 @@ Obsoletes:	polypaudio-alsa
 %description alsa
 ALSA modules for PulseAudio.
 
-%description alsa -l pl
-Modu³y ALSA dla PulseAudio.
+%description alsa -l pl.UTF-8
+ModuÅ‚y ALSA dla PulseAudio.
 
 %package gconf
 Summary:	GConf module for PulseAudio
-Summary(pl):	Modu³ GConf dla PulseAudio
+Summary(pl.UTF-8):   ModuÅ‚ GConf dla PulseAudio
 License:	GPL
 Group:		Libraries
 Requires:	%{name} = %{version}-%{release}
@@ -134,12 +134,12 @@ Requires:	%{name} = %{version}-%{release}
 %description gconf
 GConf adapter for PulseAudio.
 
-%description gconf -l pl
+%description gconf -l pl.UTF-8
 Interfejs do GConfa dla PulseAudio.
 
 %package hal
 Summary:	HAL module for PulseAudio
-Summary(pl):	Modu³ HAL dla PulseAudio
+Summary(pl.UTF-8):   ModuÅ‚ HAL dla PulseAudio
 License:	GPL
 Group:		Libraries
 Requires:	%{name} = %{version}-%{release}
@@ -148,13 +148,13 @@ Requires:	%{name} = %{version}-%{release}
 HAL module for PulseAudio to detect available audio hardware and load
 matching drivers.
 
-%description hal -l pl
-Modu³ HAL dla PulseAudio wykrywaj±cy dostêpny sprzêt d¼wiêkowy i
-wczytuj±cy pasuj±ce sterowniki.
+%description hal -l pl.UTF-8
+ModuÅ‚ HAL dla PulseAudio wykrywajÄ…cy dostÄ™pny sprzÄ™t dÅºwiÄ™kowy i
+wczytujÄ…cy pasujÄ…ce sterowniki.
 
 %package jack
 Summary:	JACK modules for PulseAudio
-Summary(pl):	Modu³y JACK dla PulseAudio
+Summary(pl.UTF-8):   ModuÅ‚y JACK dla PulseAudio
 License:	GPL
 Group:		Libraries
 Requires:	%{name} = %{version}-%{release}
@@ -164,12 +164,12 @@ Obsoletes:	polypaudio-jack
 %description jack
 JACK modules for PulseAudio.
 
-%description jack -l pl
-Modu³y JACK dla PulseAudio.
+%description jack -l pl.UTF-8
+ModuÅ‚y JACK dla PulseAudio.
 
 %package lirc
 Summary:	LIRC module for PulseAudio
-Summary(pl):	Modu³ LIRC dla PulseAudio
+Summary(pl.UTF-8):   ModuÅ‚ LIRC dla PulseAudio
 License:	GPL
 Group:		Libraries
 Requires:	%{name} = %{version}-%{release}
@@ -178,8 +178,8 @@ Obsoletes:	polypaudio-lirc
 %description lirc
 LIRC module for PulseAudio.
 
-%description lirc -l pl
-Modu³ LIRC dla PulseAudio.
+%description lirc -l pl.UTF-8
+ModuÅ‚ LIRC dla PulseAudio.
 
 %prep
 %setup -q

@@ -1,0 +1,10 @@
+--- pulseaudio-0.9.5/configure.ac~	2007-02-23 21:32:24.000000000 +0100
++++ pulseaudio-0.9.5/configure.ac	2007-02-23 21:43:31.000000000 +0100
+@@ -29,6 +29,7 @@
+ AC_CONFIG_SRCDIR([src/daemon/main.c])
+ AC_CONFIG_HEADERS([config.h])
+ AM_INIT_AUTOMAKE([foreign -Wall])
++AM_GNU_GETTEXT([external])
+ 
+ AC_SUBST(PA_MAJORMINOR, "PA_MAJOR.PA_MINOR")
+ AC_SUBST(PACKAGE_URL, [http://0pointer.de/lennart/projects/pulseaudio/])

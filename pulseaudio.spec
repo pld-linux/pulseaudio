@@ -19,7 +19,7 @@ Source0:	http://0pointer.de/lennart/projects/pulseaudio/%{name}-%{version}.tar.g
 Patch0:		%{name}-suid.patch
 Patch1:		%{name}-path.patch
 Patch2:		%{name}-link.patch
-Patch3:		%{name}-gettext.patch
+Patch3:		%{name}-am-iconv.patch
 URL:		http://pulseaudio.org/
 BuildRequires:	alsa-lib-devel >= 1.0.0
 BuildRequires:	autoconf >= 2.59-9
@@ -190,7 +190,6 @@ Moduł LIRC dla PulseAudio.
 %patch3 -p1
 
 %build
-%{__gettextize}
 %{__libtoolize}
 %{__aclocal}
 %{__autoconf}

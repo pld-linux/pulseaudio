@@ -1,6 +1,6 @@
---- pulseaudio-0.9.5/src/Makefile.am.orig	2006-08-18 21:56:48.000000000 +0200
-+++ pulseaudio-0.9.5/src/Makefile.am	2006-08-29 19:49:38.782353250 +0200
-@@ -170,7 +170,7 @@
+--- pulseaudio-0.9.6/src/Makefile.am.orig	2007-05-30 21:01:23.364754090 +0200
++++ pulseaudio-0.9.6/src/Makefile.am	2007-05-30 21:07:21.185145111 +0200
+@@ -189,7 +189,7 @@
  
  pax11publish_SOURCES = utils/pax11publish.c
  pax11publish_CFLAGS = $(AM_CFLAGS) $(X_CFLAGS)
@@ -9,7 +9,7 @@
  pax11publish_LDFLAGS = $(AM_LDFLAGS) $(BINLDFLAGS)
  
  pabrowse_SOURCES = utils/pabrowse.c
-@@ -440,7 +440,7 @@
+@@ -474,7 +474,7 @@
  
  if HAVE_X11
  libpulse_la_CFLAGS += $(X_CFLAGS)
@@ -18,7 +18,7 @@
  endif
  
  if HAVE_LIBASYNCNS
-@@ -788,12 +788,12 @@
+@@ -829,12 +829,12 @@
  libx11wrap_la_SOURCES = pulsecore/x11wrap.c pulsecore/x11wrap.h
  libx11wrap_la_LDFLAGS = -avoid-version
  libx11wrap_la_CFLAGS = $(AM_CFLAGS) $(X_CFLAGS)
@@ -33,7 +33,7 @@
  
  # Avahi
  
-@@ -1100,12 +1100,12 @@
+@@ -1144,12 +1144,12 @@
  module_x11_bell_la_SOURCES = modules/module-x11-bell.c
  module_x11_bell_la_CFLAGS = $(AM_CFLAGS) $(X_CFLAGS)
  module_x11_bell_la_LDFLAGS = -module -avoid-version
@@ -43,8 +43,8 @@
  module_x11_publish_la_SOURCES = modules/module-x11-publish.c
  module_x11_publish_la_CFLAGS = $(AM_CFLAGS) $(X_CFLAGS)
  module_x11_publish_la_LDFLAGS = -module -avoid-version
--module_x11_publish_la_LIBADD = $(AM_LIBADD) $(X_PRE_LIBS) -lX11 $(X_LIBS) $(X_EXTRA_LIBS) libx11wrap.la libauthkey.la libauthkey-prop.la libx11prop.la libstrlist.la
-+module_x11_publish_la_LIBADD = $(AM_LIBADD) -lX11 $(X_LIBS) $(X_EXTRA_LIBS) libx11wrap.la libauthkey.la libauthkey-prop.la libx11prop.la libstrlist.la
+-module_x11_publish_la_LIBADD = $(AM_LIBADD) $(X_PRE_LIBS) -lX11 $(X_LIBS) $(X_EXTRA_LIBS) libx11wrap.la libauthkey.la libauthkey-prop.la libx11prop.la libstrlist.la libpulsecore.la
++module_x11_publish_la_LIBADD = $(AM_LIBADD) -lX11 $(X_LIBS) $(X_EXTRA_LIBS) libx11wrap.la libauthkey.la libauthkey-prop.la libx11prop.la libstrlist.la libpulsecore.la
  
  # OSS
  

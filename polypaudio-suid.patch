@@ -1,0 +1,20 @@
+--- polypaudio-0.9.1/src/Makefile.am.orig	2006-04-18 21:13:11.000000000 +0200
++++ polypaudio-0.9.1/src/Makefile.am	2006-04-22 09:35:12.915500250 +0200
+@@ -1097,10 +1097,6 @@
+ #        Some minor stuff         #
+ ###################################
+ 
+-suid: polypaudio
+-	chown root $<
+-	chmod u+s $<
+-
+ CLEANFILES = esdcompat client.conf default.pa daemon.conf
+ 
+ esdcompat: daemon/esdcompat.in Makefile
+@@ -1124,6 +1120,4 @@
+ 		-e 's,@DEFAULT_CONFIG_FILE\@,$(DEFAULT_CONFIG_DIR),g' < $< > $@
+ 
+ install-exec-hook:
+-	chown root $(DESTDIR)$(bindir)/polypaudio ; true
+-	chmod u+s $(DESTDIR)$(bindir)/polypaudio
+ 	ln -sf pacat $(DESTDIR)$(bindir)/parec

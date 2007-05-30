@@ -10,24 +10,27 @@
 Summary:	Modular sound server
 Summary(pl.UTF-8):	Modularny serwer dźwięku
 Name:		pulseaudio
-Version:	0.9.5
+Version:	0.9.6
 Release:	1
 License:	GPL (server and libpulsecore), LGPL (libpulse)
 Group:		Libraries
 Source0:	http://0pointer.de/lennart/projects/pulseaudio/%{name}-%{version}.tar.gz
-# Source0-md5:	99b5d9efd4fce35cabb4ae5d0ebb230d
+# Source0-md5:	669d52a70fb9a7a83c2507005bfa2a6f
 Patch0:		%{name}-suid.patch
 Patch1:		%{name}-path.patch
 Patch2:		%{name}-link.patch
 Patch3:		%{name}-am-iconv.patch
 URL:		http://pulseaudio.org/
+BuildRequires:	GConf2-devel >= 2.4.0
 BuildRequires:	alsa-lib-devel >= 1.0.0
 BuildRequires:	autoconf >= 2.59-9
 BuildRequires:	automake
 BuildRequires:	glib2-devel >= 1:2.4.0
 BuildRequires:	avahi-devel >= 0.6.0
+BuildRequires:	hal-devel >= 0.5.7
 BuildRequires:	jack-audio-connection-kit-devel >= 0.100
 BuildRequires:	libasyncns-devel >= 0.1
+BuildRequires:	libatomic_ops
 BuildRequires:	libcap-devel
 BuildRequires:	libltdl-devel
 BuildRequires:	liboil-devel >= 0.3.0
@@ -131,6 +134,7 @@ Summary(pl.UTF-8):	Moduł GConf dla PulseAudio
 License:	GPL
 Group:		Libraries
 Requires:	%{name} = %{version}-%{release}
+Requires:	GConf2 >= 2.4.0
 
 %description gconf
 GConf adapter for PulseAudio.
@@ -144,6 +148,7 @@ Summary(pl.UTF-8):	Moduł HAL dla PulseAudio
 License:	GPL
 Group:		Libraries
 Requires:	%{name} = %{version}-%{release}
+Requires:	hal-libs >= 0.5.7
 
 %description hal
 HAL module for PulseAudio to detect available audio hardware and load

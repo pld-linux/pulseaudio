@@ -22,11 +22,12 @@ Patch2:		%{name}-link.patch
 Patch3:		%{name}-am-iconv.patch
 URL:		http://pulseaudio.org/
 BuildRequires:	GConf2-devel >= 2.4.0
+BuildRequires:	XFree86-devel
 BuildRequires:	alsa-lib-devel >= 1.0.0
 BuildRequires:	autoconf >= 2.59-9
 BuildRequires:	automake
-BuildRequires:	glib2-devel >= 1:2.4.0
 BuildRequires:	avahi-devel >= 0.6.0
+BuildRequires:	glib2-devel >= 1:2.4.0
 BuildRequires:	hal-devel >= 0.5.7
 BuildRequires:	jack-audio-connection-kit-devel >= 0.100
 BuildRequires:	libasyncns-devel >= 0.1
@@ -42,7 +43,6 @@ BuildRequires:	libwrap-devel
 BuildRequires:	lynx
 BuildRequires:	m4
 BuildRequires:	pkgconfig
-BuildRequires:	xorg-lib-libX11-devel
 Requires:	%{name}-libs = %{version}-%{release}
 Obsoletes:	polypaudio
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
@@ -87,10 +87,10 @@ Summary(pl.UTF-8):	Pliki programistyczne bibliotek PulseAudio
 License:	GPL (libpulsecore), LGPL (libpulse)
 Group:		Development/Libraries
 Requires:	%{name}-libs = %{version}-%{release}
+Requires:	XFree86-devel
 Requires:	glib2-devel >= 1:2.4.0
 Requires:	libasyncns-devel >= 0.1
 Requires:	libcap-devel
-Requires:	xorg-lib-libX11-devel
 Obsoletes:	polypaudio-devel
 
 %description devel

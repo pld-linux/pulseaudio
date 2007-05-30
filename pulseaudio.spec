@@ -25,8 +25,8 @@ BuildRequires:	GConf2-devel >= 2.4.0
 BuildRequires:	alsa-lib-devel >= 1.0.0
 BuildRequires:	autoconf >= 2.59-9
 BuildRequires:	automake
-BuildRequires:	glib2-devel >= 1:2.4.0
 BuildRequires:	avahi-devel >= 0.6.0
+BuildRequires:	glib2-devel >= 1:2.4.0
 BuildRequires:	hal-devel >= 0.5.7
 BuildRequires:	jack-audio-connection-kit-devel >= 0.100
 BuildRequires:	libasyncns-devel >= 0.1

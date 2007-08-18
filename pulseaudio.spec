@@ -12,7 +12,8 @@
 #make[3]: Leaving directory `/home/users/builder/rpm/BUILD/pulseaudio-0.9.6/src'
 #
 # Conditional build:
-%bcond_without	lirc	# without lirc module
+%bcond_without	lirc		# without lirc module
+%bcond_without	static_libs	# don't build static libraries
 #
 Summary:	Modular sound server
 Summary(pl.UTF-8):	Modularny serwer dźwięku
@@ -208,7 +209,8 @@ Moduł LIRC dla PulseAudio.
 %{__autoheader}
 %{__automake}
 %configure \
-	%{!?with_lirc:--disable-lirc}
+	%{!?with_lirc:--disable-lirc} \
+	%{!?with_static_libs:--disable-static}
 %{__make}
 
 %install
@@ -342,6 +344,7 @@ fi
 %{_pkgconfigdir}/libpulse-mainloop-glib.pc
 %{_pkgconfigdir}/libpulse-simple.pc
 
+%if %{with static_libs}
 %files static
 %defattr(644,root,root,755)
 %{_libdir}/libpulse.a
@@ -349,6 +352,7 @@ fi
 %{_libdir}/libpulse-mainloop-glib.a
 %{_libdir}/libpulse-simple.a
 %{_libdir}/libpulsecore.a
+%endif
 
 %files alsa
 %defattr(644,root,root,755)

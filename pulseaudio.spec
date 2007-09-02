@@ -3,13 +3,6 @@
 # - init script
 # - pulse:pulse uid/gid for daemon
 # - realtime and pulse-access groups for users
-# - ppc build fail:
-#.deps/flist_test-flist.Tpo -c -o flist_test-flist.o `test -f 'pulsecore/flist.c' || echo './'`pulsecore/flist.c
-#{standard input}: Assembler messages:
-#{standard input}:196: Error: syntax error; found `,' but expected `('
-#{standard input}:196: Error: junk at end of line: `,11'
-#make[3]: *** [flist_test-flist.o] Error 1
-#make[3]: Leaving directory `/home/users/builder/rpm/BUILD/pulseaudio-0.9.6/src'
 #
 # Conditional build:
 %bcond_without	lirc		# without lirc module
@@ -38,7 +31,7 @@ BuildRequires:	glib2-devel >= 1:2.4.0
 BuildRequires:	hal-devel >= 0.5.7
 BuildRequires:	jack-audio-connection-kit-devel >= 0.100
 BuildRequires:	libasyncns-devel >= 0.1
-BuildRequires:	libatomic_ops
+BuildRequires:	libatomic_ops >= 1.2-2
 BuildRequires:	libcap-devel
 BuildRequires:	libltdl-devel
 BuildRequires:	liboil-devel >= 0.3.0

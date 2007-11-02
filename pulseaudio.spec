@@ -11,12 +11,12 @@
 Summary:	Modular sound server
 Summary(pl.UTF-8):	Modularny serwer dźwięku
 Name:		pulseaudio
-Version:	0.9.6
-Release:	2
+Version:	0.9.7
+Release:	1
 License:	GPL (server and libpulsecore), LGPL (libpulse)
 Group:		Libraries
 Source0:	http://0pointer.de/lennart/projects/pulseaudio/%{name}-%{version}.tar.gz
-# Source0-md5:	669d52a70fb9a7a83c2507005bfa2a6f
+# Source0-md5:	df623170b07854d695bc24e9f1083cac
 Patch0:		%{name}-suid.patch
 Patch1:		%{name}-path.patch
 Patch2:		%{name}-link.patch
@@ -242,6 +242,7 @@ fi
 %doc README
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/pulse/daemon.conf
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/pulse/default.pa
+%{_sysconfdir}/xdg/autostart/pulseaudio-module-xsmp.desktop
 %attr(755,root,root) %{_bindir}/*
 %dir %{_libdir}/pulse-*
 %dir %{_libdir}/pulse-*/modules
@@ -276,6 +277,7 @@ fi
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-cli-protocol-tcp.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-cli-protocol-unix.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-combine.so
+%attr(755,root,root) %{_libdir}/pulse-*/modules/module-default-device-restore.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-detect.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-esound-compat-spawnfd.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-esound-compat-spawnpid.so
@@ -284,6 +286,7 @@ fi
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-esound-sink.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-http-protocol-tcp.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-http-protocol-unix.so
+%attr(755,root,root) %{_libdir}/pulse-*/modules/module-ladspa-sink.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-match.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-mmkbd-evdev.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-native-protocol-fd.so
@@ -291,20 +294,23 @@ fi
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-native-protocol-unix.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-null-sink.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-oss.so
-%attr(755,root,root) %{_libdir}/pulse-*/modules/module-oss-mmap.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-pipe-sink.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-pipe-source.so
+%attr(755,root,root) %{_libdir}/pulse-*/modules/module-remap-sink.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-rescue-streams.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-rtp-recv.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-rtp-send.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-simple-protocol-tcp.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-simple-protocol-unix.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-sine.so
+%attr(755,root,root) %{_libdir}/pulse-*/modules/module-suspend-on-idle.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-tunnel-sink.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-tunnel-source.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-volume-restore.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-x11-bell.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-x11-publish.so
+%attr(755,root,root) %{_libdir}/pulse-*/modules/module-x11-xsmp.so
+%attr(755,root,root) %{_libdir}/pulse-*/modules/module-zeroconf-discover.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-zeroconf-publish.so
 
 %files libs
@@ -331,7 +337,6 @@ fi
 %{_libdir}/libpulse-simple.la
 %{_libdir}/libpulsecore.la
 %{_includedir}/pulse
-%{_includedir}/pulsecore
 %{_pkgconfigdir}/libpulse.pc
 %{_pkgconfigdir}/libpulse-browse.pc
 %{_pkgconfigdir}/libpulse-mainloop-glib.pc

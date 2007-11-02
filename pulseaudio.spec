@@ -45,6 +45,7 @@ BuildRequires:	m4
 BuildRequires:	pkgconfig
 BuildRequires:	xorg-lib-libX11-devel
 Requires:	%{name}-libs = %{version}-%{release}
+Obsoletes:	esound
 Obsoletes:	polypaudio
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
@@ -214,6 +215,7 @@ rm -rf $RPM_BUILD_ROOT
 
 # not needed (lt_dlopenext() is used)
 rm -f $RPM_BUILD_ROOT%{_libdir}/pulse-*/modules/*.la
+ln -sf %{_bindir}/esdcompat $RPM_BUILD_ROOT%{_bindir}/esd
 
 %clean
 rm -rf $RPM_BUILD_ROOT

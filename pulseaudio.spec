@@ -1,8 +1,8 @@
 # TODO:
 # system-wide pulse daemon stuff:
-# - init script
-# - pulse:pulse uid/gid for daemon
-# - realtime and pulse-access groups for users
+# - pulse:pulse uid/gid for system-wide daemon
+# - "pulse-rt" and "pulse-access" groups for users
+# - then init script
 #
 # Conditional build:
 %bcond_without	lirc		# without lirc module
@@ -13,7 +13,7 @@ Summary(pl.UTF-8):	Modularny serwer dźwięku
 Name:		pulseaudio
 Version:	0.9.7
 Release:	1
-License:	GPL (server and libpulsecore), LGPL (libpulse)
+License:	GPL v2+ (server and libpulsecore), LGPL v2+ (libpulse)
 Group:		Libraries
 Source0:	http://0pointer.de/lennart/projects/pulseaudio/%{name}-%{version}.tar.gz
 # Source0-md5:	df623170b07854d695bc24e9f1083cac
@@ -45,7 +45,6 @@ BuildRequires:	m4
 BuildRequires:	pkgconfig
 BuildRequires:	xorg-lib-libX11-devel
 Requires:	%{name}-libs = %{version}-%{release}
-Obsoletes:	esound
 Obsoletes:	polypaudio
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
@@ -86,7 +85,7 @@ Biblioteki PulseAudio.
 %package devel
 Summary:	Development files for PulseAudio libraries
 Summary(pl.UTF-8):	Pliki programistyczne bibliotek PulseAudio
-License:	GPL (libpulsecore), LGPL (libpulse)
+License:	GPL v2+ (libpulsecore), LGPL v2+ (libpulse)
 Group:		Development/Libraries
 Requires:	%{name}-libs = %{version}-%{release}
 Requires:	glib2-devel >= 1:2.4.0
@@ -104,7 +103,7 @@ Pliki programistyczne bibliotek PulseAudio.
 %package static
 Summary:	Static PulseAudio libraries
 Summary(pl.UTF-8):	Statyczne biblioteki PulseAudio
-License:	GPL (libpulsecore), LGPL (libpulse)
+License:	GPL v2+ (libpulsecore), LGPL v2+ (libpulse)
 Group:		Development/Libraries
 Requires:	%{name}-devel = %{version}-%{release}
 Obsoletes:	polypaudio-static
@@ -115,10 +114,29 @@ Static PulseAudio libraries.
 %description static -l pl.UTF-8
 Statyczne biblioteki PulseAudio.
 
+%package esound-compat
+Summary:	EsounD compatibility start script
+Summary(pl.UTF-8):	Skrypt uruchamiający kompatybilny z EsounD
+Group:		Applications/Sound
+Requires:	%{name} = %{version}-%{release}
+Conflicts:	esound
+
+%description esound-compat
+EsounD compatibility start script, which allows to run pulseaudio
+daemon using "esd" command.
+
+NOTE: it ignores all command-line options!
+
+%description esound-compat -l pl.UTF-8
+Skrypt uruchamiający kompatybilny z EsounD, pozwalający na
+uruchamianie demona pulseaudio przy użyciu polecenia "esd".
+
+UWAGA: ignoruje wszystkie opcje z linii poleceń!
+
 %package alsa
 Summary:	ALSA modules for PulseAudio
 Summary(pl.UTF-8):	Moduły ALSA dla PulseAudio
-License:	GPL
+License:	GPL v2+
 Group:		Libraries
 Requires:	%{name} = %{version}-%{release}
 Requires:	alsa-lib >= 1.0.0
@@ -133,7 +151,7 @@ Moduły ALSA dla PulseAudio.
 %package gconf
 Summary:	GConf module for PulseAudio
 Summary(pl.UTF-8):	Moduł GConf dla PulseAudio
-License:	GPL
+License:	GPL v2+
 Group:		Libraries
 Requires:	%{name} = %{version}-%{release}
 Requires:	GConf2 >= 2.4.0
@@ -147,7 +165,7 @@ Interfejs do GConfa dla PulseAudio.
 %package hal
 Summary:	HAL module for PulseAudio
 Summary(pl.UTF-8):	Moduł HAL dla PulseAudio
-License:	GPL
+License:	GPL v2+
 Group:		Libraries
 Requires:	%{name} = %{version}-%{release}
 Requires:	hal-libs >= 0.5.7
@@ -163,7 +181,7 @@ wczytujący pasujące sterowniki.
 %package jack
 Summary:	JACK modules for PulseAudio
 Summary(pl.UTF-8):	Moduły JACK dla PulseAudio
-License:	GPL
+License:	GPL v2+
 Group:		Libraries
 Requires:	%{name} = %{version}-%{release}
 Requires:	jack-audio-connection-kit >= 0.100
@@ -178,7 +196,7 @@ Moduły JACK dla PulseAudio.
 %package lirc
 Summary:	LIRC module for PulseAudio
 Summary(pl.UTF-8):	Moduł LIRC dla PulseAudio
-License:	GPL
+License:	GPL v2+
 Group:		Libraries
 Requires:	%{name} = %{version}-%{release}
 Obsoletes:	polypaudio-lirc
@@ -213,9 +231,10 @@ rm -rf $RPM_BUILD_ROOT
 %{__make} install \
 	DESTDIR=$RPM_BUILD_ROOT
 
+ln -sf %{_bindir}/esdcompat $RPM_BUILD_ROOT%{_bindir}/esd
+
 # not needed (lt_dlopenext() is used)
 rm -f $RPM_BUILD_ROOT%{_libdir}/pulse-*/modules/*.la
-ln -sf %{_bindir}/esdcompat $RPM_BUILD_ROOT%{_bindir}/esd
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -245,7 +264,16 @@ fi
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/pulse/daemon.conf
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/pulse/default.pa
 %{_sysconfdir}/xdg/autostart/pulseaudio-module-xsmp.desktop
-%attr(755,root,root) %{_bindir}/*
+%attr(755,root,root) %{_bindir}/pabrowse
+%attr(755,root,root) %{_bindir}/pacat
+%attr(755,root,root) %{_bindir}/pacmd
+%attr(755,root,root) %{_bindir}/pactl
+%attr(755,root,root) %{_bindir}/padsp
+%attr(755,root,root) %{_bindir}/paplay
+%attr(755,root,root) %{_bindir}/parec
+%attr(755,root,root) %{_bindir}/pasuspender
+%attr(755,root,root) %{_bindir}/pax11publish
+%attr(755,root,root) %{_bindir}/pulseaudio
 %dir %{_libdir}/pulse-*
 %dir %{_libdir}/pulse-*/modules
 %attr(755,root,root) %{_libdir}/pulse-*/modules/libauthkey.so
@@ -322,6 +350,11 @@ fi
 %attr(755,root,root) %{_libdir}/libpulse-mainloop-glib.so.*.*.*
 %attr(755,root,root) %{_libdir}/libpulse-simple.so.*.*.*
 %attr(755,root,root) %{_libdir}/libpulsecore.so.*.*.*
+%attr(755,root,root) %ghost %{_libdir}/libpulse.so.0
+%attr(755,root,root) %ghost %{_libdir}/libpulse-browse.so.0
+%attr(755,root,root) %ghost %{_libdir}/libpulse-mainloop-glib.so.0
+%attr(755,root,root) %ghost %{_libdir}/libpulse-simple.so.0
+%attr(755,root,root) %ghost %{_libdir}/libpulsecore.so.4
 %attr(755,root,root) %{_libdir}/libpulsedsp.so
 %dir %{_sysconfdir}/pulse
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/pulse/client.conf
@@ -353,6 +386,11 @@ fi
 %{_libdir}/libpulse-simple.a
 %{_libdir}/libpulsecore.a
 %endif
+
+%files esound-compat
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_bindir}/esd
+%attr(755,root,root) %{_bindir}/esdcompat
 
 %files alsa
 %defattr(644,root,root,755)

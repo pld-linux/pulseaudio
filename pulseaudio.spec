@@ -47,6 +47,7 @@ BuildRequires:	lynx
 BuildRequires:	m4
 BuildRequires:	pkgconfig
 BuildRequires:	xorg-lib-libX11-devel
+BuildRequires:	xorg-lib-libSM-devel
 Requires:	%{name}-libs = %{version}-%{release}
 Obsoletes:	polypaudio
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
@@ -245,6 +246,9 @@ Moduł LIRC dla PulseAudio.
 %install
 rm -rf $RPM_BUILD_ROOT
 
+# libsocket-util.so and libipacl.so are relinked before libpulsecore.so
+# so __make -jN install leads to "File not found by glob" (or they links 
+# with libpulsecore installed on builder)
 %{__make} -j1 install \
 	DESTDIR=$RPM_BUILD_ROOT
 

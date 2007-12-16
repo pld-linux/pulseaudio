@@ -11,22 +11,25 @@
 Summary:	Modular sound server
 Summary(pl.UTF-8):	Modularny serwer dźwięku
 Name:		pulseaudio
-Version:	0.9.7
+Version:	0.9.8
 Release:	1
 License:	GPL v2+ (server and libpulsecore), LGPL v2+ (libpulse)
 Group:		Libraries
 Source0:	http://0pointer.de/lennart/projects/pulseaudio/%{name}-%{version}.tar.gz
-# Source0-md5:	df623170b07854d695bc24e9f1083cac
+# Source0-md5:	184a41d5947e583d395f0a2541525fc2
 Patch0:		%{name}-suid.patch
 Patch1:		%{name}-path.patch
 Patch2:		%{name}-link.patch
 Patch3:		%{name}-am-iconv.patch
 URL:		http://pulseaudio.org/
 BuildRequires:	GConf2-devel >= 2.4.0
+BuildRequires:	PolicyKit-devel
 BuildRequires:	alsa-lib-devel >= 1.0.0
 BuildRequires:	autoconf >= 2.59-9
 BuildRequires:	automake
 BuildRequires:	avahi-devel >= 0.6.0
+BuildRequires:	bluez-libs-devel >= 3.0
+BuildRequires:	dbus-devel >= 1.0.0
 BuildRequires:	glib2-devel >= 1:2.4.0
 BuildRequires:	hal-devel >= 0.5.7
 BuildRequires:	jack-audio-connection-kit-devel >= 0.100
@@ -147,6 +150,20 @@ ALSA modules for PulseAudio.
 
 %description alsa -l pl.UTF-8
 Moduły ALSA dla PulseAudio.
+
+%package bluetooth
+Summary:	Bluetooth module for PulseAudio
+Summary(pl.UTF-8):	Moduł Bluetooth dla PulseAudio
+License:	GPL v2+
+Group:		Libraries
+Requires:	%{name} = %{version}-%{release}
+Requires:	bluez-libs >= 3.0
+
+%description bluetooth
+Bluetooth module for PulseAudio.
+
+%description bluetooth -l pl.UTF-8
+Moduł Bluetooth dla PulseAudio.
 
 %package gconf
 Summary:	GConf module for PulseAudio
@@ -274,6 +291,7 @@ fi
 %attr(755,root,root) %{_bindir}/pasuspender
 %attr(755,root,root) %{_bindir}/pax11publish
 %attr(755,root,root) %{_bindir}/pulseaudio
+%dir %{_libdir}/pulse
 %dir %{_libdir}/pulse-*
 %dir %{_libdir}/pulse-*/modules
 %attr(755,root,root) %{_libdir}/pulse-*/modules/libauthkey.so
@@ -342,6 +360,19 @@ fi
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-x11-xsmp.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-zeroconf-discover.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-zeroconf-publish.so
+%{_datadir}/PolicyKit/policy/PulseAudio.policy
+%{_mandir}/man1/pabrowse.1*
+%{_mandir}/man1/pacat.1*
+%{_mandir}/man1/pacmd.1*
+%{_mandir}/man1/pactl.1*
+%{_mandir}/man1/padsp.1*
+%{_mandir}/man1/paplay.1*
+%{_mandir}/man1/pasuspender.1*
+%{_mandir}/man1/pax11publish.1*
+%{_mandir}/man1/pulseaudio.1*
+%{_mandir}/man5/default.pa.5*
+%{_mandir}/man5/pulse-client.conf.5*
+%{_mandir}/man5/pulse-daemon.conf.5*
 
 %files libs
 %defattr(644,root,root,755)
@@ -354,7 +385,7 @@ fi
 %attr(755,root,root) %ghost %{_libdir}/libpulse-browse.so.0
 %attr(755,root,root) %ghost %{_libdir}/libpulse-mainloop-glib.so.0
 %attr(755,root,root) %ghost %{_libdir}/libpulse-simple.so.0
-%attr(755,root,root) %ghost %{_libdir}/libpulsecore.so.4
+%attr(755,root,root) %ghost %{_libdir}/libpulsecore.so.5
 %attr(755,root,root) %{_libdir}/libpulsedsp.so
 %dir %{_sysconfdir}/pulse
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/pulse/client.conf
@@ -391,6 +422,7 @@ fi
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/esd
 %attr(755,root,root) %{_bindir}/esdcompat
+%{_mandir}/man1/esdcompat.1*
 
 %files alsa
 %defattr(644,root,root,755)
@@ -398,9 +430,13 @@ fi
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-alsa-sink.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-alsa-source.so
 
+%files bluetooth
+%defattr(644,root,root,755)
+%attr(4755,root,root) %{_libdir}/pulse/bt-proximity-helper
+%attr(755,root,root) %{_libdir}/pulse-*/modules/module-bt-proximity.so
+
 %files gconf
 %defattr(644,root,root,755)
-%dir %{_libdir}/pulse
 %attr(755,root,root) %{_libdir}/pulse/gconf-helper
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-gconf.so
 

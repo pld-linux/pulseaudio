@@ -1,9 +1,3 @@
-# TODO:
-# system-wide pulse daemon stuff:
-# - pulse:pulse uid/gid for system-wide daemon
-# - "pulse-rt" and "pulse-access" groups for users
-# - then init script
-#
 # Conditional build:
 %bcond_without	lirc		# without lirc module
 %bcond_without	static_libs	# don't build static libraries
@@ -12,11 +6,13 @@ Summary:	Modular sound server
 Summary(pl.UTF-8):	Modularny serwer dźwięku
 Name:		pulseaudio
 Version:	0.9.9
-Release:	1
+Release:	1.1
 License:	GPL v2+ (server and libpulsecore), LGPL v2+ (libpulse)
 Group:		Libraries
 Source0:	http://0pointer.de/lennart/projects/pulseaudio/%{name}-%{version}.tar.gz
 # Source0-md5:	8fa6f7a9611bb194d94311764022b197
+Source1:	%{name}.init
+Source2:	%{name}.sysconfig
 Patch0:		%{name}-suid.patch
 Patch1:		%{name}-path.patch
 Patch2:		%{name}-link.patch
@@ -44,12 +40,24 @@ BuildRequires:	libtool
 BuildRequires:	libwrap-devel
 %{?with_lirc:BuildRequires:	lirc-devel}
 BuildRequires:	lynx
-BuildRequires:	m4
 BuildRequires:	pkgconfig
+BuildRequires:	rpmbuild(macros) >= 1.228
 BuildRequires:	xorg-lib-libX11-devel
 BuildRequires:	xorg-lib-libSM-devel
 Requires:	%{name}-libs = %{version}-%{release}
+Requires(post,preun):	/sbin/chkconfig
+Requires(postun):	/usr/sbin/groupdel
+Requires(postun):	/usr/sbin/userdel
+Requires(pre):	/bin/id
+Requires(pre):	/usr/bin/getgid
+Requires(pre):	/usr/sbin/groupadd
+Requires(pre):	/usr/sbin/useradd
+Requires(pre):	fileutils
 Obsoletes:	polypaudio
+Provides:	user(pulse)
+Provides:	group(pulse)
+Provides:	group(pulse-rt)
+Provides:	group(pulse-access)
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
@@ -240,12 +248,17 @@ Moduł LIRC dla PulseAudio.
 %{__autoheader}
 %{__automake}
 %configure \
+	--with-system-user=pulse \
+	--with-system-group=pulse \
+	--with-realtime-group=pulse-rt \
+	--with-access-group=pulse-access \
 	%{!?with_lirc:--disable-lirc} \
 	%{!?with_static_libs:--disable-static}
 %{__make}
 
 %install
 rm -rf $RPM_BUILD_ROOT
+install -d $RPM_BUILD_ROOT/var/run/pulse
 
 # libsocket-util.so and libipacl.so are relinked before libpulsecore.so
 # so __make -jN install leads to "File not found by glob" (or they links 
@@ -257,6 +270,9 @@ ln -sf %{_bindir}/esdcompat $RPM_BUILD_ROOT%{_bindir}/esd
 
 # not needed (lt_dlopenext() is used)
 rm -f $RPM_BUILD_ROOT%{_libdir}/pulse-*/modules/*.la
+
+install -D %{SOURCE1} $RPM_BUILD_ROOT/etc/rc.d/init.d/%{name}
+install -D %{SOURCE2} $RPM_BUILD_ROOT/etc/sysconfig/%{name}
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -280,11 +296,37 @@ if [ -f %{_sysconfdir}/polypaudio/client.conf.rpmsave ]; then
 	mv -f %{_sysconfdir}/polypaudio/client.conf.rpmsave %{_sysconfdir}/pulse/client.conf
 fi
 
+%pre
+%groupadd -g 226 pulse
+%groupadd -g 227 pulse-rt
+%groupadd -g 228 pulse-access
+%useradd -u 226 -g 226 -d /var/run/pulse -s /bin/false -c "Pulseaudio user" pulse
+
+%post
+/sbin/chkconfig --add %{name}
+%service %{name} restart
+
+%preun
+if [ "$1" = "0" ]; then
+	%service -q %{name} stop
+	/sbin/chkconfig --del %{name}
+fi
+%postun
+if [ "$1" = "0" ]; then
+	%userremove pulse 
+	%groupremove pulse-access
+	%groupremove pulse-rt
+	%groupremove pulse
+fi
+
 %files
 %defattr(644,root,root,755)
 %doc README
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/pulse/daemon.conf
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/pulse/default.pa
+%attr(754,root,root) /etc/rc.d/init.d/%{name}
+%config(noreplace) %verify(not md5 mtime size) /etc/sysconfig/%{name}
+%dir %attr(750,pulse,pulse-access) /var/run/pulse
 %{_sysconfdir}/xdg/autostart/pulseaudio-module-xsmp.desktop
 %attr(755,root,root) %{_bindir}/pabrowse
 %attr(755,root,root) %{_bindir}/pacat

@@ -1,0 +1,109 @@
+#!/bin/sh
+#
+# pulseaudio	PulseAudio system-wide sound server	
+#
+# chkconfig:	345 86 13
+#
+# description:	System mode startup script for the PulseAudio sound server.
+#
+# processname:	pulseaudio
+# config:	/etc/sysconfig/pulseaudio
+# pidfile:	/var/run/pulse/pid
+#
+# $Id$
+
+# Source function library
+. /etc/rc.d/init.d/functions
+
+# Get network config
+. /etc/sysconfig/network
+
+# Set defaults
+PULSEAUDIO_SYSTEM_START=0
+DISALLOW_MODULE_LOADING=1
+
+# Get service config - may override defaults
+[ -f /etc/sysconfig/pulseaudio ] && . /etc/sysconfig/pulseaudio
+[ "$PULSEAUDIO_SYSTEM_START" != "1" ] && exit 0
+
+start() {
+	# Check if the service is already running?
+	if [ ! -f /var/lock/subsys/pulseaudio ]; then
+		msg_starting pulseaudio
+		daemon /usr/bin/pulseaudio --system --daemonize --high-priority --log-target=syslog --disallow-module-loading=$DISALLOW_MODULE_LOADING
+		RETVAL=$?
+		[ $RETVAL -eq 0 ] && touch /var/lock/subsys/pulseaudio
+	else
+		msg_already_running pulseaudio
+	fi
+}
+
+stop() {
+	if [ -f /var/lock/subsys/pulseaudio ]; then
+		# Stop daemons.
+		msg_stopping pulseaudio
+		killproc pulseaudio
+		killproc --pidfile /var/run/pulse/pid pulseaudio -TERM
+		rm -f /var/lock/subsys/pulseaudio
+	else
+		msg_not_running pulseaudio
+	fi
+}
+
+reload() {
+	if [ -f /var/lock/subsys/pulseaudio ]; then
+		msg_reloading pulseaudio
+		killproc pulseaudio -HUP
+		killproc --pidfile /var/run/pulse/pid pulseaudio -HUP
+		RETVAL=$?
+	else
+		msg_not_running pulseaudio
+		RETVAL=7
+	fi
+}
+
+condrestart() {
+	if [ -f /var/lock/subsys/pulseaudio ]; then
+		stop
+		start
+	else
+		msg_not_running pulseaudio
+		RETVAL=$1
+	fi
+}
+
+RETVAL=0
+# See how we were called.
+case "$1" in
+  start)
+  	start
+	;;
+  stop)
+  	stop
+	;;
+  restart)
+	stop
+	start
+	;;
+  try-restart)
+	condrestart 0
+	;;
+# include force-reload here if program allows reloading without restart
+# otherwise remove reload action and support force-reload as restart if running
+  reload|force-reload)
+  	reload
+	;;
+# use this one if program doesn't support reloading without restart
+  force-reload)
+	condrestart 7
+	;;
+  status)
+	status pulseaudio
+	RETVAL=$?
+	;;
+  *)
+	msg_usage "$0 {start|stop|restart|try-restart|reload|force-reload|status}"
+	exit 3
+esac
+
+exit $RETVAL

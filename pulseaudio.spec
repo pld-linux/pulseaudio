@@ -42,9 +42,8 @@ BuildRequires:	libwrap-devel
 BuildRequires:	lynx
 BuildRequires:	pkgconfig
 BuildRequires:	rpmbuild(macros) >= 1.228
-BuildRequires:	xorg-lib-libX11-devel
 BuildRequires:	xorg-lib-libSM-devel
-Requires:	%{name}-libs = %{version}-%{release}
+BuildRequires:	xorg-lib-libX11-devel
 Requires(post,preun):	/sbin/chkconfig
 Requires(postun):	/usr/sbin/groupdel
 Requires(postun):	/usr/sbin/userdel
@@ -53,11 +52,12 @@ Requires(pre):	/usr/bin/getgid
 Requires(pre):	/usr/sbin/groupadd
 Requires(pre):	/usr/sbin/useradd
 Requires(pre):	fileutils
-Obsoletes:	polypaudio
-Provides:	user(pulse)
+Requires:	%{name}-libs = %{version}-%{release}
 Provides:	group(pulse)
-Provides:	group(pulse-rt)
 Provides:	group(pulse-access)
+Provides:	group(pulse-rt)
+Provides:	user(pulse)
+Obsoletes:	polypaudio
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
@@ -261,7 +261,7 @@ rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT/var/run/pulse
 
 # libsocket-util.so and libipacl.so are relinked before libpulsecore.so
-# so __make -jN install leads to "File not found by glob" (or they links 
+# so __make -jN install leads to "File not found by glob" (or they links
 # with libpulsecore installed on builder)
 %{__make} -j1 install \
 	DESTDIR=$RPM_BUILD_ROOT
@@ -313,7 +313,7 @@ if [ "$1" = "0" ]; then
 fi
 %postun
 if [ "$1" = "0" ]; then
-	%userremove pulse 
+	%userremove pulse
 	%groupremove pulse-access
 	%groupremove pulse-rt
 	%groupremove pulse
@@ -407,7 +407,7 @@ fi
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-x11-xsmp.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-zeroconf-discover.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-zeroconf-publish.so
-%{_datadir}/PolicyKit/policy/PulseAudio.policy
+%{_datadir}/PolicyKit/policy/org.pulseaudio.policy
 %{_mandir}/man1/pabrowse.1*
 %{_mandir}/man1/pacat.1*
 %{_mandir}/man1/pacmd.1*

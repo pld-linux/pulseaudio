@@ -1,3 +1,6 @@
+# TODO:
+#	- service is too quiet with PULSEAUDIO_SYSTEM_START=0
+#
 # Conditional build:
 %bcond_without	lirc		# without lirc module
 %bcond_without	static_libs	# don't build static libraries

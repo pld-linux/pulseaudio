@@ -8,12 +8,12 @@
 Summary:	Modular sound server
 Summary(pl.UTF-8):	Modularny serwer dźwięku
 Name:		pulseaudio
-Version:	0.9.10
-Release:	3
+Version:	0.9.11
+Release:	1
 License:	GPL v2+ (server and libpulsecore), LGPL v2+ (libpulse)
 Group:		Libraries
 Source0:	http://0pointer.de/lennart/projects/pulseaudio/%{name}-%{version}.tar.gz
-# Source0-md5:	9187ac1b302b9ab45f355242f453882e
+# Source0-md5:	fa121f8e5dd4b98d65096de1b6c84021
 Source1:	%{name}.init
 Source2:	%{name}.sysconfig
 Patch0:		%{name}-suid.patch
@@ -331,7 +331,7 @@ fi
 %attr(754,root,root) /etc/rc.d/init.d/%{name}
 %config(noreplace) %verify(not md5 mtime size) /etc/sysconfig/%{name}
 %dir %attr(750,pulse,pulse-access) /var/run/pulse
-%{_sysconfdir}/xdg/autostart/pulseaudio-module-xsmp.desktop
+%{_sysconfdir}/xdg/autostart/pulseaudio.desktop
 %attr(755,root,root) %{_bindir}/pabrowse
 %attr(755,root,root) %{_bindir}/pacat
 %attr(755,root,root) %{_bindir}/pacmd
@@ -342,6 +342,7 @@ fi
 %attr(755,root,root) %{_bindir}/pasuspender
 %attr(755,root,root) %{_bindir}/pax11publish
 %attr(755,root,root) %{_bindir}/pulseaudio
+%attr(755,root,root) %{_bindir}/start-pulseaudio-x11
 %dir %{_libdir}/pulse
 %dir %{_libdir}/pulse-*
 %dir %{_libdir}/pulse-*/modules
@@ -372,12 +373,15 @@ fi
 %attr(755,root,root) %{_libdir}/pulse-*/modules/libtagstruct.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/libx11prop.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/libx11wrap.so
+%attr(755,root,root) %{_libdir}/pulse-*/modules/module-always-sink.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-cli.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-cli-protocol-tcp.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-cli-protocol-unix.so
+%attr(755,root,root) %{_libdir}/pulse-*/modules/module-console-kit.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-combine.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-default-device-restore.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-detect.so
+%attr(755,root,root) %{_libdir}/pulse-*/modules/module-device-restore.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-esound-compat-spawnfd.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-esound-compat-spawnpid.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-esound-protocol-tcp.so
@@ -395,6 +399,7 @@ fi
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-oss.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-pipe-sink.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-pipe-source.so
+%attr(755,root,root) %{_libdir}/pulse-*/modules/module-position-event-sounds.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-remap-sink.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-rescue-streams.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-rtp-recv.so
@@ -436,7 +441,7 @@ fi
 %attr(755,root,root) %ghost %{_libdir}/libpulse-browse.so.0
 %attr(755,root,root) %ghost %{_libdir}/libpulse-mainloop-glib.so.0
 %attr(755,root,root) %ghost %{_libdir}/libpulse-simple.so.0
-%attr(755,root,root) %ghost %{_libdir}/libpulsecore.so.5
+%attr(755,root,root) %ghost %{_libdir}/libpulsecore.so.6
 %attr(755,root,root) %{_libdir}/libpulsedsp.so
 %dir %{_sysconfdir}/pulse
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/pulse/client.conf

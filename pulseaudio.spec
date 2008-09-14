@@ -8,18 +8,16 @@
 Summary:	Modular sound server
 Summary(pl.UTF-8):	Modularny serwer dźwięku
 Name:		pulseaudio
-Version:	0.9.11
-Release:	3
+Version:	0.9.12
+Release:	1
 License:	GPL v2+ (server and libpulsecore), LGPL v2+ (libpulse)
 Group:		Libraries
 Source0:	http://0pointer.de/lennart/projects/pulseaudio/%{name}-%{version}.tar.gz
-# Source0-md5:	fa121f8e5dd4b98d65096de1b6c84021
+# Source0-md5:	b8851d52152c5c3b65f4f31ee1ab7631
 Source1:	%{name}.init
 Source2:	%{name}.sysconfig
 Patch0:		%{name}-suid.patch
-Patch1:		%{name}-path.patch
-Patch2:		%{name}-link.patch
-Patch3:		%{name}-am-iconv.patch
+Patch1:		%{name}-link.patch
 URL:		http://pulseaudio.org/
 BuildRequires:	GConf2-devel >= 2.4.0
 BuildRequires:	PolicyKit-devel
@@ -30,6 +28,7 @@ BuildRequires:	avahi-devel >= 0.6.0
 BuildRequires:	bluez-libs-devel >= 3.0
 BuildRequires:	dbus-devel >= 1.0.0
 BuildRequires:	glib2-devel >= 1:2.4.0
+BuildRequires:	gdbm-devel
 BuildRequires:	hal-devel >= 0.5.7
 BuildRequires:	jack-audio-connection-kit-devel >= 0.100
 BuildRequires:	libasyncns-devel >= 0.1
@@ -241,12 +240,10 @@ Moduł LIRC dla PulseAudio.
 %setup -q
 %patch0 -p1
 %patch1 -p1
-%patch2 -p1
-%patch3 -p1
 
 %build
 %{__libtoolize}
-%{__aclocal}
+%{__aclocal} -I m4
 %{__autoconf}
 %{__autoheader}
 %{__automake}
@@ -328,6 +325,7 @@ fi
 %doc README
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/pulse/daemon.conf
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/pulse/default.pa
+%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/pulse/system.pa
 %attr(754,root,root) /etc/rc.d/init.d/%{name}
 %config(noreplace) %verify(not md5 mtime size) /etc/sysconfig/%{name}
 %dir %attr(750,pulse,pulse-access) /var/run/pulse
@@ -346,8 +344,9 @@ fi
 %dir %{_libdir}/pulse
 %dir %{_libdir}/pulse-*
 %dir %{_libdir}/pulse-*/modules
+%attr(755,root,root) %{_libdir}/pulse-*/modules/libauth-cookie.so
+%attr(755,root,root) %{_libdir}/pulse-*/modules/module-stream-restore.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/libauthkey.so
-%attr(755,root,root) %{_libdir}/pulse-*/modules/libauthkey-prop.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/libavahi-wrap.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/libcli.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/libdbus-util.so
@@ -441,7 +440,7 @@ fi
 %attr(755,root,root) %ghost %{_libdir}/libpulse-browse.so.0
 %attr(755,root,root) %ghost %{_libdir}/libpulse-mainloop-glib.so.0
 %attr(755,root,root) %ghost %{_libdir}/libpulse-simple.so.0
-%attr(755,root,root) %ghost %{_libdir}/libpulsecore.so.6
+%attr(755,root,root) %ghost %{_libdir}/libpulsecore.so.7
 %attr(755,root,root) %{_libdir}/libpulsedsp.so
 %dir %{_sysconfdir}/pulse
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/pulse/client.conf

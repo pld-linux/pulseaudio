@@ -43,8 +43,8 @@
  module_x11_publish_la_SOURCES = modules/module-x11-publish.c
  module_x11_publish_la_CFLAGS = $(AM_CFLAGS) $(X_CFLAGS)
  module_x11_publish_la_LDFLAGS = -module -avoid-version
--module_x11_publish_la_LIBADD = $(AM_LIBADD) $(X_PRE_LIBS) -lX11 $(X_LIBS) $(X_EXTRA_LIBS) libx11wrap.la libauthkey.la libauthkey-prop.la libx11prop.la libstrlist.la libpulsecore.la
-+module_x11_publish_la_LIBADD = $(AM_LIBADD) -lX11 $(X_LIBS) $(X_EXTRA_LIBS) libx11wrap.la libauthkey.la libauthkey-prop.la libx11prop.la libstrlist.la libpulsecore.la
+-module_x11_publish_la_LIBADD = $(AM_LIBADD) $(X_PRE_LIBS) -lX11 $(X_LIBS) $(X_EXTRA_LIBS) libx11wrap.la libauthkey.la libauth-cookie.la libx11prop.la libstrlist.la libprotocol-native.la libpulsecore.la
++module_x11_publish_la_LIBADD = $(AM_LIBADD) -lX11 $(X_LIBS) $(X_EXTRA_LIBS) libx11wrap.la libauthkey.la libauth-cookie.la libx11prop.la libstrlist.la libprotocol-native.la libpulsecore.la
  
  # OSS
  

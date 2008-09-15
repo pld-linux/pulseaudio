@@ -18,6 +18,7 @@ Source1:	%{name}.init
 Source2:	%{name}.sysconfig
 Patch0:		%{name}-suid.patch
 Patch1:		%{name}-link.patch
+Patch2:		%{name}-path.patch
 URL:		http://pulseaudio.org/
 BuildRequires:	GConf2-devel >= 2.4.0
 BuildRequires:	PolicyKit-devel
@@ -240,6 +241,7 @@ Moduł LIRC dla PulseAudio.
 %setup -q
 %patch0 -p1
 %patch1 -p1
+%patch2 -p1
 
 %build
 %{__libtoolize}

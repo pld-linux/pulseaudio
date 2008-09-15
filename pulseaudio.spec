@@ -345,7 +345,6 @@ fi
 %dir %{_libdir}/pulse-*
 %dir %{_libdir}/pulse-*/modules
 %attr(755,root,root) %{_libdir}/pulse-*/modules/libauth-cookie.so
-%attr(755,root,root) %{_libdir}/pulse-*/modules/module-stream-restore.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/libauthkey.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/libavahi-wrap.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/libcli.so
@@ -406,6 +405,7 @@ fi
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-simple-protocol-tcp.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-simple-protocol-unix.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-sine.so
+%attr(755,root,root) %{_libdir}/pulse-*/modules/module-stream-restore.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-suspend-on-idle.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-tunnel-sink.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-tunnel-source.so

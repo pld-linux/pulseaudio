@@ -45,6 +45,7 @@ BuildRequires:	libwrap-devel
 BuildRequires:	lynx
 BuildRequires:	pkgconfig
 BuildRequires:	rpmbuild(macros) >= 1.228
+BuildRequires:	speex-devel >= 1:1.2-beta3
 BuildRequires:	xorg-lib-libSM-devel
 BuildRequires:	xorg-lib-libX11-devel
 Requires(post,preun):	/sbin/chkconfig

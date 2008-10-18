@@ -8,12 +8,12 @@
 Summary:	Modular sound server
 Summary(pl.UTF-8):	Modularny serwer dźwięku
 Name:		pulseaudio
-Version:	0.9.12
+Version:	0.9.13
 Release:	1
 License:	GPL v2+ (server and libpulsecore), LGPL v2+ (libpulse)
 Group:		Libraries
 Source0:	http://0pointer.de/lennart/projects/pulseaudio/%{name}-%{version}.tar.gz
-# Source0-md5:	b8851d52152c5c3b65f4f31ee1ab7631
+# Source0-md5:	279fb92f08393a6a992d55e3ac9a006b
 Source1:	%{name}.init
 Source2:	%{name}.sysconfig
 Patch0:		%{name}-suid.patch
@@ -443,7 +443,7 @@ fi
 %attr(755,root,root) %ghost %{_libdir}/libpulse-browse.so.0
 %attr(755,root,root) %ghost %{_libdir}/libpulse-mainloop-glib.so.0
 %attr(755,root,root) %ghost %{_libdir}/libpulse-simple.so.0
-%attr(755,root,root) %ghost %{_libdir}/libpulsecore.so.7
+%attr(755,root,root) %ghost %{_libdir}/libpulsecore.so.8
 %attr(755,root,root) %{_libdir}/libpulsedsp.so
 %dir %{_sysconfdir}/pulse
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/pulse/client.conf
@@ -490,8 +490,12 @@ fi
 
 %files bluetooth
 %defattr(644,root,root,755)
-%attr(4755,root,root) %{_libdir}/pulse/bt-proximity-helper
-%attr(755,root,root) %{_libdir}/pulse-*/modules/module-bt-proximity.so
+%attr(4755,root,root) %{_libdir}/pulse/proximity-helper
+%attr(755,root,root) %{_libdir}/pulse-*/modules/libbluetooth-ipc.so
+%attr(755,root,root) %{_libdir}/pulse-*/modules/libbluetooth-sbc.so
+%attr(755,root,root) %{_libdir}/pulse-*/modules/module-bluetooth-device.so
+%attr(755,root,root) %{_libdir}/pulse-*/modules/module-bluetooth-discover.so
+%attr(755,root,root) %{_libdir}/pulse-*/modules/module-bluetooth-proximity.so
 
 %files gconf
 %defattr(644,root,root,755)

@@ -8,12 +8,12 @@
 Summary:	Modular sound server
 Summary(pl.UTF-8):	Modularny serwer dźwięku
 Name:		pulseaudio
-Version:	0.9.13
-Release:	2
+Version:	0.9.14
+Release:	1
 License:	GPL v2+ (server and libpulsecore), LGPL v2+ (libpulse)
 Group:		Libraries
 Source0:	http://0pointer.de/lennart/projects/pulseaudio/%{name}-%{version}.tar.gz
-# Source0-md5:	279fb92f08393a6a992d55e3ac9a006b
+# Source0-md5:	0ed1115222d1d8c64cc14961cccb2eb0
 Source1:	%{name}.init
 Source2:	%{name}.sysconfig
 Patch0:		%{name}-suid.patch
@@ -278,6 +278,8 @@ rm -f $RPM_BUILD_ROOT%{_libdir}/pulse-*/modules/*.la
 install -D %{SOURCE1} $RPM_BUILD_ROOT/etc/rc.d/init.d/%{name}
 install -D %{SOURCE2} $RPM_BUILD_ROOT/etc/sysconfig/%{name}
 
+%find_lang %{name}
+
 %clean
 rm -rf $RPM_BUILD_ROOT
 
@@ -323,7 +325,7 @@ if [ "$1" = "0" ]; then
 	%groupremove pulse
 fi
 
-%files
+%files -f %{name}.lang
 %defattr(644,root,root,755)
 %doc README
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/pulse/daemon.conf
@@ -443,7 +445,7 @@ fi
 %attr(755,root,root) %ghost %{_libdir}/libpulse-browse.so.0
 %attr(755,root,root) %ghost %{_libdir}/libpulse-mainloop-glib.so.0
 %attr(755,root,root) %ghost %{_libdir}/libpulse-simple.so.0
-%attr(755,root,root) %ghost %{_libdir}/libpulsecore.so.8
+%attr(755,root,root) %ghost %{_libdir}/libpulsecore.so.9
 %attr(755,root,root) %{_libdir}/libpulsedsp.so
 %dir %{_sysconfdir}/pulse
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/pulse/client.conf

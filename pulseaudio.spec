@@ -186,6 +186,8 @@ License:	GPL v2+
 Group:		Libraries
 Requires:	%{name} = %{version}-%{release}
 Requires:	GConf2 >= 2.4.0
+Suggests:	padevchooser
+Suggests:	pavucontrol
 
 %description gconf
 GConf adapter for PulseAudio.

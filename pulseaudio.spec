@@ -3,21 +3,21 @@
 #
 # Conditional build:
 %bcond_without	lirc		# without lirc module
-%bcond_without	static_libs	# don't build static libraries
+%bcond_with	static_libs	# build static libraries
 #
+%define		filterout_ld	-Wl,--as-needed
 Summary:	Modular sound server
 Summary(pl.UTF-8):	Modularny serwer dźwięku
 Name:		pulseaudio
-Version:	0.9.14
+Version:	0.9.15
 Release:	1
 License:	GPL v2+ (server and libpulsecore), LGPL v2+ (libpulse)
 Group:		Libraries
 Source0:	http://0pointer.de/lennart/projects/pulseaudio/%{name}-%{version}.tar.gz
-# Source0-md5:	0ed1115222d1d8c64cc14961cccb2eb0
+# Source0-md5:	4510364eeab219fd100bd1b373b1a002
 Source1:	%{name}.init
 Source2:	%{name}.sysconfig
 Patch0:		%{name}-suid.patch
-Patch1:		%{name}-link.patch
 Patch2:		%{name}-path.patch
 URL:		http://pulseaudio.org/
 BuildRequires:	GConf2-devel >= 2.4.0
@@ -48,6 +48,7 @@ BuildRequires:	rpmbuild(macros) >= 1.228
 BuildRequires:	speex-devel >= 1:1.2-beta3
 BuildRequires:	xorg-lib-libSM-devel
 BuildRequires:	xorg-lib-libX11-devel
+BuildRequires:	xorg-lib-libXtst-devel
 Requires(post,preun):	/sbin/chkconfig
 Requires(postun):	/usr/sbin/groupdel
 Requires(postun):	/usr/sbin/userdel
@@ -186,8 +187,7 @@ License:	GPL v2+
 Group:		Libraries
 Requires:	%{name} = %{version}-%{release}
 Requires:	GConf2 >= 2.4.0
-Suggests:	padevchooser
-Suggests:	pavucontrol
+Suggests:	gnome-media-volume-control
 
 %description gconf
 GConf adapter for PulseAudio.
@@ -243,7 +243,6 @@ Moduł LIRC dla PulseAudio.
 %prep
 %setup -q
 %patch0 -p1
-%patch1 -p1
 %patch2 -p1
 
 %build
@@ -259,7 +258,7 @@ Moduł LIRC dla PulseAudio.
 	--with-realtime-group=pulse-rt \
 	--with-access-group=pulse-access \
 	%{!?with_lirc:--disable-lirc} \
-	%{!?with_static_libs:--disable-static}
+	--%{?with_static_libs:en}%{!?with_static_libs:dis}able-static
 %{__make}
 
 %install
@@ -351,39 +350,25 @@ fi
 %dir %{_libdir}/pulse
 %dir %{_libdir}/pulse-*
 %dir %{_libdir}/pulse-*/modules
-%attr(755,root,root) %{_libdir}/pulse-*/modules/libauth-cookie.so
-%attr(755,root,root) %{_libdir}/pulse-*/modules/libauthkey.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/libavahi-wrap.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/libcli.so
-%attr(755,root,root) %{_libdir}/pulse-*/modules/libdbus-util.so
-%attr(755,root,root) %{_libdir}/pulse-*/modules/libiochannel.so
-%attr(755,root,root) %{_libdir}/pulse-*/modules/libioline.so
-%attr(755,root,root) %{_libdir}/pulse-*/modules/libipacl.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/liboss-util.so
-%attr(755,root,root) %{_libdir}/pulse-*/modules/libpacket.so
-%attr(755,root,root) %{_libdir}/pulse-*/modules/libparseaddr.so
-%attr(755,root,root) %{_libdir}/pulse-*/modules/libpdispatch.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/libprotocol-cli.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/libprotocol-esound.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/libprotocol-http.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/libprotocol-native.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/libprotocol-simple.so
-%attr(755,root,root) %{_libdir}/pulse-*/modules/libpstream.so
-%attr(755,root,root) %{_libdir}/pulse-*/modules/libpstream-util.so
+%attr(755,root,root) %{_libdir}/pulse-*/modules/libraop.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/librtp.so
-%attr(755,root,root) %{_libdir}/pulse-*/modules/libsocket-client.so
-%attr(755,root,root) %{_libdir}/pulse-*/modules/libsocket-server.so
-%attr(755,root,root) %{_libdir}/pulse-*/modules/libsocket-util.so
-%attr(755,root,root) %{_libdir}/pulse-*/modules/libstrlist.so
-%attr(755,root,root) %{_libdir}/pulse-*/modules/libtagstruct.so
-%attr(755,root,root) %{_libdir}/pulse-*/modules/libx11prop.so
-%attr(755,root,root) %{_libdir}/pulse-*/modules/libx11wrap.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-always-sink.so
+%attr(755,root,root) %{_libdir}/pulse-*/modules/module-augment-properties.so
+%attr(755,root,root) %{_libdir}/pulse-*/modules/module-card-restore.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-cli.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-cli-protocol-tcp.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-cli-protocol-unix.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-console-kit.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-combine.so
+%attr(755,root,root) %{_libdir}/pulse-*/modules/module-cork-music-on-phone.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-default-device-restore.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-detect.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-device-restore.so
@@ -407,17 +392,21 @@ fi
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-position-event-sounds.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-remap-sink.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-rescue-streams.so
+%attr(755,root,root) %{_libdir}/pulse-*/modules/module-raop-discover.so
+%attr(755,root,root) %{_libdir}/pulse-*/modules/module-raop-sink.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-rtp-recv.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-rtp-send.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-simple-protocol-tcp.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-simple-protocol-unix.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-sine.so
+%attr(755,root,root) %{_libdir}/pulse-*/modules/module-sine-source.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-stream-restore.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-suspend-on-idle.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-tunnel-sink.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-tunnel-source.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-volume-restore.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-x11-bell.so
+%attr(755,root,root) %{_libdir}/pulse-*/modules/module-x11-cork-request.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-x11-publish.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-x11-xsmp.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-zeroconf-discover.so
@@ -442,12 +431,12 @@ fi
 %attr(755,root,root) %{_libdir}/libpulse-browse.so.*.*.*
 %attr(755,root,root) %{_libdir}/libpulse-mainloop-glib.so.*.*.*
 %attr(755,root,root) %{_libdir}/libpulse-simple.so.*.*.*
-%attr(755,root,root) %{_libdir}/libpulsecore.so.*.*.*
+%attr(755,root,root) %{_libdir}/libpulsecommon-%{version}.so
+%attr(755,root,root) %{_libdir}/libpulsecore-%{version}.so
 %attr(755,root,root) %ghost %{_libdir}/libpulse.so.0
 %attr(755,root,root) %ghost %{_libdir}/libpulse-browse.so.0
 %attr(755,root,root) %ghost %{_libdir}/libpulse-mainloop-glib.so.0
 %attr(755,root,root) %ghost %{_libdir}/libpulse-simple.so.0
-%attr(755,root,root) %ghost %{_libdir}/libpulsecore.so.9
 %attr(755,root,root) %{_libdir}/libpulsedsp.so
 %dir %{_sysconfdir}/pulse
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/pulse/client.conf
@@ -458,12 +447,12 @@ fi
 %attr(755,root,root) %{_libdir}/libpulse-browse.so
 %attr(755,root,root) %{_libdir}/libpulse-mainloop-glib.so
 %attr(755,root,root) %{_libdir}/libpulse-simple.so
-%attr(755,root,root) %{_libdir}/libpulsecore.so
 %{_libdir}/libpulse.la
 %{_libdir}/libpulse-browse.la
 %{_libdir}/libpulse-mainloop-glib.la
 %{_libdir}/libpulse-simple.la
-%{_libdir}/libpulsecore.la
+%{_libdir}/libpulsecommon-%{version}.la
+%{_libdir}/libpulsecore-%{version}.la
 %{_includedir}/pulse
 %{_pkgconfigdir}/libpulse.pc
 %{_pkgconfigdir}/libpulse-browse.pc
@@ -477,7 +466,8 @@ fi
 %{_libdir}/libpulse-browse.a
 %{_libdir}/libpulse-mainloop-glib.a
 %{_libdir}/libpulse-simple.a
-%{_libdir}/libpulsecore.a
+%{_libdir}/libpulsecommon-%{version}.a
+%{_libdir}/libpulsecore-%{version}.a
 %endif
 
 %files esound-compat
@@ -489,6 +479,7 @@ fi
 %files alsa
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/pulse-*/modules/libalsa-util.so
+%attr(755,root,root) %{_libdir}/pulse-*/modules/module-alsa-card.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-alsa-sink.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-alsa-source.so
 
@@ -497,6 +488,7 @@ fi
 %attr(4755,root,root) %{_libdir}/pulse/proximity-helper
 %attr(755,root,root) %{_libdir}/pulse-*/modules/libbluetooth-ipc.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/libbluetooth-sbc.so
+%attr(755,root,root) %{_libdir}/pulse-*/modules/libbluetooth-util.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-bluetooth-device.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-bluetooth-discover.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-bluetooth-proximity.so

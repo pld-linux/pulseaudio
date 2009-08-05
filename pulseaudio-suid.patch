@@ -1,12 +1,11 @@
 --- pulseaudio-0.9.8/src/Makefile.am.orig	2007-11-17 00:47:32.000000000 +0100
 +++ pulseaudio-0.9.8/src/Makefile.am	2007-12-16 03:28:22.793213746 +0100
-@@ -1488,9 +1488,6 @@
+@@ -1488,8 +1488,6 @@
  		-e 's,@PA_DEFAULT_CONFIG_FILE\@,$(DEFAULT_CONFIG_DIR),g' < $< > $@
  
  install-exec-hook:
 -	chown root $(DESTDIR)$(bindir)/pulseaudio ; true
--	chmod u+s $(DESTDIR)$(bindir)/pulseaudio
 -	-chmod u+s $(DESTDIR)$(pulselibexecdir)/proximity-helper
- 	ln -sf pacat $(DESTDIR)$(bindir)/parec
- 	rm -f $(DESTDIR)$(modlibexecdir)/*.a
- 	rm -f $(DESTDIR)$(libdir)/libpulsedsp.a
+	ln -sf pacat $(DESTDIR)$(bindir)/parec
+	ln -sf pacat $(DESTDIR)$(bindir)/pamon
+	ln -sf pacat $(DESTDIR)$(bindir)/paplay

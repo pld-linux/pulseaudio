@@ -9,16 +9,15 @@
 Summary:	Modular sound server
 Summary(pl.UTF-8):	Modularny serwer dźwięku
 Name:		pulseaudio
-Version:	0.9.15
+Version:	0.9.19
 Release:	1
 License:	GPL v2+ (server and libpulsecore), LGPL v2+ (libpulse)
 Group:		Libraries
 Source0:	http://0pointer.de/lennart/projects/pulseaudio/%{name}-%{version}.tar.gz
-# Source0-md5:	4510364eeab219fd100bd1b373b1a002
+# Source0-md5:	02adc2b99252675f0271db3b9edd432e
 Source1:	%{name}.init
 Source2:	%{name}.sysconfig
 Patch0:		%{name}-suid.patch
-Patch2:		%{name}-path.patch
 URL:		http://pulseaudio.org/
 BuildRequires:	GConf2-devel >= 2.4.0
 BuildRequires:	PolicyKit-devel
@@ -243,7 +242,6 @@ Moduł LIRC dla PulseAudio.
 %prep
 %setup -q
 %patch0 -p1
-%patch2 -p1
 
 %build
 %{__libtoolize}
@@ -335,18 +333,22 @@ fi
 %attr(754,root,root) /etc/rc.d/init.d/%{name}
 %config(noreplace) %verify(not md5 mtime size) /etc/sysconfig/%{name}
 %dir %attr(750,pulse,pulse-access) /var/run/pulse
+%{_sysconfdir}/dbus-1/system.d/pulseaudio-system.conf
 %{_sysconfdir}/xdg/autostart/pulseaudio.desktop
 %attr(755,root,root) %{_bindir}/pabrowse
 %attr(755,root,root) %{_bindir}/pacat
 %attr(755,root,root) %{_bindir}/pacmd
 %attr(755,root,root) %{_bindir}/pactl
 %attr(755,root,root) %{_bindir}/padsp
+%attr(755,root,root) %{_bindir}/pamon
 %attr(755,root,root) %{_bindir}/paplay
 %attr(755,root,root) %{_bindir}/parec
+%attr(755,root,root) %{_bindir}/parecord
 %attr(755,root,root) %{_bindir}/pasuspender
 %attr(755,root,root) %{_bindir}/pax11publish
 %attr(755,root,root) %{_bindir}/pulseaudio
 %attr(755,root,root) %{_bindir}/start-pulseaudio-x11
+/lib/udev/rules.d/90-pulseaudio.rules
 %dir %{_libdir}/pulse
 %dir %{_libdir}/pulse-*
 %dir %{_libdir}/pulse-*/modules
@@ -379,7 +381,9 @@ fi
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-esound-sink.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-http-protocol-tcp.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-http-protocol-unix.so
+%attr(755,root,root) %{_libdir}/pulse-*/modules/module-intended-roles.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-ladspa-sink.so
+%attr(755,root,root) %{_libdir}/pulse-*/modules/module-loopback.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-match.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-mmkbd-evdev.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-native-protocol-fd.so
@@ -396,6 +400,7 @@ fi
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-raop-sink.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-rtp-recv.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-rtp-send.so
+%attr(755,root,root) %{_libdir}/pulse-*/modules/module-rygel-media-server.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-simple-protocol-tcp.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-simple-protocol-unix.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-sine.so
@@ -404,6 +409,7 @@ fi
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-suspend-on-idle.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-tunnel-sink.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-tunnel-source.so
+%attr(755,root,root) %{_libdir}/pulse-*/modules/module-udev-detect.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-volume-restore.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-x11-bell.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-x11-cork-request.so
@@ -411,7 +417,9 @@ fi
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-x11-xsmp.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-zeroconf-discover.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-zeroconf-publish.so
-%{_datadir}/PolicyKit/policy/org.pulseaudio.policy
+%{_datadir}/pulseaudio/alsa-mixer/paths/*.common
+%{_datadir}/pulseaudio/alsa-mixer/paths/*.conf
+%{_datadir}/pulseaudio/alsa-mixer/profile-sets/*.conf
 %{_mandir}/man1/pabrowse.1*
 %{_mandir}/man1/pacat.1*
 %{_mandir}/man1/pacmd.1*
@@ -439,6 +447,10 @@ fi
 %attr(755,root,root) %ghost %{_libdir}/libpulse-simple.so.0
 %attr(755,root,root) %{_libdir}/libpulsedsp.so
 %dir %{_sysconfdir}/pulse
+%dir %{_datadir}/pulseaudio
+%dir %{_datadir}/pulseaudio/alsa-mixer
+%dir %{_datadir}/pulseaudio/alsa-mixer/paths
+%dir %{_datadir}/pulseaudio/alsa-mixer/profile-sets
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/pulse/client.conf
 
 %files devel
@@ -458,6 +470,7 @@ fi
 %{_pkgconfigdir}/libpulse-browse.pc
 %{_pkgconfigdir}/libpulse-mainloop-glib.pc
 %{_pkgconfigdir}/libpulse-simple.pc
+%{_datadir}/vala/vapi/libpulse.vapi
 
 %if %{with static_libs}
 %files static

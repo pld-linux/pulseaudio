@@ -37,7 +37,7 @@ BuildRequires:	libcap-devel
 BuildRequires:	libltdl-devel
 BuildRequires:	liboil-devel >= 0.3.0
 BuildRequires:	libsamplerate-devel >= 0.1.0
-BuildRequires:	libsndfile-devel >= 1.0.10
+BuildRequires:	libsndfile-devel >= 1.0.20
 BuildRequires:	libtool
 BuildRequires:	libwrap-devel
 %{?with_lirc:BuildRequires:	lirc-devel}

@@ -21,7 +21,7 @@ Patch0:		%{name}-suid.patch
 URL:		http://pulseaudio.org/
 BuildRequires:	GConf2-devel >= 2.4.0
 BuildRequires:	PolicyKit-devel
-BuildRequires:	alsa-lib-devel >= 1.0.0
+BuildRequires:	alsa-lib-devel >= 1.0.19
 BuildRequires:	autoconf >= 2.59-9
 BuildRequires:	automake
 BuildRequires:	avahi-devel >= 0.6.0

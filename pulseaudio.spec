@@ -41,7 +41,6 @@ BuildRequires:	libsndfile-devel >= 1.0.20
 BuildRequires:	libtool
 BuildRequires:	libwrap-devel
 %{?with_lirc:BuildRequires:	lirc-devel}
-BuildRequires:	lynx
 BuildRequires:	pkgconfig
 BuildRequires:	rpmbuild(macros) >= 1.228
 BuildRequires:	speex-devel >= 1:1.2-beta3

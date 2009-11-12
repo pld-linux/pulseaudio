@@ -9,12 +9,12 @@
 Summary:	Modular sound server
 Summary(pl.UTF-8):	Modularny serwer dźwięku
 Name:		pulseaudio
-Version:	0.9.19
+Version:	0.9.20
 Release:	1
 License:	GPL v2+ (server and libpulsecore), LGPL v2+ (libpulse)
 Group:		Libraries
 Source0:	http://0pointer.de/lennart/projects/pulseaudio/%{name}-%{version}.tar.gz
-# Source0-md5:	02adc2b99252675f0271db3b9edd432e
+# Source0-md5:	c877d996bb6e13f2d6c36078e84c14f8
 Source1:	%{name}.init
 Source2:	%{name}.sysconfig
 Patch0:		%{name}-suid.patch
@@ -28,6 +28,7 @@ BuildRequires:	avahi-devel >= 0.6.0
 BuildRequires:	bluez-libs-devel >= 3.0
 BuildRequires:	dbus-devel >= 1.0.0
 BuildRequires:	glib2-devel >= 1:2.4.0
+BuildRequires:	gtk+2-devel >= 2:2.4.0
 BuildRequires:	gdbm-devel
 BuildRequires:	hal-devel >= 0.5.7
 BuildRequires:	jack-audio-connection-kit-devel >= 0.100

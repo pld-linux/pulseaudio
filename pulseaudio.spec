@@ -32,6 +32,7 @@ BuildRequires:	glib2-devel >= 1:2.4.0
 BuildRequires:	gtk+2-devel >= 2:2.4.0
 BuildRequires:	gdbm-devel
 BuildRequires:	hal-devel >= 0.5.7
+BuildRequires:	intltool
 BuildRequires:	jack-audio-connection-kit-devel >= 0.100
 BuildRequires:	libasyncns-devel >= 0.1
 BuildRequires:	libatomic_ops >= 1.2-2

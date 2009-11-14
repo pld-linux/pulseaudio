@@ -27,6 +27,7 @@ BuildRequires:	automake
 BuildRequires:	avahi-devel >= 0.6.0
 BuildRequires:	bluez-libs-devel >= 3.0
 BuildRequires:	dbus-devel >= 1.0.0
+BuildRequires:	gettext-devel
 BuildRequires:	glib2-devel >= 1:2.4.0
 BuildRequires:	gtk+2-devel >= 2:2.4.0
 BuildRequires:	gdbm-devel
@@ -42,9 +43,12 @@ BuildRequires:	libsndfile-devel >= 1.0.20
 BuildRequires:	libtool
 BuildRequires:	libwrap-devel
 %{?with_lirc:BuildRequires:	lirc-devel}
+# for module-roap
+BuildRequires:	openssl-devel
 BuildRequires:	pkgconfig
 BuildRequires:	rpmbuild(macros) >= 1.228
 BuildRequires:	speex-devel >= 1:1.2-beta3
+BuildRequires:	udev-devel
 BuildRequires:	xorg-lib-libSM-devel
 BuildRequires:	xorg-lib-libX11-devel
 BuildRequires:	xorg-lib-libXtst-devel

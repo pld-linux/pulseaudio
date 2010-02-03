@@ -5,7 +5,6 @@
 %bcond_without	lirc		# without lirc module
 %bcond_with	static_libs	# build static libraries
 #
-%define		filterout_ld	-Wl,--as-needed
 Summary:	Modular sound server
 Summary(pl.UTF-8):	Modularny serwer dźwięku
 Name:		pulseaudio
@@ -20,25 +19,23 @@ Source2:	%{name}.sysconfig
 Patch0:		%{name}-suid.patch
 URL:		http://pulseaudio.org/
 BuildRequires:	GConf2-devel >= 2.4.0
-BuildRequires:	PolicyKit-devel
 BuildRequires:	alsa-lib-devel >= 1.0.19
 BuildRequires:	autoconf >= 2.59-9
 BuildRequires:	automake
 BuildRequires:	avahi-devel >= 0.6.0
 BuildRequires:	bluez-libs-devel >= 3.0
 BuildRequires:	dbus-devel >= 1.0.0
+BuildRequires:	gcc >= 4.1
+BuildRequires:	gdbm-devel
 BuildRequires:	gettext-devel
 BuildRequires:	glib2-devel >= 1:2.4.0
 BuildRequires:	gtk+2-devel >= 2:2.4.0
-BuildRequires:	gdbm-devel
 BuildRequires:	hal-devel >= 0.5.7
 BuildRequires:	intltool
 BuildRequires:	jack-audio-connection-kit-devel >= 0.100
 BuildRequires:	libasyncns-devel >= 0.1
-BuildRequires:	libatomic_ops >= 1.2-2
 BuildRequires:	libcap-devel
 BuildRequires:	libltdl-devel
-BuildRequires:	liboil-devel >= 0.3.0
 BuildRequires:	libsamplerate-devel >= 0.1.0
 BuildRequires:	libsndfile-devel >= 1.0.20
 BuildRequires:	libtool
@@ -68,6 +65,8 @@ Provides:	group(pulse-rt)
 Provides:	user(pulse)
 Obsoletes:	polypaudio
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
+
+%define		filterout_ld	-Wl,--as-needed
 
 %description
 PulseAudio (previously known as PolypAudio) is a sound server for
@@ -338,7 +337,7 @@ fi
 %attr(754,root,root) /etc/rc.d/init.d/%{name}
 %config(noreplace) %verify(not md5 mtime size) /etc/sysconfig/%{name}
 %dir %attr(750,pulse,pulse-access) /var/run/pulse
-%{_sysconfdir}/dbus-1/system.d/pulseaudio-system.conf
+/etc/dbus-1/system.d/pulseaudio-system.conf
 %{_sysconfdir}/xdg/autostart/pulseaudio.desktop
 %attr(755,root,root) %{_bindir}/pabrowse
 %attr(755,root,root) %{_bindir}/pacat

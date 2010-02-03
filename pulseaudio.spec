@@ -25,7 +25,7 @@ BuildRequires:	automake
 BuildRequires:	avahi-devel >= 0.6.0
 BuildRequires:	bluez-libs-devel >= 3.0
 BuildRequires:	dbus-devel >= 1.0.0
-BuildRequires:	gcc >= 4.1
+BuildRequires:	gcc >= 6:4.1
 BuildRequires:	gdbm-devel
 BuildRequires:	gettext-devel
 BuildRequires:	glib2-devel >= 1:2.4.0

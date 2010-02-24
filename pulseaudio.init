@@ -42,7 +42,6 @@ stop() {
 	if [ -f /var/lock/subsys/pulseaudio ]; then
 		# Stop daemons.
 		msg_stopping pulseaudio
-		killproc pulseaudio
 		killproc --pidfile /var/run/pulse/pid pulseaudio -TERM
 		rm -f /var/lock/subsys/pulseaudio
 	else
@@ -53,7 +52,6 @@ stop() {
 reload() {
 	if [ -f /var/lock/subsys/pulseaudio ]; then
 		msg_reloading pulseaudio
-		killproc pulseaudio -HUP
 		killproc --pidfile /var/run/pulse/pid pulseaudio -HUP
 		RETVAL=$?
 	else

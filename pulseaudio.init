@@ -28,46 +28,50 @@ DISALLOW_MODULE_LOADING=1
 
 start() {
 	# Check if the service is already running?
-	if [ ! -f /var/lock/subsys/pulseaudio ]; then
-		msg_starting pulseaudio
-		daemon /usr/bin/pulseaudio --system --daemonize --high-priority --log-target=syslog --disallow-module-loading=$DISALLOW_MODULE_LOADING
-		RETVAL=$?
-		[ $RETVAL -eq 0 ] && touch /var/lock/subsys/pulseaudio
-	else
-		msg_already_running pulseaudio
+	if [ -f /var/lock/subsys/pulseaudio ]; then
+		msg_already_running "PulseAudio"
+		return
 	fi
+
+	msg_starting "PulseAudio"
+	daemon /usr/bin/pulseaudio --system --daemonize --high-priority --log-target=syslog --disallow-module-loading=$DISALLOW_MODULE_LOADING
+	RETVAL=$?
+	[ $RETVAL -eq 0 ] && touch /var/lock/subsys/pulseaudio
 }
 
 stop() {
-	if [ -f /var/lock/subsys/pulseaudio ]; then
-		# Stop daemons.
-		msg_stopping pulseaudio
-		killproc --pidfile /var/run/pulse/pid pulseaudio -TERM
-		rm -f /var/lock/subsys/pulseaudio
-	else
-		msg_not_running pulseaudio
+	if [ ! -f /var/lock/subsys/pulseaudio ]; then
+		msg_not_running "PulseAudio"
+		return
 	fi
+
+	# Stop daemons.
+	msg_stopping "PulseAudio"
+	killproc --pidfile /var/run/pulse/pid pulseaudio -TERM
+	rm -f /var/lock/subsys/pulseaudio
 }
 
 reload() {
-	if [ -f /var/lock/subsys/pulseaudio ]; then
-		msg_reloading pulseaudio
-		killproc --pidfile /var/run/pulse/pid pulseaudio -HUP
-		RETVAL=$?
-	else
-		msg_not_running pulseaudio
+	if [ ! -f /var/lock/subsys/pulseaudio ]; then
+		msg_not_running "PulseAudio"
 		RETVAL=7
+		return
 	fi
+
+	msg_reloading "PulseAudio"
+	killproc --pidfile /var/run/pulse/pid pulseaudio -HUP
+	RETVAL=$?
 }
 
 condrestart() {
-	if [ -f /var/lock/subsys/pulseaudio ]; then
-		stop
-		start
-	else
-		msg_not_running pulseaudio
+	if [ ! -f /var/lock/subsys/pulseaudio ]; then
+		msg_not_running "PulseAudio"
 		RETVAL=$1
+		return
 	fi
+
+	stop
+	start
 }
 
 RETVAL=0

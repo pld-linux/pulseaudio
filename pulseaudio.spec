@@ -9,7 +9,7 @@ Summary:	Modular sound server
 Summary(pl.UTF-8):	Modularny serwer dźwięku
 Name:		pulseaudio
 Version:	0.9.21
-Release:	1
+Release:	2
 License:	GPL v2+ (server and libpulsecore), LGPL v2+ (libpulse)
 Group:		Libraries
 Source0:	http://0pointer.de/lennart/projects/pulseaudio/%{name}-%{version}.tar.gz
@@ -339,6 +339,7 @@ fi
 %dir %attr(750,pulse,pulse-access) /var/run/pulse
 /etc/dbus-1/system.d/pulseaudio-system.conf
 %{_sysconfdir}/xdg/autostart/pulseaudio.desktop
+%{_sysconfdir}/xdg/autostart/pulseaudio-kde.desktop
 %attr(755,root,root) %{_bindir}/pabrowse
 %attr(755,root,root) %{_bindir}/pacat
 %attr(755,root,root) %{_bindir}/pacmd
@@ -351,6 +352,7 @@ fi
 %attr(755,root,root) %{_bindir}/pasuspender
 %attr(755,root,root) %{_bindir}/pax11publish
 %attr(755,root,root) %{_bindir}/pulseaudio
+%attr(755,root,root) %{_bindir}/start-pulseaudio-kde
 %attr(755,root,root) %{_bindir}/start-pulseaudio-x11
 /lib/udev/rules.d/90-pulseaudio.rules
 %dir %{_libdir}/pulse
@@ -377,6 +379,7 @@ fi
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-cork-music-on-phone.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-default-device-restore.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-detect.so
+%attr(755,root,root) %{_libdir}/pulse-*/modules/module-device-manager.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-device-restore.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-esound-compat-spawnfd.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-esound-compat-spawnpid.so

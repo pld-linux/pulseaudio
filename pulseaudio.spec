@@ -275,6 +275,7 @@ install -d $RPM_BUILD_ROOT/var/run/pulse
 
 ln -sf %{_bindir}/esdcompat $RPM_BUILD_ROOT%{_bindir}/esd
 
+rm -f $RPM_BUILD_ROOT%{_libdir}/*.la
 # not needed (lt_dlopenext() is used)
 rm -f $RPM_BUILD_ROOT%{_libdir}/pulse-*/modules/*.la
 
@@ -466,12 +467,6 @@ fi
 %attr(755,root,root) %{_libdir}/libpulse-browse.so
 %attr(755,root,root) %{_libdir}/libpulse-mainloop-glib.so
 %attr(755,root,root) %{_libdir}/libpulse-simple.so
-%{_libdir}/libpulse.la
-%{_libdir}/libpulse-browse.la
-%{_libdir}/libpulse-mainloop-glib.la
-%{_libdir}/libpulse-simple.la
-%{_libdir}/libpulsecommon-%{version}.la
-%{_libdir}/libpulsecore-%{version}.la
 %{_includedir}/pulse
 %{_pkgconfigdir}/libpulse.pc
 %{_pkgconfigdir}/libpulse-browse.pc

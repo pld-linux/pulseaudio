@@ -2,6 +2,7 @@
 #	- service is too quiet with PULSEAUDIO_SYSTEM_START=0
 #
 # Conditional build:
+%bcond_without	gdbm		# build with gdbm as backend for settings database
 %bcond_without	lirc		# without lirc module
 %bcond_with	static_libs	# build static libraries
 #
@@ -9,7 +10,7 @@ Summary:	Modular sound server
 Summary(pl.UTF-8):	Modularny serwer dźwięku
 Name:		pulseaudio
 Version:	0.9.21
-Release:	3
+Release:	4
 License:	GPL v2+ (server and libpulsecore), LGPL v2+ (libpulse)
 Group:		Libraries
 Source0:	http://0pointer.de/lennart/projects/pulseaudio/%{name}-%{version}.tar.gz
@@ -17,6 +18,7 @@ Source0:	http://0pointer.de/lennart/projects/pulseaudio/%{name}-%{version}.tar.g
 Source1:	%{name}.init
 Source2:	%{name}.sysconfig
 Patch0:		%{name}-suid.patch
+Patch1:		%{name}-pa-machine-id.patch
 URL:		http://pulseaudio.org/
 BuildRequires:	GConf2-devel >= 2.4.0
 BuildRequires:	alsa-lib-devel >= 1.0.19
@@ -26,7 +28,7 @@ BuildRequires:	avahi-devel >= 0.6.0
 BuildRequires:	bluez-libs-devel >= 3.0
 BuildRequires:	dbus-devel >= 1.0.0
 BuildRequires:	gcc >= 6:4.1
-BuildRequires:	gdbm-devel
+%{?with_gdbm:BuildRequires:	gdbm-devel}
 BuildRequires:	gettext-devel
 BuildRequires:	glib2-devel >= 1:2.4.0
 BuildRequires:	gtk+2-devel >= 2:2.4.0
@@ -61,7 +63,6 @@ Requires(pre):	fileutils
 Requires:	%{name}-libs = %{version}-%{release}
 Provides:	group(pulse)
 Provides:	group(pulse-access)
-Provides:	group(pulse-rt)
 Provides:	user(pulse)
 Obsoletes:	polypaudio
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
@@ -246,6 +247,7 @@ Moduł LIRC dla PulseAudio.
 %prep
 %setup -q
 %patch0 -p1
+%patch1 -p1
 
 %build
 %{__libtoolize}
@@ -254,11 +256,10 @@ Moduł LIRC dla PulseAudio.
 %{__autoheader}
 %{__automake}
 %configure \
-	--enable-ltdl-install=no \
 	--with-system-user=pulse \
 	--with-system-group=pulse \
-	--with-realtime-group=pulse-rt \
 	--with-access-group=pulse-access \
+	--with-database=%{?with_gdbm:gdbm}%{!?with_gdbm:simple} \
 	%{!?with_lirc:--disable-lirc} \
 	--%{?with_static_libs:en}%{!?with_static_libs:dis}able-static
 %{__make}
@@ -308,7 +309,6 @@ fi
 
 %pre
 %groupadd -g 226 pulse
-%groupadd -g 227 pulse-rt
 %groupadd -g 228 pulse-access
 %useradd -u 226 -g 226 -d /var/run/pulse -s /bin/false -c "Pulseaudio user" pulse
 
@@ -321,13 +321,16 @@ if [ "$1" = "0" ]; then
 	%service -q %{name} stop
 	/sbin/chkconfig --del %{name}
 fi
+
 %postun
 if [ "$1" = "0" ]; then
 	%userremove pulse
 	%groupremove pulse-access
-	%groupremove pulse-rt
 	%groupremove pulse
 fi
+
+%triggerpostun -- pulseaudio < 0.9.21-4
+%groupremove pulse-rt
 
 %files -f %{name}.lang
 %defattr(644,root,root,755)

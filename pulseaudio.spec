@@ -1,8 +1,9 @@
 # TODO:
 #	- service is too quiet with PULSEAUDIO_SYSTEM_START=0
+#	- move system-wide daemon stuff to a separate subpackage
 #
 # Conditional build:
-%bcond_without	gdbm		# build with gdbm as backend for settings database
+%bcond_without	gdbm		# don't use gdbm as backend for settings database
 %bcond_without	lirc		# without lirc module
 %bcond_with	static_libs	# build static libraries
 #

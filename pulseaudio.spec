@@ -1,9 +1,11 @@
 # TODO:
 #	- service is too quiet with PULSEAUDIO_SYSTEM_START=0
-#	- move system-wide daemon stuff to a separate subpackage
+#	- trigger/post for -standalone split?
 #
 # Conditional build:
-%bcond_without	gdbm		# don't use gdbm as backend for settings database
+%bcond_with	gdbm		# use gdbm as backend for settings database
+				# see https://tango.0pointer.de/pipermail/pulseaudio-discuss/2009-May/003761.html
+				# thread, why it's a bad idea
 %bcond_without	lirc		# without lirc module
 %bcond_with	static_libs	# build static libraries
 #
@@ -11,7 +13,7 @@ Summary:	Modular sound server
 Summary(pl.UTF-8):	Modularny serwer dźwięku
 Name:		pulseaudio
 Version:	0.9.21
-Release:	4
+Release:	4.1
 License:	GPL v2+ (server and libpulsecore), LGPL v2+ (libpulse)
 Group:		Libraries
 Source0:	http://0pointer.de/lennart/projects/pulseaudio/%{name}-%{version}.tar.gz
@@ -53,18 +55,7 @@ BuildRequires:	udev-devel
 BuildRequires:	xorg-lib-libSM-devel
 BuildRequires:	xorg-lib-libX11-devel
 BuildRequires:	xorg-lib-libXtst-devel
-Requires(post,preun):	/sbin/chkconfig
-Requires(postun):	/usr/sbin/groupdel
-Requires(postun):	/usr/sbin/userdel
-Requires(pre):	/bin/id
-Requires(pre):	/usr/bin/getgid
-Requires(pre):	/usr/sbin/groupadd
-Requires(pre):	/usr/sbin/useradd
-Requires(pre):	fileutils
 Requires:	%{name}-libs = %{version}-%{release}
-Provides:	group(pulse)
-Provides:	group(pulse-access)
-Provides:	user(pulse)
 Obsoletes:	polypaudio
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
@@ -86,6 +77,31 @@ przekazywanych między aplikacjami a sprzętem. Przy użyciu tego serwera
 można łatwo osiągnąć takie rzeczy jak przesyłanie dźwięku na inną
 maszynę, zmiana formatu próbek czy liczby kanałów oraz miksowanie
 kilku dźwięków w jeden.
+
+%package standalone
+Summary:	Init scripts to run PA as system-wide daemon
+Summary(pl.UTF-8):	Skrypty startowe do uruchamiania PA jako demon systemowy
+License:	GPL v2+
+Group:		Daemons
+Requires:	%{name} = %{version}-%{release}
+Requires(post,preun):	/sbin/chkconfig
+Requires(postun):	/usr/sbin/groupdel
+Requires(postun):	/usr/sbin/userdel
+Requires(pre):	/bin/id
+Requires(pre):	/usr/bin/getgid
+Requires(pre):	/usr/sbin/groupadd
+Requires(pre):	/usr/sbin/useradd
+Requires(pre):	fileutils
+Provides:	group(pulse)
+Provides:	group(pulse-access)
+Provides:	user(pulse)
+Conflicts:	pulseaudio < 0.9.21-5
+
+%description standalone
+Init scripts to run PA as system-wide daemon.
+
+%description standalone -l pl.UTF-8
+Skrypty startowe do uruchamiania PA jako demon systemowy.
 
 %package libs
 Summary:	PulseAudio libraries
@@ -299,50 +315,45 @@ if [ -f %{_sysconfdir}/polypaudio/default.pa.rpmsave ]; then
 	mv -f %{_sysconfdir}/polypaudio/default.pa.rpmsave %{_sysconfdir}/pulse/default.pa
 fi
 
-%post	libs -p /sbin/ldconfig
-%postun	libs -p /sbin/ldconfig
+%triggerpostun -- pulseaudio < 0.9.21-4
+%groupremove pulse-rt
 
-%triggerpostun -- polypaudio-libs
-if [ -f %{_sysconfdir}/polypaudio/client.conf.rpmsave ]; then
-	mv -f %{_sysconfdir}/pulse/client.conf %{_sysconfdir}/pulse/client.conf.rpmnew
-	mv -f %{_sysconfdir}/polypaudio/client.conf.rpmsave %{_sysconfdir}/pulse/client.conf
-fi
-
-%pre
+%pre standalone
 %groupadd -g 226 pulse
 %groupadd -g 228 pulse-access
 %useradd -u 226 -g 226 -d /var/run/pulse -s /bin/false -c "Pulseaudio user" pulse
 
-%post
+%post standalone
 /sbin/chkconfig --add %{name}
 %service %{name} restart
 
-%preun
+%preun standalone
 if [ "$1" = "0" ]; then
 	%service -q %{name} stop
 	/sbin/chkconfig --del %{name}
 fi
 
-%postun
+%postun standalone
 if [ "$1" = "0" ]; then
 	%userremove pulse
 	%groupremove pulse-access
 	%groupremove pulse
 fi
 
-%triggerpostun -- pulseaudio < 0.9.21-4
-%groupremove pulse-rt
+%post	libs -p /sbin/ldconfig
+%postun	libs -p /sbin/ldconfig
+
+%triggerpostun libs -- polypaudio-libs
+if [ -f %{_sysconfdir}/polypaudio/client.conf.rpmsave ]; then
+	mv -f %{_sysconfdir}/pulse/client.conf %{_sysconfdir}/pulse/client.conf.rpmnew
+	mv -f %{_sysconfdir}/polypaudio/client.conf.rpmsave %{_sysconfdir}/pulse/client.conf
+fi
 
 %files -f %{name}.lang
 %defattr(644,root,root,755)
 %doc README
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/pulse/daemon.conf
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/pulse/default.pa
-%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/pulse/system.pa
-%attr(754,root,root) /etc/rc.d/init.d/%{name}
-%config(noreplace) %verify(not md5 mtime size) /etc/sysconfig/%{name}
-%dir %attr(750,pulse,pulse-access) /var/run/pulse
-/etc/dbus-1/system.d/pulseaudio-system.conf
 %{_sysconfdir}/xdg/autostart/pulseaudio.desktop
 %{_sysconfdir}/xdg/autostart/pulseaudio-kde.desktop
 %attr(755,root,root) %{_bindir}/pabrowse
@@ -444,6 +455,14 @@ fi
 %{_mandir}/man5/default.pa.5*
 %{_mandir}/man5/pulse-client.conf.5*
 %{_mandir}/man5/pulse-daemon.conf.5*
+
+%files standalone
+%defattr(644,root,root,755)
+%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/pulse/system.pa
+%attr(754,root,root) /etc/rc.d/init.d/%{name}
+%config(noreplace) %verify(not md5 mtime size) /etc/sysconfig/%{name}
+%dir %attr(750,pulse,pulse-access) /var/run/pulse
+/etc/dbus-1/system.d/pulseaudio-system.conf
 
 %files libs
 %defattr(644,root,root,755)

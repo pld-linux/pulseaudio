@@ -6,6 +6,7 @@
 %bcond_with	gdbm		# use gdbm as backend for settings database
 				# see https://tango.0pointer.de/pipermail/pulseaudio-discuss/2009-May/003761.html
 				# thread, why it's a bad idea
+%bcond_with	hal		# if you really must, HAL is obsolete, use UDEV
 %bcond_without	lirc		# without lirc module
 %bcond_with	static_libs	# build static libraries
 #
@@ -35,7 +36,7 @@ BuildRequires:	gcc >= 6:4.1
 BuildRequires:	gettext-devel
 BuildRequires:	glib2-devel >= 1:2.4.0
 BuildRequires:	gtk+2-devel >= 2:2.4.0
-BuildRequires:	hal-devel >= 0.5.7
+%{?with_hal:BuildRequires:	hal-devel >= 0.5.7}
 BuildRequires:	intltool
 BuildRequires:	jack-audio-connection-kit-devel >= 0.100
 BuildRequires:	libasyncns-devel >= 0.1
@@ -81,7 +82,6 @@ kilku dźwięków w jeden.
 %package standalone
 Summary:	Init scripts to run PA as system-wide daemon
 Summary(pl.UTF-8):	Skrypty startowe do uruchamiania PA jako demon systemowy
-License:	GPL v2+
 Group:		Daemons
 Requires:	%{name} = %{version}-%{release}
 Requires(post,preun):	/sbin/chkconfig
@@ -276,6 +276,8 @@ Moduł LIRC dla PulseAudio.
 	--with-system-user=pulse \
 	--with-system-group=pulse \
 	--with-access-group=pulse-access \
+	--%{?with_hal:en}%{!?with_hal:dis}able-hal \
+	--%{!?with_hal:en}%{?with_hal:dis}able-hal-compat \
 	--with-database=%{?with_gdbm:gdbm}%{!?with_gdbm:simple} \
 	%{!?with_lirc:--disable-lirc} \
 	--%{?with_static_libs:en}%{!?with_static_libs:dis}able-static

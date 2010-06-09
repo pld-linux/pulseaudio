@@ -80,7 +80,7 @@ kilku dźwięków w jeden.
 
 %package server
 Summary:	Init scripts to run PA as system-wide daemon
-Summary(pl.UTF-8):	Skrypty startowe do uruchamiania PA jako demon systemowy
+Summary(pl.UTF-8):	Skrypty startowe do uruchamiania PA jako usługi systemowej
 Group:		Daemons
 Requires(post,preun):	/sbin/chkconfig
 Requires(postun):	/usr/sbin/groupdel
@@ -100,10 +100,10 @@ Conflicts:	pulseaudio < 0.9.21-5
 %description server
 Init scripts to run PA as system-wide daemon.
 
-You don't want it, if you're not making a embedded system.
+You don't want it, if you're not making an embedded system.
 
 %description server -l pl.UTF-8
-Skrypty startowe do uruchamiania PA jako demon systemowy.
+Skrypty startowe do uruchamiania PA jako usługi systemowej.
 
 Nie chcesz tego o ile nie robisz systemu wbudowanego.
 

@@ -78,7 +78,7 @@ można łatwo osiągnąć takie rzeczy jak przesyłanie dźwięku na inną
 maszynę, zmiana formatu próbek czy liczby kanałów oraz miksowanie
 kilku dźwięków w jeden.
 
-%package standalone
+%package server
 Summary:	Init scripts to run PA as system-wide daemon
 Summary(pl.UTF-8):	Skrypty startowe do uruchamiania PA jako demon systemowy
 Group:		Daemons
@@ -96,10 +96,10 @@ Provides:	group(pulse-access)
 Provides:	user(pulse)
 Conflicts:	pulseaudio < 0.9.21-5
 
-%description standalone
+%description server
 Init scripts to run PA as system-wide daemon.
 
-%description standalone -l pl.UTF-8
+%description server -l pl.UTF-8
 Skrypty startowe do uruchamiania PA jako demon systemowy.
 
 %package libs
@@ -326,22 +326,22 @@ fi
 %service -q %{name} stop
 /sbin/chkconfig --del %{name}
 
-%pre standalone
+%pre server
 %groupadd -g 226 pulse
 %groupadd -g 228 pulse-access
 %useradd -u 226 -g 226 -d /var/run/pulse -s /bin/false -c "Pulseaudio user" pulse
 
-%post standalone
+%post server
 /sbin/chkconfig --add %{name}
 %service %{name} restart
 
-%preun standalone
+%preun server
 if [ "$1" = "0" ]; then
 	%service -q %{name} stop
 	/sbin/chkconfig --del %{name}
 fi
 
-%postun standalone
+%postun server
 if [ "$1" = "0" ]; then
 	%userremove pulse
 	%groupremove pulse-access
@@ -464,7 +464,7 @@ fi
 %{_mandir}/man5/pulse-client.conf.5*
 %{_mandir}/man5/pulse-daemon.conf.5*
 
-%files standalone
+%files server
 %defattr(644,root,root,755)
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/pulse/system.pa
 %attr(754,root,root) /etc/rc.d/init.d/%{name}

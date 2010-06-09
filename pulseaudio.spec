@@ -13,7 +13,7 @@ Summary:	Modular sound server
 Summary(pl.UTF-8):	Modularny serwer dźwięku
 Name:		pulseaudio
 Version:	0.9.21
-Release:	5.1
+Release:	6
 License:	GPL v2+ (server and libpulsecore), LGPL v2+ (libpulse)
 Group:		Libraries
 Source0:	http://0pointer.de/lennart/projects/pulseaudio/%{name}-%{version}.tar.gz
@@ -94,13 +94,16 @@ Requires(pre):	fileutils
 Provides:	group(pulse)
 Provides:	group(pulse-access)
 Provides:	user(pulse)
+Obsoletes:	pulseaudio-standalone
 Conflicts:	pulseaudio < 0.9.21-5
 
 %description server
 Init scripts to run PA as system-wide daemon.
+You don't want it, if you're not making a embedded system.
 
 %description server -l pl.UTF-8
 Skrypty startowe do uruchamiania PA jako demon systemowy.
+Nie chcesz tego o ile nie robisz systemu wbudowanego.
 
 %package libs
 Summary:	PulseAudio libraries
@@ -316,15 +319,8 @@ if [ -f %{_sysconfdir}/polypaudio/default.pa.rpmsave ]; then
 	mv -f %{_sysconfdir}/polypaudio/default.pa.rpmsave %{_sysconfdir}/pulse/default.pa
 fi
 
-%triggerpostun -- pulseaudio < 0.9.21-6
-%userremove pulse
-%groupremove pulse-access
-%groupremove pulse
+%triggerpostun -- pulseaudio < 0.9.21-4
 %groupremove pulse-rt
-
-%triggerun -- pulseaudio < 0.9.21-6
-%service -q %{name} stop
-/sbin/chkconfig --del %{name}
 
 %pre server
 %groupadd -g 226 pulse

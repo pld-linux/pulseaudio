@@ -1,6 +1,5 @@
 # TODO:
 #	- service is too quiet with PULSEAUDIO_SYSTEM_START=0
-#	- trigger/post for -standalone split?
 #
 # Conditional build:
 %bcond_with	gdbm		# use gdbm as backend for settings database
@@ -14,7 +13,7 @@ Summary:	Modular sound server
 Summary(pl.UTF-8):	Modularny serwer dźwięku
 Name:		pulseaudio
 Version:	0.9.21
-Release:	4.1
+Release:	5
 License:	GPL v2+ (server and libpulsecore), LGPL v2+ (libpulse)
 Group:		Libraries
 Source0:	http://0pointer.de/lennart/projects/pulseaudio/%{name}-%{version}.tar.gz

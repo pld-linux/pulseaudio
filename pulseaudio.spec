@@ -82,7 +82,6 @@ kilku dźwięków w jeden.
 Summary:	Init scripts to run PA as system-wide daemon
 Summary(pl.UTF-8):	Skrypty startowe do uruchamiania PA jako demon systemowy
 Group:		Daemons
-Requires:	%{name} = %{version}-%{release}
 Requires(post,preun):	/sbin/chkconfig
 Requires(postun):	/usr/sbin/groupdel
 Requires(postun):	/usr/sbin/userdel
@@ -91,6 +90,7 @@ Requires(pre):	/usr/bin/getgid
 Requires(pre):	/usr/sbin/groupadd
 Requires(pre):	/usr/sbin/useradd
 Requires(pre):	fileutils
+Requires:	%{name} = %{version}-%{release}
 Provides:	group(pulse)
 Provides:	group(pulse-access)
 Provides:	user(pulse)
@@ -99,10 +99,12 @@ Conflicts:	pulseaudio < 0.9.21-5
 
 %description server
 Init scripts to run PA as system-wide daemon.
+
 You don't want it, if you're not making a embedded system.
 
 %description server -l pl.UTF-8
 Skrypty startowe do uruchamiania PA jako demon systemowy.
+
 Nie chcesz tego o ile nie robisz systemu wbudowanego.
 
 %package libs

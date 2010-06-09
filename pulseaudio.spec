@@ -13,7 +13,7 @@ Summary:	Modular sound server
 Summary(pl.UTF-8):	Modularny serwer dźwięku
 Name:		pulseaudio
 Version:	0.9.21
-Release:	5
+Release:	5.1
 License:	GPL v2+ (server and libpulsecore), LGPL v2+ (libpulse)
 Group:		Libraries
 Source0:	http://0pointer.de/lennart/projects/pulseaudio/%{name}-%{version}.tar.gz
@@ -316,8 +316,15 @@ if [ -f %{_sysconfdir}/polypaudio/default.pa.rpmsave ]; then
 	mv -f %{_sysconfdir}/polypaudio/default.pa.rpmsave %{_sysconfdir}/pulse/default.pa
 fi
 
-%triggerpostun -- pulseaudio < 0.9.21-4
+%triggerpostun -- pulseaudio < 0.9.21-6
+%userremove pulse
+%groupremove pulse-access
+%groupremove pulse
 %groupremove pulse-rt
+
+%triggerun -- pulseaudio < 0.9.21-6
+%service -q %{name} stop
+/sbin/chkconfig --del %{name}
 
 %pre standalone
 %groupadd -g 226 pulse

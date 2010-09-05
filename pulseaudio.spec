@@ -133,7 +133,6 @@ Group:		Development/Libraries
 Requires:	%{name}-libs = %{version}-%{release}
 Requires:	glib2-devel >= 1:2.4.0
 Requires:	libasyncns-devel >= 0.1
-Requires:	libatomic_ops >= 1.2-2
 Requires:	libcap-devel
 Requires:	xorg-lib-libX11-devel
 Obsoletes:	polypaudio-devel

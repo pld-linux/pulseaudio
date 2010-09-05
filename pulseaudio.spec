@@ -25,8 +25,8 @@ Patch1:		%{name}-pa-machine-id.patch
 URL:		http://pulseaudio.org/
 BuildRequires:	GConf2-devel >= 2.4.0
 BuildRequires:	alsa-lib-devel >= 1.0.19
-BuildRequires:	autoconf >= 2.59-9
-BuildRequires:	automake
+BuildRequires:	autoconf >= 2.63
+BuildRequires:	automake >= 1:1.11
 BuildRequires:	avahi-devel >= 0.6.0
 BuildRequires:	bluez-libs-devel >= 3.0
 BuildRequires:	dbus-devel >= 1.0.0
@@ -35,23 +35,24 @@ BuildRequires:	gcc >= 6:4.1
 BuildRequires:	gettext-devel
 BuildRequires:	glib2-devel >= 1:2.4.0
 BuildRequires:	gtk+2-devel >= 2:2.4.0
-%{?with_hal:BuildRequires:	hal-devel >= 0.5.7}
-BuildRequires:	intltool
+%{?with_hal:BuildRequires:	hal-devel >= 0.5.11}
+BuildRequires:	intltool >= 0.35.0
 BuildRequires:	jack-audio-connection-kit-devel >= 0.100
 BuildRequires:	libasyncns-devel >= 0.1
 BuildRequires:	libcap-devel
 BuildRequires:	libltdl-devel
 BuildRequires:	libsamplerate-devel >= 0.1.0
 BuildRequires:	libsndfile-devel >= 1.0.20
-BuildRequires:	libtool
+BuildRequires:	libtool >= 2:2.2
 BuildRequires:	libwrap-devel
 %{?with_lirc:BuildRequires:	lirc-devel}
+BuildRequires:	m4
 # for module-roap
-BuildRequires:	openssl-devel
+BuildRequires:	openssl-devel > 0.9
 BuildRequires:	pkgconfig
 BuildRequires:	rpmbuild(macros) >= 1.228
 BuildRequires:	speex-devel >= 1:1.2-beta3
-BuildRequires:	udev-devel
+BuildRequires:	udev-devel >= 143
 BuildRequires:	xorg-lib-libSM-devel
 BuildRequires:	xorg-lib-libX11-devel
 BuildRequires:	xorg-lib-libXtst-devel
@@ -114,7 +115,7 @@ Group:		Libraries
 Requires:	glib2 >= 1:2.4.0
 Requires:	libasyncns >= 0.1
 Requires:	libsamplerate >= 0.1.0
-Requires:	libsndfile >= 1.0.10
+Requires:	libsndfile >= 1.0.20
 Obsoletes:	polypaudio-libs
 Conflicts:	polypaudio < 0.7-4
 
@@ -157,6 +158,18 @@ Static PulseAudio libraries.
 %description static -l pl.UTF-8
 Statyczne biblioteki PulseAudio.
 
+%package -n vala-libpulse
+Summary:	PulseAudio API for Vala language
+Summary(pl.UTF-8):	API PulseAudio dla języka Vala
+Group:		Development/Libraries
+Requires:	%{name}-devel = %{version}-%{release}
+
+%description -n vala-libpulse
+PulseAudio API for Vala language.
+
+%description -n vala-libpulse -l pl.UTF-8
+API PulseAudio dla języka Vala.
+
 %package esound-compat
 Summary:	EsounD compatibility start script
 Summary(pl.UTF-8):	Skrypt uruchamiający kompatybilny z EsounD
@@ -182,7 +195,7 @@ Summary(pl.UTF-8):	Moduły ALSA dla PulseAudio
 License:	GPL v2+
 Group:		Libraries
 Requires:	%{name} = %{version}-%{release}
-Requires:	alsa-lib >= 1.0.0
+Requires:	alsa-lib >= 1.0.19
 Obsoletes:	polypaudio-alsa
 
 %description alsa
@@ -190,6 +203,21 @@ ALSA modules for PulseAudio.
 
 %description alsa -l pl.UTF-8
 Moduły ALSA dla PulseAudio.
+
+%package -n udev-pulseaudio-alsa
+Summary:	UDEV rules for PulseAudio ALSA mixer
+Summary(pl.UTF-8):	Reguły UDEV dla miksera ALSA systemu PulseAudio
+Group:		Applications/Sound
+Requires:	%{name}-alsa = %{version}-%{release}
+Requires:	udev-core >= 143
+
+%description -n udev-pulseaudio-alsa
+UDEV rules for PulseAudio ALSA mixer. They help to choose profile
+depending on hardware.
+
+%description -n udev-pulseaudio-alsa -l pl.UTF-8
+Reguły UDEV dla miksera ALSA systemu PulseAudio. Pomagają wybrać
+profil w zależności od sprzętu.
 
 %package bluetooth
 Summary:	Bluetooth module for PulseAudio
@@ -226,7 +254,7 @@ Summary(pl.UTF-8):	Moduł HAL dla PulseAudio
 License:	GPL v2+
 Group:		Libraries
 Requires:	%{name} = %{version}-%{release}
-Requires:	hal-libs >= 0.5.7
+Requires:	hal-libs >= 0.5.11
 
 %description hal
 HAL module for PulseAudio to detect available audio hardware and load
@@ -277,14 +305,15 @@ Moduł LIRC dla PulseAudio.
 %{__autoheader}
 %{__automake}
 %configure \
-	--with-system-user=pulse \
-	--with-system-group=pulse \
-	--with-access-group=pulse-access \
 	--%{?with_hal:en}%{!?with_hal:dis}able-hal \
 	--%{!?with_hal:en}%{?with_hal:dis}able-hal-compat \
-	--with-database=%{?with_gdbm:gdbm}%{!?with_gdbm:simple} \
 	%{!?with_lirc:--disable-lirc} \
-	--%{?with_static_libs:en}%{!?with_static_libs:dis}able-static
+	--disable-silent-rules \
+	--%{?with_static_libs:en}%{!?with_static_libs:dis}able-static \
+	--with-database=%{?with_gdbm:gdbm}%{!?with_gdbm:simple} \
+	--with-access-group=pulse-access \
+	--with-system-user=pulse \
+	--with-system-group=pulse
 %{__make}
 
 %install
@@ -299,9 +328,9 @@ install -d $RPM_BUILD_ROOT/var/run/pulse
 
 ln -sf %{_bindir}/esdcompat $RPM_BUILD_ROOT%{_bindir}/esd
 
-rm -f $RPM_BUILD_ROOT%{_libdir}/*.la
-# not needed (lt_dlopenext() is used)
-rm -f $RPM_BUILD_ROOT%{_libdir}/pulse-*/modules/*.la
+# pkgconfig files exist, assume them sufficient
+%{__rm} $RPM_BUILD_ROOT%{_libdir}/*.la
+# .la for libpulsedsp and modules are killed in am install-exec-hook
 
 install -D %{SOURCE1} $RPM_BUILD_ROOT/etc/rc.d/init.d/%{name}
 install -D %{SOURCE2} $RPM_BUILD_ROOT/etc/sysconfig/%{name}
@@ -357,7 +386,7 @@ fi
 
 %files -f %{name}.lang
 %defattr(644,root,root,755)
-%doc README
+%doc ChangeLog LICENSE README
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/pulse/daemon.conf
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/pulse/default.pa
 %{_sysconfdir}/xdg/autostart/pulseaudio.desktop
@@ -376,7 +405,6 @@ fi
 %attr(755,root,root) %{_bindir}/pulseaudio
 %attr(755,root,root) %{_bindir}/start-pulseaudio-kde
 %attr(755,root,root) %{_bindir}/start-pulseaudio-x11
-/lib/udev/rules.d/90-pulseaudio.rules
 %dir %{_libdir}/pulse
 %dir %{_libdir}/pulse-*
 %dir %{_libdir}/pulse-*/modules
@@ -446,9 +474,6 @@ fi
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-x11-xsmp.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-zeroconf-discover.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-zeroconf-publish.so
-%{_datadir}/pulseaudio/alsa-mixer/paths/*.common
-%{_datadir}/pulseaudio/alsa-mixer/paths/*.conf
-%{_datadir}/pulseaudio/alsa-mixer/profile-sets/*.conf
 %{_mandir}/man1/pabrowse.1*
 %{_mandir}/man1/pacat.1*
 %{_mandir}/man1/pacmd.1*
@@ -484,11 +509,8 @@ fi
 %attr(755,root,root) %ghost %{_libdir}/libpulse-simple.so.0
 %attr(755,root,root) %{_libdir}/libpulsedsp.so
 %dir %{_sysconfdir}/pulse
-%dir %{_datadir}/pulseaudio
-%dir %{_datadir}/pulseaudio/alsa-mixer
-%dir %{_datadir}/pulseaudio/alsa-mixer/paths
-%dir %{_datadir}/pulseaudio/alsa-mixer/profile-sets
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/pulse/client.conf
+%dir %{_datadir}/pulseaudio
 
 %files devel
 %defattr(644,root,root,755)
@@ -501,7 +523,6 @@ fi
 %{_pkgconfigdir}/libpulse-browse.pc
 %{_pkgconfigdir}/libpulse-mainloop-glib.pc
 %{_pkgconfigdir}/libpulse-simple.pc
-%{_datadir}/vala/vapi/libpulse.vapi
 
 %if %{with static_libs}
 %files static
@@ -513,6 +534,10 @@ fi
 %{_libdir}/libpulsecommon-%{version}.a
 %{_libdir}/libpulsecore-%{version}.a
 %endif
+
+%files -n vala-libpulse
+%defattr(644,root,root,755)
+%{_datadir}/vala/vapi/libpulse.vapi
 
 %files esound-compat
 %defattr(644,root,root,755)
@@ -526,6 +551,16 @@ fi
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-alsa-card.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-alsa-sink.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-alsa-source.so
+%dir %{_datadir}/pulseaudio/alsa-mixer
+%dir %{_datadir}/pulseaudio/alsa-mixer/paths
+%{_datadir}/pulseaudio/alsa-mixer/paths/*.common
+%{_datadir}/pulseaudio/alsa-mixer/paths/*.conf
+%dir %{_datadir}/pulseaudio/alsa-mixer/profile-sets
+%{_datadir}/pulseaudio/alsa-mixer/profile-sets/*.conf
+
+%files -n udev-pulseaudio-alsa
+%defattr(644,root,root,755)
+/lib/udev/rules.d/90-pulseaudio.rules
 
 %files bluetooth
 %defattr(644,root,root,755)

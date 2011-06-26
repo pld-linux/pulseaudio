@@ -12,17 +12,16 @@
 Summary:	Modular sound server
 Summary(pl.UTF-8):	Modularny serwer dźwięku
 Name:		pulseaudio
-Version:	0.9.22
-Release:	2
+Version:	0.9.23
+Release:	1
 License:	GPL v2+ (server and libpulsecore), LGPL v2+ (libpulse)
 Group:		Libraries
-Source0:	http://0pointer.de/lennart/projects/pulseaudio/%{name}-%{version}.tar.gz
-# Source0-md5:	ca85ab470669b05e100861654cf5eb3c
+Source0:	http://freedesktop.org/software/pulseaudio/releases/%{name}-%{version}.tar.gz
+# Source0-md5:	7391205a337d1e04a9ff38025f684034
 Source1:	%{name}.init
 Source2:	%{name}.sysconfig
 Patch0:		%{name}-suid.patch
 Patch1:		%{name}-pa-machine-id.patch
-Patch2:		%{name}-xcb.patch
 URL:		http://pulseaudio.org/
 BuildRequires:	GConf2-devel >= 2.4.0
 BuildRequires:	alsa-lib-devel >= 1.0.19
@@ -46,6 +45,7 @@ BuildRequires:	libsamplerate-devel >= 0.1.0
 BuildRequires:	libsndfile-devel >= 1.0.20
 BuildRequires:	libtool >= 2:2.2
 BuildRequires:	libwrap-devel
+BuildRequires:	libxcb-devel >= 1.6
 %{?with_lirc:BuildRequires:	lirc-devel}
 BuildRequires:	m4
 # for module-roap
@@ -297,7 +297,6 @@ Moduł LIRC dla PulseAudio.
 %setup -q
 %patch0 -p1
 %patch1 -p1
-%patch2 -p1
 
 %build
 %{__libtoolize}
@@ -387,7 +386,7 @@ fi
 
 %files -f %{name}.lang
 %defattr(644,root,root,755)
-%doc ChangeLog LICENSE README
+%doc LICENSE README
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/pulse/daemon.conf
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/pulse/default.pa
 %{_sysconfdir}/xdg/autostart/pulseaudio.desktop
@@ -432,6 +431,7 @@ fi
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-detect.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-device-manager.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-device-restore.so
+%attr(755,root,root) %{_libdir}/pulse-*/modules/module-echo-cancel.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-esound-compat-spawnfd.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-esound-compat-spawnpid.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-esound-protocol-tcp.so
@@ -538,7 +538,10 @@ fi
 
 %files -n vala-libpulse
 %defattr(644,root,root,755)
+%{_datadir}/vala/vapi/libpulse.deps
 %{_datadir}/vala/vapi/libpulse.vapi
+%{_datadir}/vala/vapi/libpulse-mainloop-glib.deps
+%{_datadir}/vala/vapi/libpulse-mainloop-glib.vapi
 
 %files esound-compat
 %defattr(644,root,root,755)
@@ -586,6 +589,7 @@ fi
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-jack-sink.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-jack-source.so
+%attr(755,root,root) %{_libdir}/pulse-*/modules/module-jackdbus-detect.so
 
 %if %{with lirc}
 %files lirc

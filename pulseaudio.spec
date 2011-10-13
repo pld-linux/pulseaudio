@@ -12,12 +12,12 @@
 Summary:	Modular sound server
 Summary(pl.UTF-8):	Modularny serwer dźwięku
 Name:		pulseaudio
-Version:	0.9.23
-Release:	2
+Version:	1.0
+Release:	1
 License:	GPL v2+ (server and libpulsecore), LGPL v2+ (libpulse)
 Group:		Libraries
-Source0:	http://freedesktop.org/software/pulseaudio/releases/%{name}-%{version}.tar.gz
-# Source0-md5:	7391205a337d1e04a9ff38025f684034
+Source0:	http://freedesktop.org/software/pulseaudio/releases/%{name}-%{version}.tar.xz
+# Source0-md5:	538e0b55ab9ba2987a88047ae332f5f4
 Source1:	%{name}.init
 Source2:	%{name}.sysconfig
 Patch0:		%{name}-suid.patch
@@ -29,7 +29,8 @@ BuildRequires:	autoconf >= 2.63
 BuildRequires:	automake >= 1:1.11
 BuildRequires:	avahi-devel >= 0.6.0
 BuildRequires:	bluez-libs-devel >= 3.0
-BuildRequires:	dbus-devel >= 1.0.0
+BuildRequires:	dbus-devel >= 1.3.0
+BuildRequires:	fftw3-single-devel >= 3
 BuildRequires:	gcc >= 6:4.1
 %{?with_gdbm:BuildRequires:	gdbm-devel}
 BuildRequires:	gettext-devel
@@ -37,10 +38,11 @@ BuildRequires:	glib2-devel >= 1:2.4.0
 BuildRequires:	gtk+2-devel >= 2:2.4.0
 %{?with_hal:BuildRequires:	hal-devel >= 0.5.11}
 BuildRequires:	intltool >= 0.35.0
-BuildRequires:	jack-audio-connection-kit-devel >= 0.100
+BuildRequires:	jack-audio-connection-kit-devel >= 0.117.0
+BuildRequires:	json-c-devel >= 0.9
 BuildRequires:	libasyncns-devel >= 0.1
 BuildRequires:	libcap-devel
-BuildRequires:	libltdl-devel
+BuildRequires:	libltdl-devel >= 2:2.2
 BuildRequires:	libsamplerate-devel >= 0.1.0
 BuildRequires:	libsndfile-devel >= 1.0.20
 BuildRequires:	libtool >= 2:2.2
@@ -50,13 +52,17 @@ BuildRequires:	libxcb-devel >= 1.6
 BuildRequires:	m4
 # for module-roap
 BuildRequires:	openssl-devel > 0.9
+BuildRequires:	orc-devel >= 0.4.11
 BuildRequires:	pkgconfig
 BuildRequires:	rpmbuild(macros) >= 1.228
 BuildRequires:	speex-devel >= 1:1.2-beta3
+BuildRequires:	tar >= 1:1.22
 BuildRequires:	udev-devel >= 143
+BuildRequires:	xorg-lib-libICE-devel
 BuildRequires:	xorg-lib-libSM-devel
 BuildRequires:	xorg-lib-libX11-devel
 BuildRequires:	xorg-lib-libXtst-devel
+BuildRequires:	xz
 Requires:	%{name}-libs = %{version}-%{release}
 Obsoletes:	polypaudio
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
@@ -108,6 +114,23 @@ You don't want it, if you're not making an embedded system.
 Skrypty startowe do uruchamiania PA jako usługi systemowej.
 
 Nie chcesz tego o ile nie robisz systemu wbudowanego.
+
+%package qt
+Summary:	Qt-based utilities for PulseAudio (equalizer)
+Summary(pl.UTF-8):	Oparte na Qt narzędzia do PulseAudio (equalizer)
+Group:		X11/Applications/Sound
+Requires:	%{name} = %{version}-%{release}
+Requires:	python-PyQt4
+Requires:	python-dbus
+Requires:	python-sip
+
+%description qt
+Qt-based utilities for PulseAudio (currently just qpaeq - an
+equalizer).
+
+%description qt -l pl.UTF-8
+Oparte na Qt narzędzia do PulseAudio (obecnie tylko qpaeq -
+equalizer).
 
 %package libs
 Summary:	PulseAudio libraries
@@ -269,7 +292,7 @@ Summary(pl.UTF-8):	Moduły JACK dla PulseAudio
 License:	GPL v2+
 Group:		Libraries
 Requires:	%{name} = %{version}-%{release}
-Requires:	jack-audio-connection-kit >= 0.100
+Requires:	jack-audio-connection-kit >= 0.117.0
 Obsoletes:	polypaudio-jack
 
 %description jack
@@ -297,6 +320,8 @@ Moduł LIRC dla PulseAudio.
 %patch0 -p1
 %patch1 -p1
 
+%{__sed} -i -e '1s,#!/usr/bin/env python,#!/usr/bin/python,' src/utils/qpaeq
+
 %build
 %{__libtoolize}
 %{__aclocal} -I m4
@@ -304,11 +329,11 @@ Moduł LIRC dla PulseAudio.
 %{__autoheader}
 %{__automake}
 %configure \
-	--%{?with_hal:en}%{!?with_hal:dis}able-hal \
-	--%{!?with_hal:en}%{?with_hal:dis}able-hal-compat \
+	%{?with_hal:--enable-hal --disable-hal-compat} \
+	%{!?with_hal:--disable-hal --enable-hal-compat} \
 	%{!?with_lirc:--disable-lirc} \
 	--disable-silent-rules \
-	--%{?with_static_libs:en}%{!?with_static_libs:dis}able-static \
+	--enable-static%{!?with_static_libs:=no} \
 	--with-database=%{?with_gdbm:gdbm}%{!?with_gdbm:simple} \
 	--with-access-group=pulse-access \
 	--with-system-user=pulse \
@@ -390,7 +415,6 @@ fi
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/pulse/default.pa
 %{_sysconfdir}/xdg/autostart/pulseaudio.desktop
 %{_sysconfdir}/xdg/autostart/pulseaudio-kde.desktop
-%attr(755,root,root) %{_bindir}/pabrowse
 %attr(755,root,root) %{_bindir}/pacat
 %attr(755,root,root) %{_bindir}/pacmd
 %attr(755,root,root) %{_bindir}/pactl
@@ -425,17 +449,22 @@ fi
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-cli-protocol-unix.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-console-kit.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-combine.so
+%attr(755,root,root) %{_libdir}/pulse-*/modules/module-combine-sink.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-cork-music-on-phone.so
+%attr(755,root,root) %{_libdir}/pulse-*/modules/module-dbus-protocol.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-default-device-restore.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-detect.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-device-manager.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-device-restore.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-echo-cancel.so
+%attr(755,root,root) %{_libdir}/pulse-*/modules/module-equalizer-sink.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-esound-compat-spawnfd.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-esound-compat-spawnpid.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-esound-protocol-tcp.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-esound-protocol-unix.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-esound-sink.so
+%attr(755,root,root) %{_libdir}/pulse-*/modules/module-filter-apply.so
+%attr(755,root,root) %{_libdir}/pulse-*/modules/module-filter-heuristics.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-http-protocol-tcp.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-http-protocol-unix.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-intended-roles.so
@@ -447,6 +476,7 @@ fi
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-native-protocol-tcp.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-native-protocol-unix.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-null-sink.so
+%attr(755,root,root) %{_libdir}/pulse-*/modules/module-null-source.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-oss.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-pipe-sink.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-pipe-source.so
@@ -464,9 +494,12 @@ fi
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-sine-source.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-stream-restore.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-suspend-on-idle.so
+%attr(755,root,root) %{_libdir}/pulse-*/modules/module-switch-on-connect.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-tunnel-sink.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-tunnel-source.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-udev-detect.so
+%attr(755,root,root) %{_libdir}/pulse-*/modules/module-virtual-sink.so
+%attr(755,root,root) %{_libdir}/pulse-*/modules/module-virtual-source.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-volume-restore.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-x11-bell.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-x11-cork-request.so
@@ -474,7 +507,6 @@ fi
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-x11-xsmp.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-zeroconf-discover.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-zeroconf-publish.so
-%{_mandir}/man1/pabrowse.1*
 %{_mandir}/man1/pacat.1*
 %{_mandir}/man1/pacmd.1*
 %{_mandir}/man1/pactl.1*
@@ -483,6 +515,8 @@ fi
 %{_mandir}/man1/pasuspender.1*
 %{_mandir}/man1/pax11publish.1*
 %{_mandir}/man1/pulseaudio.1*
+%{_mandir}/man1/start-pulseaudio-kde.1*
+%{_mandir}/man1/start-pulseaudio-x11.1*
 %{_mandir}/man5/default.pa.5*
 %{_mandir}/man5/pulse-client.conf.5*
 %{_mandir}/man5/pulse-daemon.conf.5*
@@ -495,16 +529,18 @@ fi
 %dir %attr(750,pulse,pulse-access) /var/run/pulse
 /etc/dbus-1/system.d/pulseaudio-system.conf
 
+%files qt
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_bindir}/qpaeq
+
 %files libs
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/libpulse.so.*.*.*
-%attr(755,root,root) %{_libdir}/libpulse-browse.so.*.*.*
 %attr(755,root,root) %{_libdir}/libpulse-mainloop-glib.so.*.*.*
 %attr(755,root,root) %{_libdir}/libpulse-simple.so.*.*.*
 %attr(755,root,root) %{_libdir}/libpulsecommon-%{version}.so
 %attr(755,root,root) %{_libdir}/libpulsecore-%{version}.so
 %attr(755,root,root) %ghost %{_libdir}/libpulse.so.0
-%attr(755,root,root) %ghost %{_libdir}/libpulse-browse.so.0
 %attr(755,root,root) %ghost %{_libdir}/libpulse-mainloop-glib.so.0
 %attr(755,root,root) %ghost %{_libdir}/libpulse-simple.so.0
 %attr(755,root,root) %{_libdir}/libpulsedsp.so
@@ -515,12 +551,10 @@ fi
 %files devel
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/libpulse.so
-%attr(755,root,root) %{_libdir}/libpulse-browse.so
 %attr(755,root,root) %{_libdir}/libpulse-mainloop-glib.so
 %attr(755,root,root) %{_libdir}/libpulse-simple.so
 %{_includedir}/pulse
 %{_pkgconfigdir}/libpulse.pc
-%{_pkgconfigdir}/libpulse-browse.pc
 %{_pkgconfigdir}/libpulse-mainloop-glib.pc
 %{_pkgconfigdir}/libpulse-simple.pc
 
@@ -528,7 +562,6 @@ fi
 %files static
 %defattr(644,root,root,755)
 %{_libdir}/libpulse.a
-%{_libdir}/libpulse-browse.a
 %{_libdir}/libpulse-mainloop-glib.a
 %{_libdir}/libpulse-simple.a
 %{_libdir}/libpulsecommon-%{version}.a

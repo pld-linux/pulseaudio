@@ -1,13 +1,15 @@
---- pulseaudio-0.9.21/src/Makefile.am~	2010-06-08 17:31:32.581778168 +0200
-+++ pulseaudio-0.9.21/src/Makefile.am	2010-06-09 00:17:58.023181027 +0200
-@@ -83,6 +83,7 @@
- 	-DPA_SYSTEM_STATE_PATH=\"$(PA_SYSTEM_STATE_PATH)\" \
- 	-DAO_REQUIRE_CAS \
- 	-DPULSE_LOCALEDIR=\"$(pulselocaledir)\" \
-+	-DPA_PA_MACHINE_ID=\"$(PA_DEFAULT_CONFIG_DIR)/machine-id\" \
- 	-DPA_MACHINE_ID=\"$(localstatedir)/lib/dbus/machine-id\" \
-         -DPA_ALSA_PATHS_DIR=\"$(alsapathsdir)\" \
-         -DPA_ALSA_PROFILE_SETS_DIR=\"$(alsaprofilesetsdir)\"
+--- pulseaudio-1.0/configure.ac.orig	2011-09-27 09:55:58.000000000 +0200
++++ pulseaudio-1.0/configure.ac	2011-10-12 20:57:56.702352030 +0200
+@@ -1112,6 +1112,9 @@
+ AC_SUBST(pulseconfdir, ["${sysconfdir}/pulse"])
+ AX_DEFINE_DIR(PA_DEFAULT_CONFIG_DIR, pulseconfdir, [Location of configuration files])
+ 
++PA_PA_MACHINE_ID="${sysconfdir}/pulse"
++AX_DEFINE_DIR(PA_PA_MACHINE_ID, PA_PA_MACHINE_ID, [PA machine-id file])
++
+ AC_DEFINE_UNQUOTED(PA_BUILDDIR, "${ac_pwd}/src", [Location of uninstalled binaries])
+ 
+ #### Mac OSX specific stuff #####
 --- pulseaudio-0.9.21/src/pulsecore/core-util.c.orig	2009-11-23 04:57:07.000000000 +0100
 +++ pulseaudio-0.9.21/src/pulsecore/core-util.c	2010-06-09 00:20:25.361930253 +0200
 @@ -2560,6 +2560,20 @@

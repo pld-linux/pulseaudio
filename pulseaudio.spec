@@ -64,6 +64,8 @@ BuildRequires:	xorg-lib-libX11-devel
 BuildRequires:	xorg-lib-libXtst-devel
 BuildRequires:	xz
 Requires:	%{name}-libs = %{version}-%{release}
+Requires:	avahi >= 0.6.0
+Requires:	dbus >= 1.3.0
 Obsoletes:	polypaudio
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
@@ -136,10 +138,16 @@ equalizer).
 Summary:	PulseAudio libraries
 Summary(pl.UTF-8):	Biblioteki PulseAudio
 Group:		Libraries
+Requires:	dbus-libs >= 1.3.0
 Requires:	glib2 >= 1:2.4.0
+Requires:	json-c >= 0.9
 Requires:	libasyncns >= 0.1
+Requires:	libltdl >= 2:2.2
 Requires:	libsamplerate >= 0.1.0
 Requires:	libsndfile >= 1.0.20
+Requires:	libxcb >= 1.6
+Requires:	orc >= 0.4.11
+Requires:	speex >= 1:1.2-beta3
 Obsoletes:	polypaudio-libs
 Conflicts:	polypaudio < 0.7-4
 
@@ -277,6 +285,7 @@ Summary(pl.UTF-8):	Moduł HAL dla PulseAudio
 License:	GPL v2+
 Group:		Libraries
 Requires:	%{name} = %{version}-%{release}
+%{?with_hal:Requires:	hal >= 0.5.11}
 
 %description hal
 HAL module for PulseAudio to detect available audio hardware and load

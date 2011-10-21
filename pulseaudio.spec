@@ -12,12 +12,12 @@
 Summary:	Modular sound server
 Summary(pl.UTF-8):	Modularny serwer dźwięku
 Name:		pulseaudio
-Version:	1.0
+Version:	1.1
 Release:	1
 License:	GPL v2+ (server and libpulsecore), LGPL v2+ (libpulse)
 Group:		Libraries
 Source0:	http://freedesktop.org/software/pulseaudio/releases/%{name}-%{version}.tar.xz
-# Source0-md5:	538e0b55ab9ba2987a88047ae332f5f4
+# Source0-md5:	17d21df798cee407b769c6355fae397a
 Source1:	%{name}.init
 Source2:	%{name}.sysconfig
 Patch0:		%{name}-suid.patch

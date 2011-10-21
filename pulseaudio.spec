@@ -566,6 +566,7 @@ fi
 %{_pkgconfigdir}/libpulse.pc
 %{_pkgconfigdir}/libpulse-mainloop-glib.pc
 %{_pkgconfigdir}/libpulse-simple.pc
+%{_libdir}/cmake/PulseAudio
 
 %if %{with static_libs}
 %files static

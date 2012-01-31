@@ -20,6 +20,7 @@ Source0:	http://freedesktop.org/software/pulseaudio/releases/%{name}-%{version}.
 # Source0-md5:	17d21df798cee407b769c6355fae397a
 Source1:	%{name}.init
 Source2:	%{name}.sysconfig
+Source3:	%{name}.tmpfiles
 Patch0:		%{name}-suid.patch
 Patch1:		%{name}-pa-machine-id.patch
 URL:		http://pulseaudio.org/
@@ -351,7 +352,8 @@ Moduł LIRC dla PulseAudio.
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT/var/run/pulse
+install -d $RPM_BUILD_ROOT/var/run/pulse \
+	$RPM_BUILD_ROOT/usr/lib/tmpfiles.d
 
 # libsocket-util.so and libipacl.so are relinked before libpulsecore.so
 # so __make -jN install leads to "File not found by glob" (or they links
@@ -367,6 +369,8 @@ ln -sf %{_bindir}/esdcompat $RPM_BUILD_ROOT%{_bindir}/esd
 
 install -D %{SOURCE1} $RPM_BUILD_ROOT/etc/rc.d/init.d/%{name}
 install -D %{SOURCE2} $RPM_BUILD_ROOT/etc/sysconfig/%{name}
+
+install %{SOURCE3} $RPM_BUILD_ROOT/usr/lib/tmpfiles.d/%{name}.conf
 
 %find_lang %{name}
 
@@ -536,6 +540,7 @@ fi
 %attr(754,root,root) /etc/rc.d/init.d/%{name}
 %config(noreplace) %verify(not md5 mtime size) /etc/sysconfig/%{name}
 %dir %attr(750,pulse,pulse-access) /var/run/pulse
+/usr/lib/tmpfiles.d/%{name}.conf
 /etc/dbus-1/system.d/pulseaudio-system.conf
 
 %files qt

@@ -1,5 +1,6 @@
 # TODO:
-#	- service is too quiet with PULSEAUDIO_SYSTEM_START=0
+# - service is too quiet with PULSEAUDIO_SYSTEM_START=0
+# - http://freedesktop.org/software/pulseaudio/webrtc-audio-processing/
 #
 # Conditional build:
 %bcond_with	gdbm		# use gdbm as backend for settings database
@@ -8,16 +9,16 @@
 %bcond_with	hal		# if you really must, HAL is obsolete, use UDEV
 %bcond_without	lirc		# without lirc module
 %bcond_with	static_libs	# build static libraries
-#
+
 Summary:	Modular sound server
 Summary(pl.UTF-8):	Modularny serwer dźwięku
 Name:		pulseaudio
-Version:	1.1
-Release:	3
+Version:	2.0
+Release:	0.2
 License:	GPL v2+ (server and libpulsecore), LGPL v2+ (libpulse)
 Group:		Libraries
 Source0:	http://freedesktop.org/software/pulseaudio/releases/%{name}-%{version}.tar.xz
-# Source0-md5:	17d21df798cee407b769c6355fae397a
+# Source0-md5:	9bbde657c353fe675c3b693054175a8e
 Source1:	%{name}.init
 Source2:	%{name}.sysconfig
 Source3:	%{name}.tmpfiles
@@ -55,7 +56,7 @@ BuildRequires:	m4
 BuildRequires:	openssl-devel > 0.9
 BuildRequires:	orc-devel >= 0.4.11
 BuildRequires:	pkgconfig
-BuildRequires:	rpmbuild(macros) >= 1.228
+BuildRequires:	rpmbuild(macros) >= 1.647
 BuildRequires:	speex-devel >= 1:1.2-beta3
 BuildRequires:	tar >= 1:1.22
 BuildRequires:	udev-devel >= 143
@@ -353,7 +354,7 @@ Moduł LIRC dla PulseAudio.
 %install
 rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT/var/run/pulse \
-	$RPM_BUILD_ROOT/usr/lib/tmpfiles.d
+	$RPM_BUILD_ROOT%{systemdtmpfilesdir}
 
 # libsocket-util.so and libipacl.so are relinked before libpulsecore.so
 # so __make -jN install leads to "File not found by glob" (or they links
@@ -365,12 +366,13 @@ ln -sf %{_bindir}/esdcompat $RPM_BUILD_ROOT%{_bindir}/esd
 
 # pkgconfig files exist, assume them sufficient
 %{__rm} $RPM_BUILD_ROOT%{_libdir}/*.la
+%{__rm} $RPM_BUILD_ROOT%{_libdir}/%{name}/*.la
 # .la for libpulsedsp and modules are killed in am install-exec-hook
 
-install -D %{SOURCE1} $RPM_BUILD_ROOT/etc/rc.d/init.d/%{name}
-install -D %{SOURCE2} $RPM_BUILD_ROOT/etc/sysconfig/%{name}
+install -Dp %{SOURCE1} $RPM_BUILD_ROOT/etc/rc.d/init.d/%{name}
+install -Dp %{SOURCE2} $RPM_BUILD_ROOT/etc/sysconfig/%{name}
 
-install %{SOURCE3} $RPM_BUILD_ROOT/usr/lib/tmpfiles.d/%{name}.conf
+cp -p %{SOURCE3} $RPM_BUILD_ROOT%{systemdtmpfilesdir}/%{name}.conf
 
 %find_lang %{name}
 
@@ -457,13 +459,13 @@ fi
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-always-sink.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-augment-properties.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-card-restore.so
-%attr(755,root,root) %{_libdir}/pulse-*/modules/module-cli.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-cli-protocol-tcp.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-cli-protocol-unix.so
-%attr(755,root,root) %{_libdir}/pulse-*/modules/module-console-kit.so
-%attr(755,root,root) %{_libdir}/pulse-*/modules/module-combine.so
+%attr(755,root,root) %{_libdir}/pulse-*/modules/module-cli.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-combine-sink.so
-%attr(755,root,root) %{_libdir}/pulse-*/modules/module-cork-music-on-phone.so
+%attr(755,root,root) %{_libdir}/pulse-*/modules/module-combine.so
+%attr(755,root,root) %{_libdir}/pulse-*/modules/module-console-kit.so
+#%attr(755,root,root) %{_libdir}/pulse-*/modules/module-cork-music-on-phone.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-dbus-protocol.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-default-device-restore.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-detect.so
@@ -494,30 +496,35 @@ fi
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-pipe-sink.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-pipe-source.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-position-event-sounds.so
-%attr(755,root,root) %{_libdir}/pulse-*/modules/module-remap-sink.so
-%attr(755,root,root) %{_libdir}/pulse-*/modules/module-rescue-streams.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-raop-discover.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-raop-sink.so
+%attr(755,root,root) %{_libdir}/pulse-*/modules/module-remap-sink.so
+%attr(755,root,root) %{_libdir}/pulse-*/modules/module-rescue-streams.so
+%attr(755,root,root) %{_libdir}/pulse-*/modules/module-role-cork.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-rtp-recv.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-rtp-send.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-rygel-media-server.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-simple-protocol-tcp.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-simple-protocol-unix.so
-%attr(755,root,root) %{_libdir}/pulse-*/modules/module-sine.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-sine-source.so
+%attr(755,root,root) %{_libdir}/pulse-*/modules/module-sine.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-stream-restore.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-suspend-on-idle.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-switch-on-connect.so
+%attr(755,root,root) %{_libdir}/pulse-*/modules/module-switch-on-port-available.so
+%attr(755,root,root) %{_libdir}/pulse-*/modules/module-systemd-login.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-tunnel-sink.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-tunnel-source.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-udev-detect.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-virtual-sink.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-virtual-source.so
+%attr(755,root,root) %{_libdir}/pulse-*/modules/module-virtual-surround-sink.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-volume-restore.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-x11-bell.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-x11-cork-request.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-x11-publish.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-x11-xsmp.so
+%attr(755,root,root) %{_libdir}/pulse-*/modules/module-xenpv-sink.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-zeroconf-discover.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-zeroconf-publish.so
 %{_mandir}/man1/pacat.1*
@@ -531,6 +538,7 @@ fi
 %{_mandir}/man1/start-pulseaudio-kde.1*
 %{_mandir}/man1/start-pulseaudio-x11.1*
 %{_mandir}/man5/default.pa.5*
+%{_mandir}/man5/pulse-cli-syntax.5*
 %{_mandir}/man5/pulse-client.conf.5*
 %{_mandir}/man5/pulse-daemon.conf.5*
 
@@ -540,7 +548,7 @@ fi
 %attr(754,root,root) /etc/rc.d/init.d/%{name}
 %config(noreplace) %verify(not md5 mtime size) /etc/sysconfig/%{name}
 %dir %attr(750,pulse,pulse-access) /var/run/pulse
-/usr/lib/tmpfiles.d/%{name}.conf
+%{systemdtmpfilesdir}/%{name}.conf
 /etc/dbus-1/system.d/pulseaudio-system.conf
 
 %files qt
@@ -552,12 +560,13 @@ fi
 %attr(755,root,root) %{_libdir}/libpulse.so.*.*.*
 %attr(755,root,root) %{_libdir}/libpulse-mainloop-glib.so.*.*.*
 %attr(755,root,root) %{_libdir}/libpulse-simple.so.*.*.*
-%attr(755,root,root) %{_libdir}/libpulsecommon-%{version}.so
 %attr(755,root,root) %{_libdir}/libpulsecore-%{version}.so
 %attr(755,root,root) %ghost %{_libdir}/libpulse.so.0
 %attr(755,root,root) %ghost %{_libdir}/libpulse-mainloop-glib.so.0
 %attr(755,root,root) %ghost %{_libdir}/libpulse-simple.so.0
-%attr(755,root,root) %{_libdir}/libpulsedsp.so
+%dir %attr(755,root,root) %{_libdir}/%{name}
+%attr(755,root,root) %{_libdir}/%{name}/libpulsedsp.so
+%attr(755,root,root) %{_libdir}/%{name}/libpulsecommon-2.0.so
 %dir %{_sysconfdir}/pulse
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/pulse/client.conf
 %dir %{_datadir}/pulseaudio

@@ -1,7 +1,10 @@
 # TODO:
 # - service is too quiet with PULSEAUDIO_SYSTEM_START=0
 # - http://freedesktop.org/software/pulseaudio/webrtc-audio-processing/
-#
+# - split due extra deps:
+#   pulseaudio-2.0-0.2.x86_64 marks xen-libs-4.1.2-3.x86_64 (cap libxenctrl.so.4.0()(64bit))
+#   pulseaudio-2.0-0.2.x86_64 marks webrtc-audio-processing-0.1-1.x86_64 (cap libwebrtc_audio_processing.so.0()(64bit))
+
 # Conditional build:
 %bcond_with	gdbm		# use gdbm as backend for settings database
 				# see https://tango.0pointer.de/pipermail/pulseaudio-discuss/2009-May/003761.html
@@ -14,7 +17,7 @@ Summary:	Modular sound server
 Summary(pl.UTF-8):	Modularny serwer dźwięku
 Name:		pulseaudio
 Version:	2.0
-Release:	0.2
+Release:	1
 License:	GPL v2+ (server and libpulsecore), LGPL v2+ (libpulse)
 Group:		Libraries
 Source0:	http://freedesktop.org/software/pulseaudio/releases/%{name}-%{version}.tar.xz
@@ -52,6 +55,7 @@ BuildRequires:	libwrap-devel
 BuildRequires:	libxcb-devel >= 1.6
 %{?with_lirc:BuildRequires:	lirc-devel}
 BuildRequires:	m4
+BuildRequires:	webrtc-audio-processing-devel
 # for module-roap
 BuildRequires:	openssl-devel > 0.9
 BuildRequires:	orc-devel >= 0.4.11
@@ -60,6 +64,7 @@ BuildRequires:	rpmbuild(macros) >= 1.647
 BuildRequires:	speex-devel >= 1:1.2-beta3
 BuildRequires:	tar >= 1:1.22
 BuildRequires:	udev-devel >= 143
+BuildRequires:	xen-devel
 BuildRequires:	xorg-lib-libICE-devel
 BuildRequires:	xorg-lib-libSM-devel
 BuildRequires:	xorg-lib-libX11-devel
@@ -70,8 +75,6 @@ Requires:	avahi >= 0.6.0
 Requires:	dbus >= 1.3.0
 Obsoletes:	polypaudio
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
-
-%define		filterout_ld	-Wl,--as-needed
 
 %description
 PulseAudio (previously known as PolypAudio) is a sound server for
@@ -343,6 +346,7 @@ Moduł LIRC dla PulseAudio.
 	%{?with_hal:--enable-hal --disable-hal-compat} \
 	%{!?with_hal:--disable-hal --enable-hal-compat} \
 	%{!?with_lirc:--disable-lirc} \
+	--enable-webrtc-aec \
 	--disable-silent-rules \
 	--enable-static%{!?with_static_libs:=no} \
 	--with-database=%{?with_gdbm:gdbm}%{!?with_gdbm:simple} \
@@ -564,7 +568,7 @@ fi
 %attr(755,root,root) %ghost %{_libdir}/libpulse.so.0
 %attr(755,root,root) %ghost %{_libdir}/libpulse-mainloop-glib.so.0
 %attr(755,root,root) %ghost %{_libdir}/libpulse-simple.so.0
-%dir %attr(755,root,root) %{_libdir}/%{name}
+%dir %{_libdir}/%{name}
 %attr(755,root,root) %{_libdir}/%{name}/libpulsedsp.so
 %attr(755,root,root) %{_libdir}/%{name}/libpulsecommon-2.0.so
 %dir %{_sysconfdir}/pulse

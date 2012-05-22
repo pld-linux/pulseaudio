@@ -1,16 +1,13 @@
 # TODO:
 # - service is too quiet with PULSEAUDIO_SYSTEM_START=0
-# - http://freedesktop.org/software/pulseaudio/webrtc-audio-processing/
-# - split due extra deps:
-#   pulseaudio-2.0-0.2.x86_64 marks xen-libs-4.1.2-3.x86_64 (cap libxenctrl.so.4.0()(64bit))
-#   pulseaudio-2.0-0.2.x86_64 marks webrtc-audio-processing-0.1-1.x86_64 (cap libwebrtc_audio_processing.so.0()(64bit))
 
 # Conditional build:
 %bcond_with	gdbm		# use gdbm as backend for settings database
 				# see https://tango.0pointer.de/pipermail/pulseaudio-discuss/2009-May/003761.html
 				# thread, why it's a bad idea
-%bcond_with	hal		# if you really must, HAL is obsolete, use UDEV
+%bcond_with	hal		# if you really must; HAL is obsolete, use UDEV
 %bcond_without	lirc		# without lirc module
+%bcond_without	xen		# Xen paravirtualized driver
 %bcond_with	static_libs	# build static libraries
 
 Summary:	Modular sound server
@@ -62,9 +59,10 @@ BuildRequires:	orc-devel >= 0.4.11
 BuildRequires:	pkgconfig
 BuildRequires:	rpmbuild(macros) >= 1.647
 BuildRequires:	speex-devel >= 1:1.2-beta3
+BuildRequires:	systemd-devel
 BuildRequires:	tar >= 1:1.22
-BuildRequires:	udev-devel >= 143
-BuildRequires:	xen-devel
+BuildRequires:	udev-devel >= 1:143
+%{?with_xen:BuildRequires:	xen-devel}
 BuildRequires:	xorg-lib-libICE-devel
 BuildRequires:	xorg-lib-libSM-devel
 BuildRequires:	xorg-lib-libX11-devel
@@ -245,7 +243,7 @@ Summary:	UDEV rules for PulseAudio ALSA mixer
 Summary(pl.UTF-8):	Reguły UDEV dla miksera ALSA systemu PulseAudio
 Group:		Applications/Sound
 Requires:	%{name}-alsa = %{version}-%{release}
-Requires:	udev-core >= 143
+Requires:	udev-core >= 1:143
 
 %description -n udev-pulseaudio-alsa
 UDEV rules for PulseAudio ALSA mixer. They help to choose profile
@@ -329,6 +327,19 @@ LIRC module for PulseAudio.
 %description lirc -l pl.UTF-8
 Moduł LIRC dla PulseAudio.
 
+%package xen
+Summary:	Xen paravirtualized driver for PulseAudio
+Summary(pl.UTF-8):	Sterownik parawirtualny Xen dla PulseAudio
+License:	LGPL v2.1+
+Group:		Libraries
+Requires:	%{name} = %{version}-%{release}
+
+%description xen
+Xen paravirtualized driver for PulseAudio.
+
+%description xen -l pl.UTF-8
+Sterownik parawirtualny Xen dla PulseAudio.
+
 %prep
 %setup -q
 %patch0 -p1
@@ -346,9 +357,10 @@ Moduł LIRC dla PulseAudio.
 	%{?with_hal:--enable-hal --disable-hal-compat} \
 	%{!?with_hal:--disable-hal --enable-hal-compat} \
 	%{!?with_lirc:--disable-lirc} \
-	--enable-webrtc-aec \
 	--disable-silent-rules \
+	%{!?with_xen:--disable-xen} \
 	--enable-static%{!?with_static_libs:=no} \
+	--enable-webrtc-aec \
 	--with-database=%{?with_gdbm:gdbm}%{!?with_gdbm:simple} \
 	--with-access-group=pulse-access \
 	--with-system-user=pulse \
@@ -469,7 +481,6 @@ fi
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-combine-sink.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-combine.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-console-kit.so
-#%attr(755,root,root) %{_libdir}/pulse-*/modules/module-cork-music-on-phone.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-dbus-protocol.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-default-device-restore.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-detect.so
@@ -528,7 +539,6 @@ fi
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-x11-cork-request.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-x11-publish.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-x11-xsmp.so
-%attr(755,root,root) %{_libdir}/pulse-*/modules/module-xenpv-sink.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-zeroconf-discover.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-zeroconf-publish.so
 %{_mandir}/man1/pacat.1*
@@ -655,4 +665,10 @@ fi
 %files lirc
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-lirc.so
+%endif
+
+%if %{with xen}
+%files xen
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_libdir}/pulse-*/modules/module-xenpv-sink.so
 %endif

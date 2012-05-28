@@ -14,7 +14,7 @@ Summary:	Modular sound server
 Summary(pl.UTF-8):	Modularny serwer dźwięku
 Name:		pulseaudio
 Version:	2.0
-Release:	1
+Release:	2
 License:	GPL v2+ (server and libpulsecore), LGPL v2+ (libpulse)
 Group:		Libraries
 Source0:	http://freedesktop.org/software/pulseaudio/releases/%{name}-%{version}.tar.xz
@@ -404,6 +404,9 @@ if [ -f %{_sysconfdir}/polypaudio/default.pa.rpmsave ]; then
 	mv -f %{_sysconfdir}/pulse/default.pa %{_sysconfdir}/pulse/default.pa.rpmnew
 	mv -f %{_sysconfdir}/polypaudio/default.pa.rpmsave %{_sysconfdir}/pulse/default.pa
 fi
+
+%triggerpostun -- pulseaudio < 2.0-2
+%{__sed} -i -e 's/load-module module-cork-music-on-phone/load-module module-role-cork/' %{_sysconfdir}/pulse/default.pa || :
 
 %triggerpostun -- pulseaudio < 0.9.21-4
 %groupremove pulse-rt

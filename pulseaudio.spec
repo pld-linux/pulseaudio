@@ -14,7 +14,7 @@ Summary:	Modular sound server
 Summary(pl.UTF-8):	Modularny serwer dźwięku
 Name:		pulseaudio
 Version:	2.0
-Release:	3
+Release:	4
 License:	GPL v2+ (server and libpulsecore), LGPL v2+ (libpulse)
 Group:		Libraries
 Source0:	http://freedesktop.org/software/pulseaudio/releases/%{name}-%{version}.tar.xz
@@ -24,6 +24,7 @@ Source2:	%{name}.sysconfig
 Source3:	%{name}.tmpfiles
 Patch0:		%{name}-suid.patch
 Patch1:		%{name}-pa-machine-id.patch
+Patch2:		udev-deprecated.patch
 URL:		http://pulseaudio.org/
 BuildRequires:	GConf2-devel >= 2.4.0
 BuildRequires:	alsa-lib-devel >= 1.0.19
@@ -344,6 +345,7 @@ Sterownik parawirtualny Xen dla PulseAudio.
 %setup -q
 %patch0 -p1
 %patch1 -p1
+%patch2 -p1
 
 %{__sed} -i -e '1s,#!/usr/bin/env python,#!/usr/bin/python,' src/utils/qpaeq
 

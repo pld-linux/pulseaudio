@@ -13,18 +13,17 @@
 Summary:	Modular sound server
 Summary(pl.UTF-8):	Modularny serwer dźwięku
 Name:		pulseaudio
-Version:	2.0
-Release:	5
+Version:	2.1
+Release:	1
 License:	GPL v2+ (server and libpulsecore), LGPL v2+ (libpulse)
 Group:		Libraries
 Source0:	http://freedesktop.org/software/pulseaudio/releases/%{name}-%{version}.tar.xz
-# Source0-md5:	9bbde657c353fe675c3b693054175a8e
+# Source0-md5:	33e85023259d530f0a763d5204e8bad9
 Source1:	%{name}.init
 Source2:	%{name}.sysconfig
 Source3:	%{name}.tmpfiles
 Patch0:		%{name}-suid.patch
 Patch1:		%{name}-pa-machine-id.patch
-Patch2:		udev-deprecated.patch
 URL:		http://pulseaudio.org/
 BuildRequires:	GConf2-devel >= 2.4.0
 BuildRequires:	alsa-lib-devel >= 1.0.19
@@ -345,7 +344,6 @@ Sterownik parawirtualny Xen dla PulseAudio.
 %setup -q
 %patch0 -p1
 %patch1 -p1
-%patch2 -p1
 
 %{__sed} -i -e '1s,#!/usr/bin/env python,#!/usr/bin/python,' src/utils/qpaeq
 
@@ -477,6 +475,7 @@ fi
 %attr(755,root,root) %{_libdir}/pulse-*/modules/libprotocol-simple.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/libraop.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/librtp.so
+%attr(755,root,root) %{_libdir}/pulse-*/modules/libwebrtc-util.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-always-sink.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-augment-properties.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-card-restore.so
@@ -585,7 +584,7 @@ fi
 %attr(755,root,root) %ghost %{_libdir}/libpulse-simple.so.0
 %dir %{_libdir}/%{name}
 %attr(755,root,root) %{_libdir}/%{name}/libpulsedsp.so
-%attr(755,root,root) %{_libdir}/%{name}/libpulsecommon-2.0.so
+%attr(755,root,root) %{_libdir}/%{name}/libpulsecommon-%{version}.so
 %dir %{_sysconfdir}/pulse
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/pulse/client.conf
 %dir %{_datadir}/pulseaudio

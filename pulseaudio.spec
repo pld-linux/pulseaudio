@@ -13,12 +13,12 @@
 Summary:	Modular sound server
 Summary(pl.UTF-8):	Modularny serwer dźwięku
 Name:		pulseaudio
-Version:	2.1
-Release:	3
+Version:	3.0
+Release:	1
 License:	GPL v2+ (server and libpulsecore), LGPL v2+ (libpulse)
 Group:		Libraries
 Source0:	http://freedesktop.org/software/pulseaudio/releases/%{name}-%{version}.tar.xz
-# Source0-md5:	33e85023259d530f0a763d5204e8bad9
+# Source0-md5:	47fd7eca8479c757822bee68a1feef25
 Source1:	%{name}.init
 Source2:	%{name}.sysconfig
 Source3:	%{name}.tmpfiles
@@ -30,7 +30,7 @@ BuildRequires:	alsa-lib-devel >= 1.0.19
 BuildRequires:	autoconf >= 2.63
 BuildRequires:	automake >= 1:1.11
 BuildRequires:	avahi-devel >= 0.6.0
-BuildRequires:	bluez-libs-devel >= 3.0
+BuildRequires:	bluez-libs-devel >= 4.99
 BuildRequires:	dbus-devel >= 1.3.0
 BuildRequires:	fftw3-single-devel >= 3
 BuildRequires:	gcc >= 6:4.1
@@ -44,10 +44,10 @@ BuildRequires:	jack-audio-connection-kit-devel >= 0.117.0
 BuildRequires:	json-c-devel >= 0.9
 BuildRequires:	libasyncns-devel >= 0.1
 BuildRequires:	libcap-devel
-BuildRequires:	libltdl-devel >= 2:2.2
+BuildRequires:	libltdl-devel >= 2:2.4
 BuildRequires:	libsamplerate-devel >= 0.1.0
 BuildRequires:	libsndfile-devel >= 1.0.20
-BuildRequires:	libtool >= 2:2.2
+BuildRequires:	libtool >= 2:2.4
 BuildRequires:	libwrap-devel
 BuildRequires:	libxcb-devel >= 1.6
 %{?with_lirc:BuildRequires:	lirc-devel}
@@ -58,6 +58,7 @@ BuildRequires:	openssl-devel > 0.9
 BuildRequires:	orc-devel >= 0.4.11
 BuildRequires:	pkgconfig
 BuildRequires:	rpmbuild(macros) >= 1.647
+BuildRequires:	sbc-devel >= 1.0
 BuildRequires:	speex-devel >= 1:1.2-beta3
 BuildRequires:	systemd-devel
 BuildRequires:	tar >= 1:1.22
@@ -145,7 +146,7 @@ Requires:	dbus-libs >= 1.3.0
 Requires:	glib2 >= 1:2.4.0
 Requires:	json-c >= 0.9
 Requires:	libasyncns >= 0.1
-Requires:	libltdl >= 2:2.2
+Requires:	libltdl >= 2:2.4
 Requires:	libsamplerate >= 0.1.0
 Requires:	libsndfile >= 1.0.20
 Requires:	libxcb >= 1.6
@@ -259,7 +260,8 @@ Summary(pl.UTF-8):	Moduł Bluetooth dla PulseAudio
 License:	GPL v2+
 Group:		Libraries
 Requires:	%{name} = %{version}-%{release}
-Requires:	bluez-libs >= 3.0
+Requires:	bluez-libs >= 4.99
+Requires:	sbc >= 1.0
 
 %description bluetooth
 Bluetooth module for PulseAudio.
@@ -643,11 +645,10 @@ fi
 %files bluetooth
 %defattr(644,root,root,755)
 %attr(4755,root,root) %{_libdir}/pulse/proximity-helper
-%attr(755,root,root) %{_libdir}/pulse-*/modules/libbluetooth-ipc.so
-%attr(755,root,root) %{_libdir}/pulse-*/modules/libbluetooth-sbc.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/libbluetooth-util.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-bluetooth-device.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-bluetooth-discover.so
+%attr(755,root,root) %{_libdir}/pulse-*/modules/module-bluetooth-policy.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-bluetooth-proximity.so
 
 %files gconf

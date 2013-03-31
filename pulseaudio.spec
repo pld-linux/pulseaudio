@@ -58,7 +58,7 @@ BuildRequires:	openssl-devel > 0.9
 BuildRequires:	orc-devel >= 0.4.11
 BuildRequires:	pkgconfig
 BuildRequires:	rpmbuild(macros) >= 1.647
-BuildRequires;	rpm-pythonprov
+BuildRequires:	rpm-pythonprov
 BuildRequires:	sbc-devel >= 1.0
 BuildRequires:	speex-devel >= 1:1.2-beta3
 BuildRequires:	systemd-devel

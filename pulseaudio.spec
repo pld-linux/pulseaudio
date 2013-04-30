@@ -24,6 +24,7 @@ Source2:	%{name}.sysconfig
 Source3:	%{name}.tmpfiles
 Patch0:		%{name}-suid.patch
 Patch1:		%{name}-pa-machine-id.patch
+Patch2:		mate-desktop.patch
 URL:		http://pulseaudio.org/
 BuildRequires:	GConf2-devel >= 2.4.0
 BuildRequires:	alsa-lib-devel >= 1.0.19
@@ -347,6 +348,7 @@ Sterownik parawirtualny Xen dla PulseAudio.
 %setup -q
 %patch0 -p1
 %patch1 -p1
+%patch2 -p1
 
 %{__sed} -i -e '1s,#!/usr/bin/env python,#!/usr/bin/python,' src/utils/qpaeq
 

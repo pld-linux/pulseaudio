@@ -1,15 +1,14 @@
---- pulseaudio-1.0/configure.ac.orig	2011-09-27 09:55:58.000000000 +0200
-+++ pulseaudio-1.0/configure.ac	2011-10-12 20:57:56.702352030 +0200
-@@ -1112,6 +1112,9 @@
- AC_SUBST(pulseconfdir, ["${sysconfdir}/pulse"])
- AX_DEFINE_DIR(PA_DEFAULT_CONFIG_DIR, pulseconfdir, [Location of configuration files])
+--- pulseaudio-4.0/configure.ac.orig	2013-06-08 13:07:47.119786074 +0200
++++ pulseaudio-4.0/configure.ac	2013-06-08 13:09:53.796450100 +0200
+@@ -991,6 +991,8 @@
  
+ PA_MACHINE_ID="${sysconfdir}/machine-id"
+ AX_DEFINE_DIR(PA_MACHINE_ID, PA_MACHINE_ID, [D-Bus machine-id file])
 +PA_PA_MACHINE_ID="${sysconfdir}/pulse/machine-id"
 +AX_DEFINE_DIR(PA_PA_MACHINE_ID, PA_PA_MACHINE_ID, [PA machine-id file])
-+
- AC_DEFINE_UNQUOTED(PA_BUILDDIR, "${ac_pwd}/src", [Location of uninstalled binaries])
- 
- #### Mac OSX specific stuff #####
+ PA_MACHINE_ID_FALLBACK="${localstatedir}/lib/dbus/machine-id"
+ AX_DEFINE_DIR(PA_MACHINE_ID_FALLBACK, PA_MACHINE_ID_FALLBACK,
+ 	      [Fallback machine-id file])
 --- pulseaudio-3.0/src/pulsecore/core-util.c.orig	2012-12-22 08:18:53.590608852 +0100
 +++ pulseaudio-3.0/src/pulsecore/core-util.c	2012-12-22 09:05:12.940550922 +0100
 @@ -2893,6 +2893,20 @@

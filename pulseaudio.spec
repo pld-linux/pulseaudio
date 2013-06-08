@@ -5,7 +5,6 @@
 %bcond_with	gdbm		# use gdbm as backend for settings database
 				# see https://tango.0pointer.de/pipermail/pulseaudio-discuss/2009-May/003761.html
 				# thread, why it's a bad idea
-%bcond_with	hal		# if you really must; HAL is obsolete, use UDEV
 %bcond_without	lirc		# without lirc module
 %bcond_without	xen		# Xen paravirtualized driver
 %bcond_with	static_libs	# build static libraries
@@ -13,12 +12,12 @@
 Summary:	Modular sound server
 Summary(pl.UTF-8):	Modularny serwer dźwięku
 Name:		pulseaudio
-Version:	3.0
+Version:	4.0
 Release:	1
 License:	GPL v2+ (server and libpulsecore), LGPL v2+ (libpulse)
 Group:		Libraries
 Source0:	http://freedesktop.org/software/pulseaudio/releases/%{name}-%{version}.tar.xz
-# Source0-md5:	47fd7eca8479c757822bee68a1feef25
+# Source0-md5:	591f211db2790a7e4d222f2dc6858db3
 Source1:	%{name}.init
 Source2:	%{name}.sysconfig
 Source3:	%{name}.tmpfiles
@@ -27,19 +26,18 @@ Patch1:		%{name}-pa-machine-id.patch
 Patch2:		mate-desktop.patch
 URL:		http://pulseaudio.org/
 BuildRequires:	GConf2-devel >= 2.4.0
-BuildRequires:	alsa-lib-devel >= 1.0.19
+BuildRequires:	alsa-lib-devel >= 1.0.24
 BuildRequires:	autoconf >= 2.63
 BuildRequires:	automake >= 1:1.11
 BuildRequires:	avahi-devel >= 0.6.0
 BuildRequires:	bluez-libs-devel >= 4.99
-BuildRequires:	dbus-devel >= 1.3.0
+BuildRequires:	dbus-devel >= 1.4.12
 BuildRequires:	fftw3-single-devel >= 3
 BuildRequires:	gcc >= 6:4.1
 %{?with_gdbm:BuildRequires:	gdbm-devel}
 BuildRequires:	gettext-devel
 BuildRequires:	glib2-devel >= 1:2.4.0
-BuildRequires:	gtk+2-devel >= 2:2.4.0
-%{?with_hal:BuildRequires:	hal-devel >= 0.5.11}
+BuildRequires:	gtk+3-devel >= 3.0
 BuildRequires:	intltool >= 0.35.0
 BuildRequires:	jack-audio-connection-kit-devel >= 0.117.0
 BuildRequires:	json-c-devel >= 0.9
@@ -53,7 +51,6 @@ BuildRequires:	libwrap-devel
 BuildRequires:	libxcb-devel >= 1.6
 %{?with_lirc:BuildRequires:	lirc-devel}
 BuildRequires:	m4
-BuildRequires:	webrtc-audio-processing-devel
 # for module-roap
 BuildRequires:	openssl-devel > 0.9
 BuildRequires:	orc-devel >= 0.4.11
@@ -65,6 +62,7 @@ BuildRequires:	speex-devel >= 1:1.2-beta3
 BuildRequires:	systemd-devel
 BuildRequires:	tar >= 1:1.22
 BuildRequires:	udev-devel >= 1:143
+BuildRequires:	webrtc-audio-processing-devel
 %{?with_xen:BuildRequires:	xen-devel}
 BuildRequires:	xorg-lib-libICE-devel
 BuildRequires:	xorg-lib-libSM-devel
@@ -73,7 +71,7 @@ BuildRequires:	xorg-lib-libXtst-devel
 BuildRequires:	xz
 Requires:	%{name}-libs = %{version}-%{release}
 Requires:	avahi >= 0.6.0
-Requires:	dbus >= 1.3.0
+Requires:	dbus >= 1.4.12
 Obsoletes:	polypaudio
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
@@ -144,7 +142,7 @@ equalizer).
 Summary:	PulseAudio libraries
 Summary(pl.UTF-8):	Biblioteki PulseAudio
 Group:		Libraries
-Requires:	dbus-libs >= 1.3.0
+Requires:	dbus-libs >= 1.4.12
 Requires:	glib2 >= 1:2.4.0
 Requires:	json-c >= 0.9
 Requires:	libasyncns >= 0.1
@@ -232,7 +230,7 @@ Summary(pl.UTF-8):	Moduły ALSA dla PulseAudio
 License:	GPL v2+
 Group:		Libraries
 Requires:	%{name} = %{version}-%{release}
-Requires:	alsa-lib >= 1.0.19
+Requires:	alsa-lib >= 1.0.24
 Obsoletes:	polypaudio-alsa
 
 %description alsa
@@ -292,7 +290,6 @@ Summary(pl.UTF-8):	Moduł HAL dla PulseAudio
 License:	GPL v2+
 Group:		Libraries
 Requires:	%{name} = %{version}-%{release}
-%{?with_hal:Requires:	hal >= 0.5.11}
 
 %description hal
 HAL module for PulseAudio to detect available audio hardware and load
@@ -344,6 +341,19 @@ Xen paravirtualized driver for PulseAudio.
 %description xen -l pl.UTF-8
 Sterownik parawirtualny Xen dla PulseAudio.
 
+%package -n bash-completion-pulseaudio
+Summary:	Bash completion for PulseAudio commands
+Summary(pl.UTF-8):	Bashowe uzupełnianie parametrów dla poleceń PulseAudio
+Group:		Applications/Shells
+Requires:	%{name} = %{version}-%{release}
+Requires:	bash-completion
+
+%description -n bash-completion-pulseaudio
+Bash completion for PulseAudio commands.
+
+%description -n bash-completion-pulseaudio -l pl.UTF-8
+Bashowe uzupełnianie parametrów dla poleceń PulseAudio.
+
 %prep
 %setup -q
 %patch0 -p1
@@ -359,8 +369,7 @@ Sterownik parawirtualny Xen dla PulseAudio.
 %{__autoheader}
 %{__automake}
 %configure \
-	%{?with_hal:--enable-hal --disable-hal-compat} \
-	%{!?with_hal:--disable-hal --enable-hal-compat} \
+	--enable-hal-compat \
 	%{!?with_lirc:--disable-lirc} \
 	--disable-silent-rules \
 	%{!?with_xen:--disable-xen} \
@@ -523,8 +532,10 @@ fi
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-raop-discover.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-raop-sink.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-remap-sink.so
+%attr(755,root,root) %{_libdir}/pulse-*/modules/module-remap-source.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-rescue-streams.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-role-cork.so
+%attr(755,root,root) %{_libdir}/pulse-*/modules/module-role-ducking.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-rtp-recv.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-rtp-send.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-rygel-media-server.so
@@ -680,3 +691,7 @@ fi
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-xenpv-sink.so
 %endif
+
+%files -n bash-completion-pulseaudio
+%defattr(644,root,root,755)
+/etc/bash_completion.d/pulseaudio-bash-completion.sh

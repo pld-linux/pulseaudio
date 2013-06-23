@@ -13,7 +13,7 @@ Summary:	Modular sound server
 Summary(pl.UTF-8):	Modularny serwer dźwięku
 Name:		pulseaudio
 Version:	4.0
-Release:	1
+Release:	2
 License:	GPL v2+ (server and libpulsecore), LGPL v2+ (libpulse)
 Group:		Libraries
 Source0:	http://freedesktop.org/software/pulseaudio/releases/%{name}-%{version}.tar.xz
@@ -74,6 +74,8 @@ Requires:	avahi >= 0.6.0
 Requires:	dbus >= 1.4.12
 Obsoletes:	polypaudio
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
+
+%define zshdir %{_datadir}/zsh/site-functions
 
 %description
 PulseAudio (previously known as PolypAudio) is a sound server for
@@ -354,6 +356,18 @@ Bash completion for PulseAudio commands.
 %description -n bash-completion-pulseaudio -l pl.UTF-8
 Bashowe uzupełnianie parametrów dla poleceń PulseAudio.
 
+%package -n zsh-completion-pulseaudio
+Summary:	zsh completion for PulseAudio commands
+Summary(pl.UTF-8):	Uzupełnianie parametrów w zsh dla poleceń PulseAudio
+Group:		Applications/Shells
+Requires:	%{name} = %{version}-%{release}
+
+%description -n zsh-completion-pulseaudio
+zsh completion for PulseAudio commands.
+
+%description -n zsh-completion-pulseaudio -l pl.UTF-8
+Uzupełnianie parametrów w zsh dla poleceń PulseAudio.
+
 %prep
 %setup -q
 %patch0 -p1
@@ -384,7 +398,8 @@ Bashowe uzupełnianie parametrów dla poleceń PulseAudio.
 %install
 rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT/var/run/pulse \
-	$RPM_BUILD_ROOT%{systemdtmpfilesdir}
+	$RPM_BUILD_ROOT%{systemdtmpfilesdir} \
+	$RPM_BUILD_ROOT%{zshdir}
 
 # libsocket-util.so and libipacl.so are relinked before libpulsecore.so
 # so __make -jN install leads to "File not found by glob" (or they links
@@ -403,6 +418,8 @@ install -Dp %{SOURCE1} $RPM_BUILD_ROOT/etc/rc.d/init.d/%{name}
 install -Dp %{SOURCE2} $RPM_BUILD_ROOT/etc/sysconfig/%{name}
 
 cp -p %{SOURCE3} $RPM_BUILD_ROOT%{systemdtmpfilesdir}/%{name}.conf
+
+install -m644 shell-completion/pulseaudio-zsh-completion.zsh $RPM_BUILD_ROOT%{zshdir}/_pulseaudio
 
 %find_lang %{name}
 
@@ -695,3 +712,7 @@ fi
 %files -n bash-completion-pulseaudio
 %defattr(644,root,root,755)
 /etc/bash_completion.d/pulseaudio-bash-completion.sh
+
+%files -n zsh-completion-pulseaudio
+%defattr(644,root,root,755)
+%{zshdir}/_pulseaudio

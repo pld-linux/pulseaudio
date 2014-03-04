@@ -29,7 +29,6 @@ BuildRequires:	alsa-lib-devel >= 1.0.19
 BuildRequires:	autoconf >= 2.63
 BuildRequires:	automake >= 1:1.11
 BuildRequires:	avahi-devel >= 0.6.0
-BuildRequires:	bluez-libs-devel >= 4.99
 BuildRequires:	dbus-devel >= 1.4.12
 BuildRequires:	fftw3-single-devel >= 3
 BuildRequires:	gcc >= 6:4.1
@@ -231,7 +230,7 @@ Summary(pl.UTF-8):	Moduły ALSA dla PulseAudio
 License:	GPL v2+
 Group:		Libraries
 Requires:	%{name} = %{version}-%{release}
-Requires:	alsa-lib >= 1.0.24
+Requires:	alsa-lib >= 1.0.19
 Obsoletes:	polypaudio-alsa
 
 %description alsa
@@ -261,7 +260,6 @@ Summary(pl.UTF-8):	Moduł Bluetooth dla PulseAudio
 License:	GPL v2+
 Group:		Libraries
 Requires:	%{name} = %{version}-%{release}
-Requires:	bluez-libs >= 4.99
 Requires:	sbc >= 1.0
 
 %description bluetooth
@@ -473,7 +471,7 @@ fi
 
 %files -f %{name}.lang
 %defattr(644,root,root,755)
-%doc LICENSE README
+%doc LICENSE NEWS README
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/pulse/daemon.conf
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/pulse/default.pa
 %{_sysconfdir}/xdg/autostart/pulseaudio.desktop
@@ -624,6 +622,7 @@ fi
 
 %files devel
 %defattr(644,root,root,755)
+%doc PROTOCOL
 %attr(755,root,root) %{_libdir}/libpulse.so
 %attr(755,root,root) %{_libdir}/libpulse-mainloop-glib.so
 %attr(755,root,root) %{_libdir}/libpulse-simple.so

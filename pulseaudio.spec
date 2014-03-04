@@ -12,21 +12,20 @@
 Summary:	Modular sound server
 Summary(pl.UTF-8):	Modularny serwer dźwięku
 Name:		pulseaudio
-Version:	4.0
-Release:	3
+Version:	5.0
+Release:	1
 License:	GPL v2+ (server and libpulsecore), LGPL v2+ (libpulse)
 Group:		Libraries
 Source0:	http://freedesktop.org/software/pulseaudio/releases/%{name}-%{version}.tar.xz
-# Source0-md5:	591f211db2790a7e4d222f2dc6858db3
+# Source0-md5:	c43749838612f4860465e83ed62ca38e
 Source1:	%{name}.init
 Source2:	%{name}.sysconfig
 Source3:	%{name}.tmpfiles
-Patch0:		%{name}-suid.patch
-Patch1:		%{name}-pa-machine-id.patch
-Patch2:		mate-desktop.patch
+Patch0:		%{name}-pa-machine-id.patch
+Patch1:		mate-desktop.patch
 URL:		http://pulseaudio.org/
 BuildRequires:	GConf2-devel >= 2.4.0
-BuildRequires:	alsa-lib-devel >= 1.0.24
+BuildRequires:	alsa-lib-devel >= 1.0.19
 BuildRequires:	autoconf >= 2.63
 BuildRequires:	automake >= 1:1.11
 BuildRequires:	avahi-devel >= 0.6.0
@@ -35,7 +34,7 @@ BuildRequires:	dbus-devel >= 1.4.12
 BuildRequires:	fftw3-single-devel >= 3
 BuildRequires:	gcc >= 6:4.1
 %{?with_gdbm:BuildRequires:	gdbm-devel}
-BuildRequires:	gettext-devel
+BuildRequires:	gettext-devel >= 0.18.1
 BuildRequires:	glib2-devel >= 1:2.4.0
 BuildRequires:	gtk+3-devel >= 3.0
 BuildRequires:	intltool >= 0.35.0
@@ -372,7 +371,6 @@ Uzupełnianie parametrów w zsh dla poleceń PulseAudio.
 %setup -q
 %patch0 -p1
 %patch1 -p1
-%patch2 -p1
 
 %{__sed} -i -e '1s,#!/usr/bin/env python,#!/usr/bin/python,' src/utils/qpaeq
 
@@ -566,7 +564,9 @@ fi
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-switch-on-port-available.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-systemd-login.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-tunnel-sink.so
+%attr(755,root,root) %{_libdir}/pulse-*/modules/module-tunnel-sink-new.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-tunnel-source.so
+%attr(755,root,root) %{_libdir}/pulse-*/modules/module-tunnel-source-new.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-udev-detect.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-virtual-sink.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-virtual-source.so
@@ -675,12 +675,14 @@ fi
 
 %files bluetooth
 %defattr(644,root,root,755)
-%attr(4755,root,root) %{_libdir}/pulse/proximity-helper
-%attr(755,root,root) %{_libdir}/pulse-*/modules/libbluetooth-util.so
-%attr(755,root,root) %{_libdir}/pulse-*/modules/module-bluetooth-device.so
+%attr(755,root,root) %{_libdir}/pulse-*/modules/libbluez4-util.so
+%attr(755,root,root) %{_libdir}/pulse-*/modules/libbluez5-util.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-bluetooth-discover.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-bluetooth-policy.so
-%attr(755,root,root) %{_libdir}/pulse-*/modules/module-bluetooth-proximity.so
+%attr(755,root,root) %{_libdir}/pulse-*/modules/module-bluez4-device.so
+%attr(755,root,root) %{_libdir}/pulse-*/modules/module-bluez4-discover.so
+%attr(755,root,root) %{_libdir}/pulse-*/modules/module-bluez5-device.so
+%attr(755,root,root) %{_libdir}/pulse-*/modules/module-bluez5-discover.so
 
 %files gconf
 %defattr(644,root,root,755)

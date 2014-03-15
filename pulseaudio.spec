@@ -346,6 +346,9 @@ Summary(pl.UTF-8):	Bashowe uzupełnianie parametrów dla poleceń PulseAudio
 Group:		Applications/Shells
 Requires:	%{name} = %{version}-%{release}
 Requires:	bash-completion
+%if "%{_rpmversion}" >= "5"
+BuildArch:	noarch
+%endif
 
 %description -n bash-completion-pulseaudio
 Bash completion for PulseAudio commands.
@@ -358,6 +361,9 @@ Summary:	zsh completion for PulseAudio commands
 Summary(pl.UTF-8):	Uzupełnianie parametrów w zsh dla poleceń PulseAudio
 Group:		Applications/Shells
 Requires:	%{name} = %{version}-%{release}
+%if "%{_rpmversion}" >= "5"
+BuildArch:	noarch
+%endif
 
 %description -n zsh-completion-pulseaudio
 zsh completion for PulseAudio commands.

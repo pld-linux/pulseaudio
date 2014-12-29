@@ -9,6 +9,10 @@
 %bcond_without	xen		# Xen paravirtualized driver
 %bcond_with	static_libs	# build static libraries
 
+%ifarch x32
+%undefine	with_xen
+%endif
+
 Summary:	Modular sound server
 Summary(pl.UTF-8):	Modularny serwer dźwięku
 Name:		pulseaudio

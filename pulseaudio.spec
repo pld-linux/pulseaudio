@@ -61,7 +61,7 @@ BuildRequires:	rpmbuild(macros) >= 1.647
 BuildRequires:	rpm-pythonprov
 BuildRequires:	sbc-devel >= 1.0
 BuildRequires:	speex-devel >= 1:1.2-beta3
-BuildRequires:	speexdsp-devel >= 1:1.2-beta3
+BuildRequires:	speexdsp-devel >= 1.2-0.beta3
 BuildRequires:	systemd-devel
 BuildRequires:	tar >= 1:1.22
 BuildRequires:	udev-devel >= 1:143

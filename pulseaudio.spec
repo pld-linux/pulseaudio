@@ -149,7 +149,7 @@ Summary(pl.UTF-8):	Biblioteki PulseAudio
 Group:		Libraries
 Requires:	dbus-libs >= 1.4.12
 Requires:	glib2 >= 1:2.4.0
-Requires:	json-c >= 0.9
+Requires:	json-c >= 0.11
 Requires:	libasyncns >= 0.1
 Requires:	libltdl >= 2:2.4
 Requires:	libsamplerate >= 0.1.0
@@ -724,7 +724,15 @@ fi
 
 %files -n bash-completion-pulseaudio
 %defattr(644,root,root,755)
-/etc/bash_completion.d/*
+/etc/bash_completion.d/pacat
+/etc/bash_completion.d/pacmd
+/etc/bash_completion.d/pactl
+/etc/bash_completion.d/padsp
+/etc/bash_completion.d/paplay
+/etc/bash_completion.d/parec
+/etc/bash_completion.d/parecord
+/etc/bash_completion.d/pasuspender
+/etc/bash_completion.d/pulseaudio
 
 %files -n zsh-completion-pulseaudio
 %defattr(644,root,root,755)

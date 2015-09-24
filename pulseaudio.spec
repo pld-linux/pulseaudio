@@ -16,12 +16,12 @@
 Summary:	Modular sound server
 Summary(pl.UTF-8):	Modularny serwer dźwięku
 Name:		pulseaudio
-Version:	6.0
-Release:	2
+Version:	7.0
+Release:	1
 License:	GPL v2+ (server and libpulsecore), LGPL v2+ (libpulse)
 Group:		Libraries
 Source0:	http://freedesktop.org/software/pulseaudio/releases/%{name}-%{version}.tar.xz
-# Source0-md5:	b691e83b7434c678dffacfa3a027750e
+# Source0-md5:	09668b660ffb32f2639cfd6fdc9d3b37
 Source1:	%{name}.init
 Source2:	%{name}.sysconfig
 Source3:	%{name}.tmpfiles
@@ -57,9 +57,10 @@ BuildRequires:	m4
 BuildRequires:	openssl-devel > 0.9
 BuildRequires:	orc-devel >= 0.4.11
 BuildRequires:	pkgconfig
-BuildRequires:	rpmbuild(macros) >= 1.647
 BuildRequires:	rpm-pythonprov
+BuildRequires:	rpmbuild(macros) >= 1.673
 BuildRequires:	sbc-devel >= 1.0
+BuildRequires:	soxr-devel >= 0.1.1
 BuildRequires:	speex-devel >= 1:1.2-beta3
 BuildRequires:	speexdsp-devel >= 1.2-0.beta3
 BuildRequires:	systemd-devel
@@ -156,6 +157,7 @@ Requires:	libsamplerate >= 0.1.0
 Requires:	libsndfile >= 1.0.20
 Requires:	libxcb >= 1.6
 Requires:	orc >= 0.4.11
+Requires:	soxr >= 0.1.1
 Requires:	speex >= 1:1.2-beta3
 Obsoletes:	polypaudio-libs
 Conflicts:	polypaudio < 0.7-4
@@ -350,7 +352,7 @@ Summary:	Bash completion for PulseAudio commands
 Summary(pl.UTF-8):	Bashowe uzupełnianie parametrów dla poleceń PulseAudio
 Group:		Applications/Shells
 Requires:	%{name} = %{version}-%{release}
-Requires:	bash-completion
+Requires:	bash-completion >= 2.0
 %if "%{_rpmversion}" >= "5"
 BuildArch:	noarch
 %endif
@@ -396,6 +398,7 @@ Uzupełnianie parametrów w zsh dla poleceń PulseAudio.
 	%{!?with_xen:--disable-xen} \
 	--enable-static%{!?with_static_libs:=no} \
 	--enable-webrtc-aec \
+	--with-bash-completion-dir=%{bash_compdir} \
 	--with-database=%{?with_gdbm:gdbm}%{!?with_gdbm:simple} \
 	--with-access-group=pulse-access \
 	--with-system-user=pulse \
@@ -591,7 +594,10 @@ fi
 %{_mandir}/man1/pacmd.1*
 %{_mandir}/man1/pactl.1*
 %{_mandir}/man1/padsp.1*
+%{_mandir}/man1/pamon.1*
 %{_mandir}/man1/paplay.1*
+%{_mandir}/man1/parec.1*
+%{_mandir}/man1/parecord.1*
 %{_mandir}/man1/pasuspender.1*
 %{_mandir}/man1/pax11publish.1*
 %{_mandir}/man1/pulseaudio.1*
@@ -724,15 +730,15 @@ fi
 
 %files -n bash-completion-pulseaudio
 %defattr(644,root,root,755)
-/etc/bash_completion.d/pacat
-/etc/bash_completion.d/pacmd
-/etc/bash_completion.d/pactl
-/etc/bash_completion.d/padsp
-/etc/bash_completion.d/paplay
-/etc/bash_completion.d/parec
-/etc/bash_completion.d/parecord
-/etc/bash_completion.d/pasuspender
-/etc/bash_completion.d/pulseaudio
+%{bash_compdir}/pacat
+%{bash_compdir}/pacmd
+%{bash_compdir}/pactl
+%{bash_compdir}/padsp
+%{bash_compdir}/paplay
+%{bash_compdir}/parec
+%{bash_compdir}/parecord
+%{bash_compdir}/pasuspender
+%{bash_compdir}/pulseaudio
 
 %files -n zsh-completion-pulseaudio
 %defattr(644,root,root,755)

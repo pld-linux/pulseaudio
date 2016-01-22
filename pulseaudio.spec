@@ -16,12 +16,12 @@
 Summary:	Modular sound server
 Summary(pl.UTF-8):	Modularny serwer dźwięku
 Name:		pulseaudio
-Version:	7.1
+Version:	8.0
 Release:	1
 License:	GPL v2+ (server and libpulsecore), LGPL v2+ (libpulse)
 Group:		Libraries
 Source0:	http://freedesktop.org/software/pulseaudio/releases/%{name}-%{version}.tar.xz
-# Source0-md5:	9d0a9817b632cac8e3f3834d7eb1c99d
+# Source0-md5:	8678442ba0bb4b4c33ac6f62542962df
 Source1:	%{name}.init
 Source2:	%{name}.sysconfig
 Source3:	%{name}.tmpfiles
@@ -625,13 +625,13 @@ fi
 %attr(755,root,root) %{_libdir}/libpulse.so.*.*.*
 %attr(755,root,root) %{_libdir}/libpulse-mainloop-glib.so.*.*.*
 %attr(755,root,root) %{_libdir}/libpulse-simple.so.*.*.*
-%attr(755,root,root) %{_libdir}/libpulsecore-%{version}.so
 %attr(755,root,root) %ghost %{_libdir}/libpulse.so.0
 %attr(755,root,root) %ghost %{_libdir}/libpulse-mainloop-glib.so.0
 %attr(755,root,root) %ghost %{_libdir}/libpulse-simple.so.0
 %dir %{_libdir}/%{name}
 %attr(755,root,root) %{_libdir}/%{name}/libpulsedsp.so
 %attr(755,root,root) %{_libdir}/%{name}/libpulsecommon-%{version}.so
+%attr(755,root,root) %{_libdir}/%{name}/libpulsecore-%{version}.so
 %dir %{_sysconfdir}/pulse
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/pulse/client.conf
 %dir %{_datadir}/pulseaudio

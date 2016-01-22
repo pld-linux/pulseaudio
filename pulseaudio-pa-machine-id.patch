@@ -9,11 +9,11 @@
  PA_MACHINE_ID_FALLBACK="${localstatedir}/lib/dbus/machine-id"
  AX_DEFINE_DIR(PA_MACHINE_ID_FALLBACK, PA_MACHINE_ID_FALLBACK,
  	      [Fallback machine-id file])
---- pulseaudio-3.0/src/pulsecore/core-util.c.orig	2012-12-22 08:18:53.590608852 +0100
-+++ pulseaudio-3.0/src/pulsecore/core-util.c	2012-12-22 09:05:12.940550922 +0100
-@@ -2893,6 +2893,20 @@
-     /* The returned value is supposed be some kind of ascii identifier
-      * that is unique and stable across reboots. */
+--- pulseaudio-8.0/src/pulsecore/core-util.c.orig	2016-01-22 19:14:53.600528288 +0100
++++ pulseaudio-8.0/src/pulsecore/core-util.c	2016-01-22 19:19:09.026774778 +0100
+@@ -3066,6 +3066,20 @@
+      * identifier that suits our needs perfectly. If it's not, we fall back to
+      * the hostname, which is not as good, since it can change over time. */
  
 +    /* First we try locally configured ID */
 +
@@ -29,6 +29,6 @@
 +            return pa_utf8_filter(ln);
 +    }
 +
-     /* First we try the /etc/machine-id, which is the best option we
-      * have, since it fits perfectly our needs and is not as volatile
-      * as the hostname which might be set from dhcp. */
+     /* We search for the machine-id file from four locations. The first two are
+      * relative to the configured installation prefix, but if we're installed
+      * under /usr/local, for example, it's likely that the machine-id won't be

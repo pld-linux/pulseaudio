@@ -17,7 +17,7 @@ Summary:	Modular sound server
 Summary(pl.UTF-8):	Modularny serwer dźwięku
 Name:		pulseaudio
 Version:	8.0
-Release:	1
+Release:	2
 License:	GPL v2+ (server and libpulsecore), LGPL v2+ (libpulse)
 Group:		Libraries
 Source0:	http://freedesktop.org/software/pulseaudio/releases/%{name}-%{version}.tar.xz
@@ -205,6 +205,9 @@ Summary:	PulseAudio API for Vala language
 Summary(pl.UTF-8):	API PulseAudio dla języka Vala
 Group:		Development/Libraries
 Requires:	%{name}-devel = %{version}-%{release}
+%if "%{_rpmversion}" >= "5"
+BuildArch:	noarch
+%endif
 
 %description -n vala-libpulse
 PulseAudio API for Vala language.
@@ -429,7 +432,7 @@ install -Dp %{SOURCE2} $RPM_BUILD_ROOT/etc/sysconfig/%{name}
 
 cp -p %{SOURCE3} $RPM_BUILD_ROOT%{systemdtmpfilesdir}/%{name}.conf
 
-install -m644 shell-completion/zsh/_pulseaudio $RPM_BUILD_ROOT%{zshdir}/_pulseaudio
+cp -p shell-completion/zsh/_pulseaudio $RPM_BUILD_ROOT%{zshdir}/_pulseaudio
 
 %find_lang %{name}
 

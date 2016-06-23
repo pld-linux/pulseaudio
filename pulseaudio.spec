@@ -16,12 +16,12 @@
 Summary:	Modular sound server
 Summary(pl.UTF-8):	Modularny serwer dźwięku
 Name:		pulseaudio
-Version:	8.0
-Release:	3
+Version:	9.0
+Release:	1
 License:	GPL v2+ (server and libpulsecore), LGPL v2+ (libpulse)
 Group:		Libraries
 Source0:	http://freedesktop.org/software/pulseaudio/releases/%{name}-%{version}.tar.xz
-# Source0-md5:	8678442ba0bb4b4c33ac6f62542962df
+# Source0-md5:	da7162541b3a9bc20576dbd0d7d1489a
 Source1:	%{name}.init
 Source2:	%{name}.sysconfig
 Source3:	%{name}.tmpfiles
@@ -66,7 +66,7 @@ BuildRequires:	speexdsp-devel >= 1.2-0.beta3
 BuildRequires:	systemd-devel
 BuildRequires:	tar >= 1:1.22
 BuildRequires:	udev-devel >= 1:143
-BuildRequires:	webrtc-audio-processing-devel
+BuildRequires:	webrtc-audio-processing-devel >= 0.2
 %{?with_xen:BuildRequires:	xen-devel}
 BuildRequires:	xorg-lib-libICE-devel
 BuildRequires:	xorg-lib-libSM-devel

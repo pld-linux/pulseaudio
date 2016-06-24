@@ -20,7 +20,7 @@ Version:	9.0
 Release:	1
 License:	GPL v2+ (server and libpulsecore), LGPL v2+ (libpulse)
 Group:		Libraries
-Source0:	http://freedesktop.org/software/pulseaudio/releases/%{name}-%{version}.tar.xz
+Source0:	https://freedesktop.org/software/pulseaudio/releases/%{name}-%{version}.tar.xz
 # Source0-md5:	da7162541b3a9bc20576dbd0d7d1489a
 Source1:	%{name}.init
 Source2:	%{name}.sysconfig
@@ -53,7 +53,7 @@ BuildRequires:	libwrap-devel
 BuildRequires:	libxcb-devel >= 1.6
 %{?with_lirc:BuildRequires:	lirc-devel}
 BuildRequires:	m4
-# for module-roap
+# for module-raop
 BuildRequires:	openssl-devel > 0.9
 BuildRequires:	orc-devel >= 0.4.11
 BuildRequires:	pkgconfig

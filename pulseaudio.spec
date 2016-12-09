@@ -46,7 +46,6 @@ BuildRequires:	json-c-devel >= 0.11
 BuildRequires:	libasyncns-devel >= 0.1
 BuildRequires:	libcap-devel
 BuildRequires:	libltdl-devel >= 2:2.4
-BuildRequires:	libsamplerate-devel >= 0.1.0
 BuildRequires:	libsndfile-devel >= 1.0.20
 BuildRequires:	libtool >= 2:2.4
 BuildRequires:	libwrap-devel
@@ -153,7 +152,6 @@ Requires:	glib2 >= 1:2.4.0
 Requires:	json-c >= 0.11
 Requires:	libasyncns >= 0.1
 Requires:	libltdl >= 2:2.4
-Requires:	libsamplerate >= 0.1.0
 Requires:	libsndfile >= 1.0.20
 Requires:	libxcb >= 1.6
 Requires:	orc >= 0.4.11

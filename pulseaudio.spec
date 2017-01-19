@@ -6,22 +6,17 @@
 				# see https://tango.0pointer.de/pipermail/pulseaudio-discuss/2009-May/003761.html
 				# thread, why it's a bad idea
 %bcond_without	lirc		# without lirc module
-%bcond_without	xen		# Xen paravirtualized driver
 %bcond_with	static_libs	# build static libraries
-
-%ifarch x32
-%undefine	with_xen
-%endif
 
 Summary:	Modular sound server
 Summary(pl.UTF-8):	Modularny serwer dźwięku
 Name:		pulseaudio
-Version:	9.0
+Version:	10.0
 Release:	1
 License:	GPL v2+ (server and libpulsecore), LGPL v2+ (libpulse)
 Group:		Libraries
 Source0:	https://freedesktop.org/software/pulseaudio/releases/%{name}-%{version}.tar.xz
-# Source0-md5:	da7162541b3a9bc20576dbd0d7d1489a
+# Source0-md5:	4950d2799bf55ab91f6b7f990b7f0971
 Source1:	%{name}.init
 Source2:	%{name}.sysconfig
 Source3:	%{name}.tmpfiles
@@ -42,7 +37,6 @@ BuildRequires:	glib2-devel >= 1:2.4.0
 BuildRequires:	gtk+3-devel >= 3.0
 BuildRequires:	intltool >= 0.35.0
 BuildRequires:	jack-audio-connection-kit-devel >= 0.117.0
-BuildRequires:	json-c-devel >= 0.11
 BuildRequires:	libasyncns-devel >= 0.1
 BuildRequires:	libcap-devel
 BuildRequires:	libltdl-devel >= 2:2.4
@@ -66,7 +60,6 @@ BuildRequires:	systemd-devel
 BuildRequires:	tar >= 1:1.22
 BuildRequires:	udev-devel >= 1:143
 BuildRequires:	webrtc-audio-processing-devel >= 0.2
-%{?with_xen:BuildRequires:	xen-devel}
 BuildRequires:	xorg-lib-libICE-devel
 BuildRequires:	xorg-lib-libSM-devel
 BuildRequires:	xorg-lib-libX11-devel
@@ -149,7 +142,6 @@ Summary(pl.UTF-8):	Biblioteki PulseAudio
 Group:		Libraries
 Requires:	dbus-libs >= 1.4.12
 Requires:	glib2 >= 1:2.4.0
-Requires:	json-c >= 0.11
 Requires:	libasyncns >= 0.1
 Requires:	libltdl >= 2:2.4
 Requires:	libsndfile >= 1.0.20
@@ -335,19 +327,6 @@ LIRC module for PulseAudio.
 %description lirc -l pl.UTF-8
 Moduł LIRC dla PulseAudio.
 
-%package xen
-Summary:	Xen paravirtualized driver for PulseAudio
-Summary(pl.UTF-8):	Sterownik parawirtualny Xen dla PulseAudio
-License:	LGPL v2.1+
-Group:		Libraries
-Requires:	%{name} = %{version}-%{release}
-
-%description xen
-Xen paravirtualized driver for PulseAudio.
-
-%description xen -l pl.UTF-8
-Sterownik parawirtualny Xen dla PulseAudio.
-
 %package -n bash-completion-pulseaudio
 Summary:	Bash completion for PulseAudio commands
 Summary(pl.UTF-8):	Bashowe uzupełnianie parametrów dla poleceń PulseAudio
@@ -396,7 +375,6 @@ Uzupełnianie parametrów w zsh dla poleceń PulseAudio.
 	--enable-hal-compat \
 	%{!?with_lirc:--disable-lirc} \
 	--disable-silent-rules \
-	%{!?with_xen:--disable-xen} \
 	--enable-static%{!?with_static_libs:=no} \
 	--enable-webrtc-aec \
 	--with-bash-completion-dir=%{bash_compdir} \
@@ -516,6 +494,7 @@ fi
 %attr(755,root,root) %{_libdir}/pulse-*/modules/libraop.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/librtp.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/libwebrtc-util.so
+%attr(755,root,root) %{_libdir}/pulse-*/modules/module-allow-passthrough.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-always-sink.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-augment-properties.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-card-restore.so
@@ -721,12 +700,6 @@ fi
 %files lirc
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-lirc.so
-%endif
-
-%if %{with xen}
-%files xen
-%defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/pulse-*/modules/module-xenpv-sink.so
 %endif
 
 %files -n bash-completion-pulseaudio

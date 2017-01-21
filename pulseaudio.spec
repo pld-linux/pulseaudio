@@ -30,7 +30,7 @@ BuildRequires:	automake >= 1:1.11
 BuildRequires:	avahi-devel >= 0.6.0
 BuildRequires:	dbus-devel >= 1.4.12
 BuildRequires:	fftw3-single-devel >= 3
-BuildRequires:	gcc >= 6:4.1
+BuildRequires:	gcc >= 6:4.7
 %{?with_gdbm:BuildRequires:	gdbm-devel}
 BuildRequires:	gettext-tools >= 0.18.1
 BuildRequires:	glib2-devel >= 1:2.4.0
@@ -69,6 +69,7 @@ Requires:	%{name}-libs = %{version}-%{release}
 Requires:	avahi >= 0.6.0
 Requires:	dbus >= 1.4.12
 Obsoletes:	polypaudio
+Obsoletes:	pulseaudio-xen
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %define zshdir %{_datadir}/zsh/site-functions

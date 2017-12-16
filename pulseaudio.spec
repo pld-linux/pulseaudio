@@ -28,6 +28,8 @@ BuildRequires:	alsa-lib-devel >= 1.0.19
 BuildRequires:	autoconf >= 2.63
 BuildRequires:	automake >= 1:1.11
 BuildRequires:	avahi-devel >= 0.6.0
+# headers for bluez5-native-headset support
+BuildRequires:	bluez-libs-devel >= 4.101
 BuildRequires:	dbus-devel >= 1.4.12
 BuildRequires:	fftw3-single-devel >= 3
 BuildRequires:	gcc >= 6:4.7
@@ -41,6 +43,7 @@ BuildRequires:	libasyncns-devel >= 0.1
 BuildRequires:	libcap-devel
 BuildRequires:	libltdl-devel >= 2:2.4
 BuildRequires:	libsndfile-devel >= 1.0.20
+BuildRequires:	libstdc++-devel >= 6:4.3
 BuildRequires:	libtool >= 2:2.4
 BuildRequires:	libwrap-devel
 BuildRequires:	libxcb-devel >= 1.6

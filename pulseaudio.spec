@@ -11,12 +11,12 @@
 Summary:	Modular sound server
 Summary(pl.UTF-8):	Modularny serwer dźwięku
 Name:		pulseaudio
-Version:	11.1
+Version:	12.0
 Release:	1
 License:	GPL v2+ (server and libpulsecore), LGPL v2+ (libpulse)
 Group:		Libraries
 Source0:	https://freedesktop.org/software/pulseaudio/releases/%{name}-%{version}.tar.xz
-# Source0-md5:	390de38231d5cdd6b43ada8939eb74f1
+# Source0-md5:	efe7683310080e80bc42707285df8c36
 Source1:	%{name}.init
 Source2:	%{name}.sysconfig
 Source3:	%{name}.tmpfiles
@@ -128,7 +128,7 @@ Summary:	Qt-based utilities for PulseAudio (equalizer)
 Summary(pl.UTF-8):	Oparte na Qt narzędzia do PulseAudio (equalizer)
 Group:		X11/Applications/Sound
 Requires:	%{name} = %{version}-%{release}
-Requires:	python-PyQt4
+Requires:	python-PyQt5
 Requires:	python-dbus
 Requires:	python-sip
 
@@ -280,12 +280,27 @@ Group:		Libraries
 Requires:	%{name} = %{version}-%{release}
 Requires:	GConf2 >= 2.4.0
 Suggests:	gnome-media-volume-control
+Conflicts:	%{name}-gsettings
 
 %description gconf
 GConf adapter for PulseAudio.
 
 %description gconf -l pl.UTF-8
 Interfejs do GConfa dla PulseAudio.
+
+%package gsettings
+Summary:	GSettings module for PulseAudio
+Summary(pl.UTF-8):	Moduł GSettings dla PulseAudio
+License:	GPL v2+
+Group:		Libraries
+Requires:	%{name} = %{version}-%{release}
+Conflicts:	%{name}-gconf
+
+%description gsettings
+GSettings adapter for PulseAudio.
+
+%description gsettings -l pl.UTF-8
+Interfejs do GSettings dla PulseAudio.
 
 %package hal
 Summary:	HAL module for PulseAudio
@@ -376,6 +391,8 @@ Uzupełnianie parametrów w zsh dla poleceń PulseAudio.
 %{__autoheader}
 %{__automake}
 %configure \
+	--enable-gconf \
+	--enable-gsettings \
 	--enable-hal-compat \
 	%{!?with_lirc:--disable-lirc} \
 	--disable-silent-rules \
@@ -484,7 +501,7 @@ fi
 %attr(755,root,root) %{_bindir}/pax11publish
 %attr(755,root,root) %{_bindir}/pulseaudio
 %attr(755,root,root) %{_bindir}/start-pulseaudio-x11
-%dir %{_libdir}/pulse
+%dir %{_libexecdir}/pulse
 %dir %{_libdir}/pulse-*
 %dir %{_libdir}/pulse-*/modules
 %attr(755,root,root) %{_libdir}/pulse-*/modules/libavahi-wrap.so
@@ -500,6 +517,7 @@ fi
 %attr(755,root,root) %{_libdir}/pulse-*/modules/libwebrtc-util.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-allow-passthrough.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-always-sink.so
+%attr(755,root,root) %{_libdir}/pulse-*/modules/module-always-source.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-augment-properties.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-card-restore.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-cli-protocol-tcp.so
@@ -687,8 +705,15 @@ fi
 
 %files gconf
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/pulse/gconf-helper
+%attr(755,root,root) %{_libexecdir}/pulse/gconf-helper
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-gconf.so
+
+%files gsettings
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_datadir}/GConf/gsettings/pulseaudio.convert
+%attr(755,root,root) %{_datadir}/glib-2.0/schemas/org.freedesktop.pulseaudio.gschema.xml
+%attr(755,root,root) %{_libexecdir}/pulse/gsettings-helper
+%attr(755,root,root) %{_libdir}/pulse-*/modules/module-gsettings.so
 
 %files hal
 %defattr(644,root,root,755)

@@ -11,12 +11,12 @@
 Summary:	Modular sound server
 Summary(pl.UTF-8):	Modularny serwer dźwięku
 Name:		pulseaudio
-Version:	12.2
-Release:	2
+Version:	13.0
+Release:	1
 License:	GPL v2+ (server and libpulsecore), LGPL v2+ (libpulse)
 Group:		Libraries
 Source0:	https://freedesktop.org/software/pulseaudio/releases/%{name}-%{version}.tar.xz
-# Source0-md5:	c42f1f1465e8df9859d023dc184734bf
+# Source0-md5:	e41d606f90254ed45c90520faf83d95c
 Source1:	%{name}.init
 Source2:	%{name}.sysconfig
 Source3:	%{name}.tmpfiles
@@ -29,15 +29,14 @@ BuildRequires:	autoconf >= 2.63
 BuildRequires:	automake >= 1:1.11
 BuildRequires:	avahi-devel >= 0.6.0
 # headers for bluez5-native-headset support
-BuildRequires:	bluez-libs-devel >= 4.101
+BuildRequires:	bluez-libs-devel >= 5
 BuildRequires:	dbus-devel >= 1.4.12
 BuildRequires:	fftw3-single-devel >= 3
 BuildRequires:	gcc >= 6:4.7
 %{?with_gdbm:BuildRequires:	gdbm-devel}
-BuildRequires:	gettext-tools >= 0.18.1
+BuildRequires:	gettext-tools >= 0.19.3
 BuildRequires:	glib2-devel >= 1:2.4.0
 BuildRequires:	gtk+3-devel >= 3.0
-BuildRequires:	intltool >= 0.35.0
 BuildRequires:	jack-audio-connection-kit-devel >= 0.117.0
 BuildRequires:	libasyncns-devel >= 0.1
 BuildRequires:	libcap-devel
@@ -499,6 +498,7 @@ fi
 %attr(755,root,root) %{_bindir}/parecord
 %attr(755,root,root) %{_bindir}/pasuspender
 %attr(755,root,root) %{_bindir}/pax11publish
+%attr(755,root,root) %{_bindir}/pa-info
 %attr(755,root,root) %{_bindir}/pulseaudio
 %attr(755,root,root) %{_bindir}/start-pulseaudio-x11
 %dir %{_libexecdir}/pulse
@@ -694,12 +694,9 @@ fi
 
 %files bluetooth
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/pulse-*/modules/libbluez4-util.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/libbluez5-util.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-bluetooth-discover.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-bluetooth-policy.so
-%attr(755,root,root) %{_libdir}/pulse-*/modules/module-bluez4-device.so
-%attr(755,root,root) %{_libdir}/pulse-*/modules/module-bluez4-discover.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-bluez5-device.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-bluez5-discover.so
 

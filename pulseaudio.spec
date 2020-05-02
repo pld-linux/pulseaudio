@@ -381,7 +381,7 @@ Uzupełnianie parametrów w zsh dla poleceń PulseAudio.
 %patch0 -p1
 %patch1 -p1
 
-%{__sed} -i -e '1s,#!/usr/bin/env python,#!/usr/bin/python,' src/utils/qpaeq
+%{__sed} -i -e '1s,#!/usr/bin/env python,#!%{__python},' src/utils/qpaeq
 
 %build
 %{__libtoolize}

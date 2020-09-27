@@ -482,6 +482,14 @@ if [ -f %{_sysconfdir}/polypaudio/client.conf.rpmsave ]; then
 	mv -f %{_sysconfdir}/polypaudio/client.conf.rpmsave %{_sysconfdir}/pulse/client.conf
 fi
 
+%post gsettings
+%glib_compile_schemas
+
+%postun gsettings
+if [ "$1" = "0" ]; then
+        %glib_compile_schemas
+fi
+
 %files -f %{name}.lang
 %defattr(644,root,root,755)
 %doc LICENSE NEWS README

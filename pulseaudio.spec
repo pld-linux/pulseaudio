@@ -11,12 +11,12 @@
 Summary:	Modular sound server
 Summary(pl.UTF-8):	Modularny serwer dźwięku
 Name:		pulseaudio
-Version:	13.0
+Version:	14.0
 Release:	1
 License:	GPL v2+ (server and libpulsecore), LGPL v2+ (libpulse)
 Group:		Libraries
 Source0:	https://freedesktop.org/software/pulseaudio/releases/%{name}-%{version}.tar.xz
-# Source0-md5:	e41d606f90254ed45c90520faf83d95c
+# Source0-md5:	84a7776e63dd55c40db8fbd7c7e2e18e
 Source1:	%{name}.init
 Source2:	%{name}.sysconfig
 Source3:	%{name}.tmpfiles
@@ -34,8 +34,8 @@ BuildRequires:	dbus-devel >= 1.4.12
 BuildRequires:	fftw3-single-devel >= 3
 BuildRequires:	gcc >= 6:4.7
 %{?with_gdbm:BuildRequires:	gdbm-devel}
-BuildRequires:	gettext-tools >= 0.19.3
-BuildRequires:	glib2-devel >= 1:2.4.0
+BuildRequires:	gettext-tools >= 0.19.8
+BuildRequires:	glib2-devel >= 1:2.26.0
 BuildRequires:	gtk+3-devel >= 3.0
 BuildRequires:	jack-audio-connection-kit-devel >= 0.117.0
 BuildRequires:	libasyncns-devel >= 0.1
@@ -127,9 +127,8 @@ Summary:	Qt-based utilities for PulseAudio (equalizer)
 Summary(pl.UTF-8):	Oparte na Qt narzędzia do PulseAudio (equalizer)
 Group:		X11/Applications/Sound
 Requires:	%{name} = %{version}-%{release}
-Requires:	python-PyQt5
-Requires:	python-dbus
-Requires:	python-sip
+Requires:	python3-PyQt5
+Requires:	python3-dbus
 
 %description qt
 Qt-based utilities for PulseAudio (currently just qpaeq - an
@@ -144,7 +143,7 @@ Summary:	PulseAudio libraries
 Summary(pl.UTF-8):	Biblioteki PulseAudio
 Group:		Libraries
 Requires:	dbus-libs >= 1.4.12
-Requires:	glib2 >= 1:2.4.0
+Requires:	glib2 >= 1:2.26.0
 Requires:	libasyncns >= 0.1
 Requires:	libltdl >= 2:2.4
 Requires:	libsndfile >= 1.0.20
@@ -167,7 +166,7 @@ Summary(pl.UTF-8):	Pliki programistyczne bibliotek PulseAudio
 License:	GPL v2+ (libpulsecore), LGPL v2+ (libpulse)
 Group:		Development/Libraries
 Requires:	%{name}-libs = %{version}-%{release}
-Requires:	glib2-devel >= 1:2.4.0
+Requires:	glib2-devel >= 1:2.26.0
 Requires:	libasyncns-devel >= 0.1
 Requires:	libcap-devel
 Requires:	xorg-lib-libX11-devel
@@ -381,7 +380,7 @@ Uzupełnianie parametrów w zsh dla poleceń PulseAudio.
 %patch0 -p1
 %patch1 -p1
 
-%{__sed} -i -e '1s,#!/usr/bin/env python,#!%{__python},' src/utils/qpaeq
+%{__sed} -i -e '1s,#!/usr/bin/env python.*,#!%{__python3},' src/utils/qpaeq
 
 %build
 %{__libtoolize}

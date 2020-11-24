@@ -32,6 +32,7 @@ BuildRequires:	avahi-devel >= 0.6.0
 BuildRequires:	bluez-libs-devel >= 5
 BuildRequires:	dbus-devel >= 1.4.12
 BuildRequires:	fftw3-single-devel >= 3
+# -std=gnu11
 BuildRequires:	gcc >= 6:4.7
 %{?with_gdbm:BuildRequires:	gdbm-devel}
 BuildRequires:	gettext-tools >= 0.19.8
@@ -53,7 +54,7 @@ BuildRequires:	openssl-devel > 0.9
 BuildRequires:	orc-devel >= 0.4.11
 BuildRequires:	pkgconfig
 BuildRequires:	rpm-pythonprov
-BuildRequires:	rpmbuild(macros) >= 1.673
+BuildRequires:	rpmbuild(macros) >= 1.752
 BuildRequires:	sbc-devel >= 1.0
 BuildRequires:	soxr-devel >= 0.1.1
 BuildRequires:	speex-devel >= 1:1.2-beta3
@@ -73,8 +74,6 @@ Requires:	dbus >= 1.4.12
 Obsoletes:	polypaudio
 Obsoletes:	pulseaudio-xen
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
-
-%define zshdir %{_datadir}/zsh/site-functions
 
 %description
 PulseAudio (previously known as PolypAudio) is a sound server for
@@ -197,9 +196,7 @@ Summary:	PulseAudio API for Vala language
 Summary(pl.UTF-8):	API PulseAudio dla języka Vala
 Group:		Development/Libraries
 Requires:	%{name}-devel = %{version}-%{release}
-%if "%{_rpmversion}" >= "5"
-BuildArch:	noarch
-%endif
+%{?noarchpackage}
 
 %description -n vala-libpulse
 PulseAudio API for Vala language.
@@ -350,9 +347,7 @@ Summary(pl.UTF-8):	Bashowe uzupełnianie parametrów dla poleceń PulseAudio
 Group:		Applications/Shells
 Requires:	%{name} = %{version}-%{release}
 Requires:	bash-completion >= 2.0
-%if "%{_rpmversion}" >= "5"
-BuildArch:	noarch
-%endif
+%{?noarchpackage}
 
 %description -n bash-completion-pulseaudio
 Bash completion for PulseAudio commands.
@@ -365,9 +360,7 @@ Summary:	zsh completion for PulseAudio commands
 Summary(pl.UTF-8):	Uzupełnianie parametrów w zsh dla poleceń PulseAudio
 Group:		Applications/Shells
 Requires:	%{name} = %{version}-%{release}
-%if "%{_rpmversion}" >= "5"
-BuildArch:	noarch
-%endif
+%{?noarchpackage}
 
 %description -n zsh-completion-pulseaudio
 zsh completion for PulseAudio commands.
@@ -380,7 +373,7 @@ Uzupełnianie parametrów w zsh dla poleceń PulseAudio.
 %patch0 -p1
 %patch1 -p1
 
-%{__sed} -i -e '1s,#!/usr/bin/env python.*,#!%{__python3},' src/utils/qpaeq
+%{__sed} -i -e '1s,#!/usr/bin/env python3,#!%{__python3},' src/utils/qpaeq
 
 %build
 %{__libtoolize}
@@ -407,7 +400,7 @@ Uzupełnianie parametrów w zsh dla poleceń PulseAudio.
 rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT/var/run/pulse \
 	$RPM_BUILD_ROOT%{systemdtmpfilesdir} \
-	$RPM_BUILD_ROOT%{zshdir}
+	$RPM_BUILD_ROOT%{zsh_compdir}
 
 # libsocket-util.so and libipacl.so are relinked before libpulsecore.so
 # so __make -jN install leads to "File not found by glob" (or they links
@@ -427,7 +420,7 @@ install -Dp %{SOURCE2} $RPM_BUILD_ROOT/etc/sysconfig/%{name}
 
 cp -p %{SOURCE3} $RPM_BUILD_ROOT%{systemdtmpfilesdir}/%{name}.conf
 
-cp -p shell-completion/zsh/_pulseaudio $RPM_BUILD_ROOT%{zshdir}/_pulseaudio
+cp -p shell-completion/zsh/_pulseaudio $RPM_BUILD_ROOT%{zsh_compdir}/_pulseaudio
 
 %find_lang %{name}
 
@@ -749,4 +742,4 @@ fi
 
 %files -n zsh-completion-pulseaudio
 %defattr(644,root,root,755)
-%{zshdir}/_pulseaudio
+%{zsh_compdir}/_pulseaudio

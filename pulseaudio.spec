@@ -7,6 +7,11 @@
 				# thread, why it's a bad idea
 %bcond_without	lirc		# without lirc module
 %bcond_with	static_libs	# build static libraries
+%bcond_without	neon		# without ARM NEON instructions
+
+%ifnarch armv7l armv7hl armv7hnl armv8l armv8hl armv8hnl armv8hcnl aarch64
+%undefine       with_neon
+%endif
 
 Summary:	Modular sound server
 Summary(pl.UTF-8):	Modularny serwer dźwięku
@@ -386,6 +391,7 @@ Uzupełnianie parametrów w zsh dla poleceń PulseAudio.
 	--enable-gsettings \
 	--enable-hal-compat \
 	%{!?with_lirc:--disable-lirc} \
+	%{!?with_neon:--disable-neon-opt} \
 	--disable-silent-rules \
 	--enable-static%{!?with_static_libs:=no} \
 	--enable-webrtc-aec \

@@ -201,7 +201,7 @@ Summary:	PulseAudio API for Vala language
 Summary(pl.UTF-8):	API PulseAudio dla języka Vala
 Group:		Development/Libraries
 Requires:	%{name}-devel = %{version}-%{release}
-%{?noarchpackage}
+BuildArch:	noarch
 
 %description -n vala-libpulse
 PulseAudio API for Vala language.
@@ -352,7 +352,7 @@ Summary(pl.UTF-8):	Bashowe uzupełnianie parametrów dla poleceń PulseAudio
 Group:		Applications/Shells
 Requires:	%{name} = %{version}-%{release}
 Requires:	bash-completion >= 2.0
-%{?noarchpackage}
+BuildArch:	noarch
 
 %description -n bash-completion-pulseaudio
 Bash completion for PulseAudio commands.
@@ -365,7 +365,7 @@ Summary:	zsh completion for PulseAudio commands
 Summary(pl.UTF-8):	Uzupełnianie parametrów w zsh dla poleceń PulseAudio
 Group:		Applications/Shells
 Requires:	%{name} = %{version}-%{release}
-%{?noarchpackage}
+BuildArch:	noarch
 
 %description -n zsh-completion-pulseaudio
 zsh completion for PulseAudio commands.

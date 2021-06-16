@@ -8,6 +8,7 @@
 %bcond_without	lirc		# without lirc module
 %bcond_with	static_libs	# build static libraries
 %bcond_without	neon		# without ARM NEON instructions
+%bcond_without	gconf		# without GConf2 support
 
 %ifnarch armv7l armv7hl armv7hnl armv8l armv8hl armv8hnl armv8hcnl aarch64
 %undefine       with_neon
@@ -28,7 +29,7 @@ Source3:	%{name}.tmpfiles
 Patch0:		%{name}-pa-machine-id.patch
 Patch1:		mate-desktop.patch
 URL:		http://pulseaudio.org/
-BuildRequires:	GConf2-devel >= 2.4.0
+%{?with_gconf:BuildRequires:	GConf2-devel >= 2.4.0}
 BuildRequires:	alsa-lib-devel >= 1.0.19
 BuildRequires:	autoconf >= 2.63
 BuildRequires:	automake >= 1:1.11
@@ -387,7 +388,7 @@ Uzupełnianie parametrów w zsh dla poleceń PulseAudio.
 %{__autoheader}
 %{__automake}
 %configure \
-	--enable-gconf \
+	%{__enable_disable gconf} \
 	--enable-gsettings \
 	--enable-hal-compat \
 	%{!?with_lirc:--disable-lirc} \
@@ -706,10 +707,12 @@ fi
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-bluez5-device.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-bluez5-discover.so
 
+%if %{with gconf}
 %files gconf
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libexecdir}/pulse/gconf-helper
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-gconf.so
+%endif
 
 %files gsettings
 %defattr(644,root,root,755)

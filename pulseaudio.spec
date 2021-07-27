@@ -7,32 +7,23 @@
 				# thread, why it's a bad idea
 %bcond_without	lirc		# without lirc module
 %bcond_with	static_libs	# build static libraries
-%bcond_without	neon		# without ARM NEON instructions
-%bcond_without	gconf		# without GConf2 support
-
-%ifnarch armv7l armv7hl armv7hnl armv8l armv8hl armv8hnl armv8hcnl aarch64
-%undefine       with_neon
-%endif
 
 Summary:	Modular sound server
 Summary(pl.UTF-8):	Modularny serwer dźwięku
 Name:		pulseaudio
-Version:	14.2
+Version:	15.0
 Release:	1
 License:	GPL v2+ (server and libpulsecore), LGPL v2+ (libpulse)
 Group:		Libraries
 Source0:	https://freedesktop.org/software/pulseaudio/releases/%{name}-%{version}.tar.xz
-# Source0-md5:	1efc916251910f1e9d4df7810e3e69f8
+# Source0-md5:	bb888e7747b778c1c487c63b582ddf40
 Source1:	%{name}.init
 Source2:	%{name}.sysconfig
 Source3:	%{name}.tmpfiles
 Patch0:		%{name}-pa-machine-id.patch
 Patch1:		mate-desktop.patch
 URL:		http://pulseaudio.org/
-%{?with_gconf:BuildRequires:	GConf2-devel >= 2.4.0}
-BuildRequires:	alsa-lib-devel >= 1.0.19
-BuildRequires:	autoconf >= 2.63
-BuildRequires:	automake >= 1:1.11
+BuildRequires:	alsa-lib-devel >= 1.0.24
 BuildRequires:	avahi-devel >= 0.6.0
 # headers for bluez5-native-headset support
 BuildRequires:	bluez-libs-devel >= 5
@@ -42,7 +33,7 @@ BuildRequires:	fftw3-single-devel >= 3
 BuildRequires:	gcc >= 6:4.7
 %{?with_gdbm:BuildRequires:	gdbm-devel}
 BuildRequires:	gettext-tools >= 0.19.8
-BuildRequires:	glib2-devel >= 1:2.26.0
+BuildRequires:	glib2-devel >= 1:2.28.0
 BuildRequires:	gtk+3-devel >= 3.0
 BuildRequires:	jack-audio-connection-kit-devel >= 0.117.0
 BuildRequires:	libasyncns-devel >= 0.1
@@ -50,11 +41,12 @@ BuildRequires:	libcap-devel
 BuildRequires:	libltdl-devel >= 2:2.4
 BuildRequires:	libsndfile-devel >= 1.0.20
 BuildRequires:	libstdc++-devel >= 6:4.3
-BuildRequires:	libtool >= 2:2.4
 BuildRequires:	libwrap-devel
 BuildRequires:	libxcb-devel >= 1.6
 %{?with_lirc:BuildRequires:	lirc-devel}
 BuildRequires:	m4
+BuildRequires:	meson >= 0.50.0
+BuildRequires:	ninja
 # for module-raop
 BuildRequires:	openssl-devel > 0.9
 BuildRequires:	orc-devel >= 0.4.11
@@ -78,6 +70,8 @@ Requires:	%{name}-libs = %{version}-%{release}
 Requires:	avahi >= 0.6.0
 Requires:	dbus >= 1.4.12
 Obsoletes:	polypaudio
+Obsoletes:	pulseaudio-esound-compat < 15.0
+Obsoletes:	pulseaudio-gconf < 15.0
 Obsoletes:	pulseaudio-xen
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
@@ -148,7 +142,7 @@ Summary:	PulseAudio libraries
 Summary(pl.UTF-8):	Biblioteki PulseAudio
 Group:		Libraries
 Requires:	dbus-libs >= 1.4.12
-Requires:	glib2 >= 1:2.26.0
+Requires:	glib2 >= 1:2.28.0
 Requires:	libasyncns >= 0.1
 Requires:	libltdl >= 2:2.4
 Requires:	libsndfile >= 1.0.20
@@ -171,7 +165,7 @@ Summary(pl.UTF-8):	Pliki programistyczne bibliotek PulseAudio
 License:	GPL v2+ (libpulsecore), LGPL v2+ (libpulse)
 Group:		Development/Libraries
 Requires:	%{name}-libs = %{version}-%{release}
-Requires:	glib2-devel >= 1:2.26.0
+Requires:	glib2-devel >= 1:2.28.0
 Requires:	libasyncns-devel >= 0.1
 Requires:	libcap-devel
 Requires:	xorg-lib-libX11-devel
@@ -210,32 +204,13 @@ PulseAudio API for Vala language.
 %description -n vala-libpulse -l pl.UTF-8
 API PulseAudio dla języka Vala.
 
-%package esound-compat
-Summary:	EsounD compatibility start script
-Summary(pl.UTF-8):	Skrypt uruchamiający kompatybilny z EsounD
-Group:		Applications/Sound
-Requires:	%{name} = %{version}-%{release}
-Conflicts:	esound
-
-%description esound-compat
-EsounD compatibility start script, which allows to run pulseaudio
-daemon using "esd" command.
-
-NOTE: it ignores all command-line options!
-
-%description esound-compat -l pl.UTF-8
-Skrypt uruchamiający kompatybilny z EsounD, pozwalający na
-uruchamianie demona pulseaudio przy użyciu polecenia "esd".
-
-UWAGA: ignoruje wszystkie opcje z linii poleceń!
-
 %package alsa
 Summary:	ALSA modules for PulseAudio
 Summary(pl.UTF-8):	Moduły ALSA dla PulseAudio
 License:	GPL v2+
 Group:		Libraries
 Requires:	%{name} = %{version}-%{release}
-Requires:	alsa-lib >= 1.0.19
+Requires:	alsa-lib >= 1.0.24
 Obsoletes:	polypaudio-alsa
 
 %description alsa
@@ -273,29 +248,12 @@ Bluetooth module for PulseAudio.
 %description bluetooth -l pl.UTF-8
 Moduł Bluetooth dla PulseAudio.
 
-%package gconf
-Summary:	GConf module for PulseAudio
-Summary(pl.UTF-8):	Moduł GConf dla PulseAudio
-License:	GPL v2+
-Group:		Libraries
-Requires:	%{name} = %{version}-%{release}
-Requires:	GConf2 >= 2.4.0
-Suggests:	gnome-media-volume-control
-Conflicts:	%{name}-gsettings
-
-%description gconf
-GConf adapter for PulseAudio.
-
-%description gconf -l pl.UTF-8
-Interfejs do GConfa dla PulseAudio.
-
 %package gsettings
 Summary:	GSettings module for PulseAudio
 Summary(pl.UTF-8):	Moduł GSettings dla PulseAudio
 License:	GPL v2+
 Group:		Libraries
 Requires:	%{name} = %{version}-%{release}
-Conflicts:	%{name}-gconf
 
 %description gsettings
 GSettings adapter for PulseAudio.
@@ -382,45 +340,28 @@ Uzupełnianie parametrów w zsh dla poleceń PulseAudio.
 %{__sed} -i -e '1s,#!/usr/bin/env python3,#!%{__python3},' src/utils/qpaeq
 
 %build
-%{__libtoolize}
-%{__aclocal} -I m4
-%{__autoconf}
-%{__autoheader}
-%{__automake}
-%configure \
-	%{__enable_disable gconf} \
-	--enable-gsettings \
-	--enable-hal-compat \
-	%{!?with_lirc:--disable-lirc} \
-	%{!?with_neon:--disable-neon-opt} \
-	--disable-silent-rules \
-	--enable-static%{!?with_static_libs:=no} \
-	--enable-webrtc-aec \
-	--with-bash-completion-dir=%{bash_compdir} \
-	--with-database=%{?with_gdbm:gdbm}%{!?with_gdbm:simple} \
-	--with-access-group=pulse-access \
-	--with-system-user=pulse \
-	--with-system-group=pulse
-%{__make}
+%meson build \
+	-Dgsettings=enabled \
+	-Dhal-compat=true \
+	%{!?with_lirc:-Dlirc=disabled} \
+	-Dwebrtc-aec=enabled \
+	-Dbashcompletiondir=%{bash_compdir} \
+	-Ddatabase=%{?with_gdbm:gdbm}%{!?with_gdbm:simple} \
+	-Daccess_group=pulse-access \
+	-Dsystem_user=pulse \
+	-Dsystem_group=pulse \
+	%{!?with_static_libs:--default-library=shared}
+
+%ninja_build -C build
 
 %install
 rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT/var/run/pulse \
 	$RPM_BUILD_ROOT%{systemdtmpfilesdir} \
-	$RPM_BUILD_ROOT%{zsh_compdir}
+	$RPM_BUILD_ROOT%{zsh_compdir} \
+	$RPM_BUILD_ROOT%{_sysconfdir}/pulse/default.pa.d
 
-# libsocket-util.so and libipacl.so are relinked before libpulsecore.so
-# so __make -jN install leads to "File not found by glob" (or they links
-# with libpulsecore installed on builder)
-%{__make} -j1 install \
-	DESTDIR=$RPM_BUILD_ROOT
-
-ln -sf %{_bindir}/esdcompat $RPM_BUILD_ROOT%{_bindir}/esd
-
-# pkgconfig files exist, assume them sufficient
-%{__rm} $RPM_BUILD_ROOT%{_libdir}/*.la
-%{__rm} $RPM_BUILD_ROOT%{_libdir}/%{name}/*.la
-# .la for libpulsedsp and modules are killed in am install-exec-hook
+%ninja_install -C build
 
 install -Dp %{SOURCE1} $RPM_BUILD_ROOT/etc/rc.d/init.d/%{name}
 install -Dp %{SOURCE2} $RPM_BUILD_ROOT/etc/sysconfig/%{name}
@@ -494,6 +435,7 @@ fi
 %doc LICENSE NEWS README
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/pulse/daemon.conf
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/pulse/default.pa
+%dir %{_sysconfdir}/pulse/default.pa.d
 %{_sysconfdir}/xdg/autostart/pulseaudio.desktop
 %attr(755,root,root) %{_bindir}/pacat
 %attr(755,root,root) %{_bindir}/pacmd
@@ -515,7 +457,6 @@ fi
 %attr(755,root,root) %{_libdir}/pulse-*/modules/libcli.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/liboss-util.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/libprotocol-cli.so
-%attr(755,root,root) %{_libdir}/pulse-*/modules/libprotocol-esound.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/libprotocol-http.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/libprotocol-native.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/libprotocol-simple.so
@@ -540,11 +481,6 @@ fi
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-device-restore.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-echo-cancel.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-equalizer-sink.so
-%attr(755,root,root) %{_libdir}/pulse-*/modules/module-esound-compat-spawnfd.so
-%attr(755,root,root) %{_libdir}/pulse-*/modules/module-esound-compat-spawnpid.so
-%attr(755,root,root) %{_libdir}/pulse-*/modules/module-esound-protocol-tcp.so
-%attr(755,root,root) %{_libdir}/pulse-*/modules/module-esound-protocol-unix.so
-%attr(755,root,root) %{_libdir}/pulse-*/modules/module-esound-sink.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-filter-apply.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-filter-heuristics.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-http-protocol-tcp.so
@@ -598,6 +534,7 @@ fi
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-zeroconf-discover.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-zeroconf-publish.so
 %{systemduserunitdir}/pulseaudio.service
+%{systemduserunitdir}/pulseaudio-x11.service
 %{systemduserunitdir}/pulseaudio.socket
 %{_mandir}/man1/pacat.1*
 %{_mandir}/man1/pacmd.1*
@@ -676,12 +613,6 @@ fi
 %{_datadir}/vala/vapi/libpulse-simple.deps
 %{_datadir}/vala/vapi/libpulse-simple.vapi
 
-%files esound-compat
-%defattr(644,root,root,755)
-%attr(755,root,root) %{_bindir}/esd
-%attr(755,root,root) %{_bindir}/esdcompat
-%{_mandir}/man1/esdcompat.1*
-
 %files alsa
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/pulse-*/modules/libalsa-util.so
@@ -706,13 +637,6 @@ fi
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-bluetooth-policy.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-bluez5-device.so
 %attr(755,root,root) %{_libdir}/pulse-*/modules/module-bluez5-discover.so
-
-%if %{with gconf}
-%files gconf
-%defattr(644,root,root,755)
-%attr(755,root,root) %{_libexecdir}/pulse/gconf-helper
-%attr(755,root,root) %{_libdir}/pulse-*/modules/module-gconf.so
-%endif
 
 %files gsettings
 %defattr(644,root,root,755)

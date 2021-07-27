@@ -1,14 +1,13 @@
---- pulseaudio-4.0/configure.ac.orig	2013-06-08 13:07:47.119786074 +0200
-+++ pulseaudio-4.0/configure.ac	2013-06-08 13:09:53.796450100 +0200
-@@ -991,6 +991,8 @@
- 
- PA_MACHINE_ID="${sysconfdir}/machine-id"
- AX_DEFINE_DIR(PA_MACHINE_ID, PA_MACHINE_ID, [D-Bus machine-id file])
-+PA_PA_MACHINE_ID="${sysconfdir}/pulse/machine-id"
-+AX_DEFINE_DIR(PA_PA_MACHINE_ID, PA_PA_MACHINE_ID, [PA machine-id file])
- PA_MACHINE_ID_FALLBACK="${localstatedir}/lib/dbus/machine-id"
- AX_DEFINE_DIR(PA_MACHINE_ID_FALLBACK, PA_MACHINE_ID_FALLBACK,
- 	      [Fallback machine-id file])
+--- pulseaudio-15.0/meson.build.orig	2021-07-27 22:02:27.711868000 +0200
++++ pulseaudio-15.0/meson.build	2021-07-28 00:14:10.525724158 +0200
+@@ -137,6 +137,7 @@
+ cdata.set('PA_API_VERSION', pa_api_version)
+ cdata.set('PA_PROTOCOL_VERSION', pa_protocol_version)
+ cdata.set_quoted('PA_MACHINE_ID', join_paths(sysconfdir, 'machine-id'))
++cdata.set_quoted('PA_PA_MACHINE_ID', join_paths(sysconfdir, 'pulse', 'machine-id'))
+ cdata.set_quoted('PA_MACHINE_ID_FALLBACK', join_paths(localstatedir, 'lib', 'dbus', 'machine-id'))
+ cdata.set_quoted('PA_SRCDIR', join_paths(meson.current_source_dir(), 'src'))
+ cdata.set_quoted('PA_BUILDDIR', meson.current_build_dir())
 --- pulseaudio-8.0/src/pulsecore/core-util.c.orig	2016-01-22 19:14:53.600528288 +0100
 +++ pulseaudio-8.0/src/pulsecore/core-util.c	2016-01-22 19:19:09.026774778 +0100
 @@ -3066,6 +3066,20 @@

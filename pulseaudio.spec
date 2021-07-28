@@ -5,8 +5,10 @@
 %bcond_with	gdbm		# use gdbm as backend for settings database
 				# see https://tango.0pointer.de/pipermail/pulseaudio-discuss/2009-May/003761.html
 				# thread, why it's a bad idea
-%bcond_without	lirc		# without lirc module
-%bcond_with	static_libs	# build static libraries
+%bcond_without	gstreamer	# BlueZ 5 GSstreamer support
+%bcond_with	gstreamer_rtp	# GSstreamer-based RTP module instead of native
+%bcond_without	lirc		# lirc module
+%bcond_with	static_libs	# static libraries
 
 Summary:	Modular sound server
 Summary(pl.UTF-8):	Modularny serwer dźwięku
@@ -34,13 +36,15 @@ BuildRequires:	gcc >= 6:4.7
 %{?with_gdbm:BuildRequires:	gdbm-devel}
 BuildRequires:	gettext-tools >= 0.19.8
 BuildRequires:	glib2-devel >= 1:2.28.0
+%{?with_gstreamer:BuildRequires:	gstreamer-devel >= 1.14}
+%{?with_gstreamer_rtp:BuildRequires:	gstreamer-plugins-base-devel >= 1.14}
 BuildRequires:	gtk+3-devel >= 3.0
 BuildRequires:	jack-audio-connection-kit-devel >= 0.117.0
 BuildRequires:	libasyncns-devel >= 0.1
 BuildRequires:	libcap-devel
 BuildRequires:	libltdl-devel >= 2:2.4
 BuildRequires:	libsndfile-devel >= 1.0.20
-BuildRequires:	libstdc++-devel >= 6:4.3
+BuildRequires:	libstdc++-devel >= 6:4.7
 BuildRequires:	libwrap-devel
 BuildRequires:	libxcb-devel >= 1.6
 %{?with_lirc:BuildRequires:	lirc-devel}
@@ -51,6 +55,7 @@ BuildRequires:	ninja
 BuildRequires:	openssl-devel > 0.9
 BuildRequires:	orc-devel >= 0.4.11
 BuildRequires:	pkgconfig
+BuildRequires:	rpm-build >= 4.6
 BuildRequires:	rpm-pythonprov
 BuildRequires:	rpmbuild(macros) >= 1.752
 BuildRequires:	sbc-devel >= 1.0
@@ -341,7 +346,9 @@ Uzupełnianie parametrów w zsh dla poleceń PulseAudio.
 
 %build
 %meson build \
+	%{!?with_gstreamer:-Dbluez5-gstreamer=disabled} \
 	-Dgsettings=enabled \
+	%{?with_gstreamer_rtp:-Dgstreamer=enabled} \
 	-Dhal-compat=true \
 	%{!?with_lirc:-Dlirc=disabled} \
 	-Dwebrtc-aec=enabled \
@@ -436,6 +443,8 @@ fi
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/pulse/daemon.conf
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/pulse/default.pa
 %dir %{_sysconfdir}/pulse/default.pa.d
+# where to package?
+#%{_sysconfdir}/xdg/Xwayland-session.d/00-pulseaudio-x11
 %{_sysconfdir}/xdg/autostart/pulseaudio.desktop
 %attr(755,root,root) %{_bindir}/pacat
 %attr(755,root,root) %{_bindir}/pacmd

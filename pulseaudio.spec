@@ -29,6 +29,7 @@ BuildRequires:	alsa-lib-devel >= 1.0.24
 BuildRequires:	avahi-devel >= 0.6.0
 # headers for bluez5-native-headset support
 BuildRequires:	bluez-libs-devel >= 5
+BuildRequires:	check-devel >= 0.9.10
 BuildRequires:	dbus-devel >= 1.4.12
 BuildRequires:	fftw3-single-devel >= 3
 # -std=gnu11
@@ -54,6 +55,8 @@ BuildRequires:	ninja
 # for module-raop
 BuildRequires:	openssl-devel > 0.9
 BuildRequires:	orc-devel >= 0.4.11
+BuildRequires:	perl-XML-Parser
+BuildRequires:	perl-base
 BuildRequires:	pkgconfig
 BuildRequires:	rpm-build >= 4.6
 BuildRequires:	rpm-pythonprov

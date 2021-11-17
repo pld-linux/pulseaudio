@@ -71,7 +71,7 @@ BuildRequires:	udev-devel >= 1:143
 BuildRequires:	webrtc-audio-processing-devel >= 0.2
 BuildRequires:	xorg-lib-libICE-devel
 BuildRequires:	xorg-lib-libSM-devel
-BuildRequires:	xorg-lib-libX11-devel
+BuildRequires:	xorg-lib-libX11-devel >= 1.7
 BuildRequires:	xorg-lib-libXtst-devel
 BuildRequires:	xz
 Requires:	%{name}-libs = %{version}-%{release}
@@ -176,7 +176,7 @@ Requires:	%{name}-libs = %{version}-%{release}
 Requires:	glib2-devel >= 1:2.28.0
 Requires:	libasyncns-devel >= 0.1
 Requires:	libcap-devel
-Requires:	xorg-lib-libX11-devel
+Requires:	xorg-lib-libX11-devel >= 1.7
 Obsoletes:	polypaudio-devel
 
 %description devel

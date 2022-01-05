@@ -14,7 +14,7 @@ Summary:	Modular sound server
 Summary(pl.UTF-8):	Modularny serwer dźwięku
 Name:		pulseaudio
 Version:	15.0
-Release:	2
+Release:	3
 License:	GPL v2+ (server and libpulsecore), LGPL v2+ (libpulse)
 Group:		Libraries
 Source0:	https://freedesktop.org/software/pulseaudio/releases/%{name}-%{version}.tar.xz
@@ -75,6 +75,7 @@ BuildRequires:	xorg-lib-libX11-devel >= 1.7
 BuildRequires:	xorg-lib-libXtst-devel
 BuildRequires:	xz
 Requires:	%{name}-libs = %{version}-%{release}
+Requires:	%{name}-tools = %{version}-%{release}
 Requires:	avahi >= 0.6.0
 Requires:	dbus >= 1.4.12
 Obsoletes:	polypaudio
@@ -99,6 +100,15 @@ przekazywanych między aplikacjami a sprzętem. Przy użyciu tego serwera
 można łatwo osiągnąć takie rzeczy jak przesyłanie dźwięku na inną
 maszynę, zmiana formatu próbek czy liczby kanałów oraz miksowanie
 kilku dźwięków w jeden.
+
+%package tools
+Summary:	PulseAudio sound server tools
+Group:		Applications/Sound
+Requires:	%{name}-libs = %{version}-%{release}
+
+%description tools
+This package contains command line tools for the PulseAudio sound
+server.
 
 %package server
 Summary:	Init scripts to run PA as system-wide daemon
@@ -449,17 +459,6 @@ fi
 # where to package?
 #%{_sysconfdir}/xdg/Xwayland-session.d/00-pulseaudio-x11
 %{_sysconfdir}/xdg/autostart/pulseaudio.desktop
-%attr(755,root,root) %{_bindir}/pacat
-%attr(755,root,root) %{_bindir}/pacmd
-%attr(755,root,root) %{_bindir}/pactl
-%attr(755,root,root) %{_bindir}/padsp
-%attr(755,root,root) %{_bindir}/pamon
-%attr(755,root,root) %{_bindir}/paplay
-%attr(755,root,root) %{_bindir}/parec
-%attr(755,root,root) %{_bindir}/parecord
-%attr(755,root,root) %{_bindir}/pasuspender
-%attr(755,root,root) %{_bindir}/pax11publish
-%attr(755,root,root) %{_bindir}/pa-info
 %attr(755,root,root) %{_bindir}/pulseaudio
 %attr(755,root,root) %{_bindir}/start-pulseaudio-x11
 %dir %{_libexecdir}/pulse
@@ -548,6 +547,26 @@ fi
 %{systemduserunitdir}/pulseaudio.service
 %{systemduserunitdir}/pulseaudio-x11.service
 %{systemduserunitdir}/pulseaudio.socket
+%{_mandir}/man1/pulseaudio.1*
+%{_mandir}/man1/start-pulseaudio-x11.1*
+%{_mandir}/man5/default.pa.5*
+%{_mandir}/man5/pulse-cli-syntax.5*
+%{_mandir}/man5/pulse-client.conf.5*
+%{_mandir}/man5/pulse-daemon.conf.5*
+
+%files tools
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_bindir}/pacat
+%attr(755,root,root) %{_bindir}/pacmd
+%attr(755,root,root) %{_bindir}/pactl
+%attr(755,root,root) %{_bindir}/padsp
+%attr(755,root,root) %{_bindir}/pamon
+%attr(755,root,root) %{_bindir}/paplay
+%attr(755,root,root) %{_bindir}/parec
+%attr(755,root,root) %{_bindir}/parecord
+%attr(755,root,root) %{_bindir}/pasuspender
+%attr(755,root,root) %{_bindir}/pax11publish
+%attr(755,root,root) %{_bindir}/pa-info
 %{_mandir}/man1/pacat.1*
 %{_mandir}/man1/pacmd.1*
 %{_mandir}/man1/pactl.1*
@@ -558,12 +577,6 @@ fi
 %{_mandir}/man1/parecord.1*
 %{_mandir}/man1/pasuspender.1*
 %{_mandir}/man1/pax11publish.1*
-%{_mandir}/man1/pulseaudio.1*
-%{_mandir}/man1/start-pulseaudio-x11.1*
-%{_mandir}/man5/default.pa.5*
-%{_mandir}/man5/pulse-cli-syntax.5*
-%{_mandir}/man5/pulse-client.conf.5*
-%{_mandir}/man5/pulse-daemon.conf.5*
 
 %files server
 %defattr(644,root,root,755)

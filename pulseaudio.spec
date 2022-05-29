@@ -38,7 +38,9 @@ BuildRequires:	gcc >= 6:4.7
 BuildRequires:	gettext-tools >= 0.19.8
 BuildRequires:	glib2-devel >= 1:2.28.0
 %{?with_gstreamer:BuildRequires:	gstreamer-devel >= 1.14}
-%{?with_gstreamer_rtp:BuildRequires:	gstreamer-plugins-base-devel >= 1.14}
+%if %{with gstreamer} || %{with gstreamer_rtp}
+BuildRequires:	gstreamer-plugins-base-devel >= 1.14}
+%endif
 BuildRequires:	gtk+3-devel >= 3.0
 BuildRequires:	jack-audio-connection-kit-devel >= 0.117.0
 BuildRequires:	libasyncns-devel >= 0.1

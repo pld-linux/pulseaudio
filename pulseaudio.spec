@@ -9,6 +9,7 @@
 %bcond_with	gstreamer_rtp	# GSstreamer-based RTP module instead of native
 %bcond_without	lirc		# lirc module
 %bcond_with	static_libs	# static libraries
+%bcond_without	apidocs		# Doxygen based API documentation
 
 Summary:	Modular sound server
 Summary(pl.UTF-8):	Modularny serwer dźwięku
@@ -31,6 +32,7 @@ BuildRequires:	avahi-devel >= 0.6.0
 BuildRequires:	bluez-libs-devel >= 5
 BuildRequires:	check-devel >= 0.9.10
 BuildRequires:	dbus-devel >= 1.4.12
+%{?with_apidocs:BuildRequires:	doxygen}
 BuildRequires:	fftw3-single-devel >= 3
 # -std=gnu11
 BuildRequires:	gcc >= 6:4.7
@@ -352,6 +354,18 @@ zsh completion for PulseAudio commands.
 %description -n zsh-completion-pulseaudio -l pl.UTF-8
 Uzupełnianie parametrów w zsh dla poleceń PulseAudio.
 
+%package apidocs
+Summary:	PulseAudio API documentation
+Summary(pl.UTF-8):	Dokumentacja API PulseAudio
+Group:		Documentation
+BuildArch:	noarch
+
+%description apidocs
+API and internal documentation for PulseAudio.
+
+%description apidocs -l pl.UTF-8
+Dokumentacja API PulseAudio.
+
 %prep
 %setup -q
 %patch0 -p1
@@ -362,6 +376,7 @@ Uzupełnianie parametrów w zsh dla poleceń PulseAudio.
 %build
 %meson build \
 	%{!?with_gstreamer:-Dbluez5-gstreamer=disabled} \
+	-Ddoxygen=%{__true_false apidocs} \
 	-Dgsettings=enabled \
 	%{?with_gstreamer_rtp:-Dgstreamer=enabled} \
 	-Dhal-compat=true \
@@ -376,6 +391,10 @@ Uzupełnianie parametrów w zsh dla poleceń PulseAudio.
 	%{!?with_static_libs:--default-library=shared}
 
 %ninja_build -C build
+
+%if %{with apidocs}
+%__meson compile -C build doxygen
+%endif
 
 %install
 rm -rf $RPM_BUILD_ROOT
@@ -704,3 +723,9 @@ fi
 %files -n zsh-completion-pulseaudio
 %defattr(644,root,root,755)
 %{zsh_compdir}/_pulseaudio
+
+%if %{with apidocs}
+%files apidocs
+%defattr(644,root,root,755)
+%doc build/doxygen/html/*
+%endif

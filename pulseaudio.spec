@@ -372,6 +372,7 @@ Uzupełnianie parametrów w zsh dla poleceń PulseAudio.
 	-Daccess_group=pulse-access \
 	-Dsystem_user=pulse \
 	-Dsystem_group=pulse \
+	-Dzshcompletiondir=%{zsh_compdir} \
 	%{!?with_static_libs:--default-library=shared}
 
 %ninja_build -C build

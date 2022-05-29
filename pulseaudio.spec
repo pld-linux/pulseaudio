@@ -6,7 +6,7 @@
 				# see https://tango.0pointer.de/pipermail/pulseaudio-discuss/2009-May/003761.html
 				# thread, why it's a bad idea
 %bcond_without	gstreamer	# BlueZ 5 GSstreamer support
-%bcond_with	gstreamer_rtp	# GSstreamer-based RTP module instead of native
+%bcond_without	gstreamer_rtp	# GSstreamer-based RTP module instead of native
 %bcond_without	lirc		# lirc module
 %bcond_with	static_libs	# static libraries
 %bcond_without	apidocs		# Doxygen based API documentation
@@ -14,12 +14,12 @@
 Summary:	Modular sound server
 Summary(pl.UTF-8):	Modularny serwer dźwięku
 Name:		pulseaudio
-Version:	15.0
-Release:	3
+Version:	16.0
+Release:	1
 License:	GPL v2+ (server and libpulsecore), LGPL v2+ (libpulse)
 Group:		Libraries
 Source0:	https://freedesktop.org/software/pulseaudio/releases/%{name}-%{version}.tar.xz
-# Source0-md5:	bb888e7747b778c1c487c63b582ddf40
+# Source0-md5:	be97bd61024f44cc71c4035b83158010
 Source1:	%{name}.init
 Source2:	%{name}.sysconfig
 Source3:	%{name}.tmpfiles
@@ -173,6 +173,7 @@ Requires:	orc >= 0.4.11
 Requires:	soxr >= 0.1.1
 Requires:	speex >= 1:1.2-beta3
 Obsoletes:	polypaudio-libs
+Conflicts:	paprefs < 1.2
 Conflicts:	polypaudio < 0.7-4
 
 %description libs
@@ -378,7 +379,7 @@ Dokumentacja API PulseAudio.
 	%{!?with_gstreamer:-Dbluez5-gstreamer=disabled} \
 	-Ddoxygen=%{__true_false apidocs} \
 	-Dgsettings=enabled \
-	%{?with_gstreamer_rtp:-Dgstreamer=enabled} \
+	-Dgstreamer=%{__enabled_disabled gstreamer_rtp} \
 	-Dhal-compat=true \
 	%{!?with_lirc:-Dlirc=disabled} \
 	-Dwebrtc-aec=enabled \
@@ -484,88 +485,88 @@ fi
 %attr(755,root,root) %{_bindir}/pulseaudio
 %attr(755,root,root) %{_bindir}/start-pulseaudio-x11
 %dir %{_libexecdir}/pulse
-%dir %{_libdir}/pulse-*
-%dir %{_libdir}/pulse-*/modules
-%attr(755,root,root) %{_libdir}/pulse-*/modules/libavahi-wrap.so
-%attr(755,root,root) %{_libdir}/pulse-*/modules/libcli.so
-%attr(755,root,root) %{_libdir}/pulse-*/modules/liboss-util.so
-%attr(755,root,root) %{_libdir}/pulse-*/modules/libprotocol-cli.so
-%attr(755,root,root) %{_libdir}/pulse-*/modules/libprotocol-http.so
-%attr(755,root,root) %{_libdir}/pulse-*/modules/libprotocol-native.so
-%attr(755,root,root) %{_libdir}/pulse-*/modules/libprotocol-simple.so
-%attr(755,root,root) %{_libdir}/pulse-*/modules/libraop.so
-%attr(755,root,root) %{_libdir}/pulse-*/modules/librtp.so
-%attr(755,root,root) %{_libdir}/pulse-*/modules/libwebrtc-util.so
-%attr(755,root,root) %{_libdir}/pulse-*/modules/module-allow-passthrough.so
-%attr(755,root,root) %{_libdir}/pulse-*/modules/module-always-sink.so
-%attr(755,root,root) %{_libdir}/pulse-*/modules/module-always-source.so
-%attr(755,root,root) %{_libdir}/pulse-*/modules/module-augment-properties.so
-%attr(755,root,root) %{_libdir}/pulse-*/modules/module-card-restore.so
-%attr(755,root,root) %{_libdir}/pulse-*/modules/module-cli-protocol-tcp.so
-%attr(755,root,root) %{_libdir}/pulse-*/modules/module-cli-protocol-unix.so
-%attr(755,root,root) %{_libdir}/pulse-*/modules/module-cli.so
-%attr(755,root,root) %{_libdir}/pulse-*/modules/module-combine-sink.so
-%attr(755,root,root) %{_libdir}/pulse-*/modules/module-combine.so
-%attr(755,root,root) %{_libdir}/pulse-*/modules/module-console-kit.so
-%attr(755,root,root) %{_libdir}/pulse-*/modules/module-dbus-protocol.so
-%attr(755,root,root) %{_libdir}/pulse-*/modules/module-default-device-restore.so
-%attr(755,root,root) %{_libdir}/pulse-*/modules/module-detect.so
-%attr(755,root,root) %{_libdir}/pulse-*/modules/module-device-manager.so
-%attr(755,root,root) %{_libdir}/pulse-*/modules/module-device-restore.so
-%attr(755,root,root) %{_libdir}/pulse-*/modules/module-echo-cancel.so
-%attr(755,root,root) %{_libdir}/pulse-*/modules/module-equalizer-sink.so
-%attr(755,root,root) %{_libdir}/pulse-*/modules/module-filter-apply.so
-%attr(755,root,root) %{_libdir}/pulse-*/modules/module-filter-heuristics.so
-%attr(755,root,root) %{_libdir}/pulse-*/modules/module-http-protocol-tcp.so
-%attr(755,root,root) %{_libdir}/pulse-*/modules/module-http-protocol-unix.so
-%attr(755,root,root) %{_libdir}/pulse-*/modules/module-intended-roles.so
-%attr(755,root,root) %{_libdir}/pulse-*/modules/module-ladspa-sink.so
-%attr(755,root,root) %{_libdir}/pulse-*/modules/module-loopback.so
-%attr(755,root,root) %{_libdir}/pulse-*/modules/module-match.so
-%attr(755,root,root) %{_libdir}/pulse-*/modules/module-mmkbd-evdev.so
-%attr(755,root,root) %{_libdir}/pulse-*/modules/module-native-protocol-fd.so
-%attr(755,root,root) %{_libdir}/pulse-*/modules/module-native-protocol-tcp.so
-%attr(755,root,root) %{_libdir}/pulse-*/modules/module-native-protocol-unix.so
-%attr(755,root,root) %{_libdir}/pulse-*/modules/module-null-sink.so
-%attr(755,root,root) %{_libdir}/pulse-*/modules/module-null-source.so
-%attr(755,root,root) %{_libdir}/pulse-*/modules/module-oss.so
-%attr(755,root,root) %{_libdir}/pulse-*/modules/module-pipe-sink.so
-%attr(755,root,root) %{_libdir}/pulse-*/modules/module-pipe-source.so
-%attr(755,root,root) %{_libdir}/pulse-*/modules/module-position-event-sounds.so
-%attr(755,root,root) %{_libdir}/pulse-*/modules/module-raop-discover.so
-%attr(755,root,root) %{_libdir}/pulse-*/modules/module-raop-sink.so
-%attr(755,root,root) %{_libdir}/pulse-*/modules/module-remap-sink.so
-%attr(755,root,root) %{_libdir}/pulse-*/modules/module-remap-source.so
-%attr(755,root,root) %{_libdir}/pulse-*/modules/module-rescue-streams.so
-%attr(755,root,root) %{_libdir}/pulse-*/modules/module-role-cork.so
-%attr(755,root,root) %{_libdir}/pulse-*/modules/module-role-ducking.so
-%attr(755,root,root) %{_libdir}/pulse-*/modules/module-rtp-recv.so
-%attr(755,root,root) %{_libdir}/pulse-*/modules/module-rtp-send.so
-%attr(755,root,root) %{_libdir}/pulse-*/modules/module-rygel-media-server.so
-%attr(755,root,root) %{_libdir}/pulse-*/modules/module-simple-protocol-tcp.so
-%attr(755,root,root) %{_libdir}/pulse-*/modules/module-simple-protocol-unix.so
-%attr(755,root,root) %{_libdir}/pulse-*/modules/module-sine-source.so
-%attr(755,root,root) %{_libdir}/pulse-*/modules/module-sine.so
-%attr(755,root,root) %{_libdir}/pulse-*/modules/module-stream-restore.so
-%attr(755,root,root) %{_libdir}/pulse-*/modules/module-suspend-on-idle.so
-%attr(755,root,root) %{_libdir}/pulse-*/modules/module-switch-on-connect.so
-%attr(755,root,root) %{_libdir}/pulse-*/modules/module-switch-on-port-available.so
-%attr(755,root,root) %{_libdir}/pulse-*/modules/module-systemd-login.so
-%attr(755,root,root) %{_libdir}/pulse-*/modules/module-tunnel-sink.so
-%attr(755,root,root) %{_libdir}/pulse-*/modules/module-tunnel-sink-new.so
-%attr(755,root,root) %{_libdir}/pulse-*/modules/module-tunnel-source.so
-%attr(755,root,root) %{_libdir}/pulse-*/modules/module-tunnel-source-new.so
-%attr(755,root,root) %{_libdir}/pulse-*/modules/module-udev-detect.so
-%attr(755,root,root) %{_libdir}/pulse-*/modules/module-virtual-sink.so
-%attr(755,root,root) %{_libdir}/pulse-*/modules/module-virtual-source.so
-%attr(755,root,root) %{_libdir}/pulse-*/modules/module-virtual-surround-sink.so
-%attr(755,root,root) %{_libdir}/pulse-*/modules/module-volume-restore.so
-%attr(755,root,root) %{_libdir}/pulse-*/modules/module-x11-bell.so
-%attr(755,root,root) %{_libdir}/pulse-*/modules/module-x11-cork-request.so
-%attr(755,root,root) %{_libdir}/pulse-*/modules/module-x11-publish.so
-%attr(755,root,root) %{_libdir}/pulse-*/modules/module-x11-xsmp.so
-%attr(755,root,root) %{_libdir}/pulse-*/modules/module-zeroconf-discover.so
-%attr(755,root,root) %{_libdir}/pulse-*/modules/module-zeroconf-publish.so
+%dir %{_libdir}/pulseaudio
+%dir %{_libdir}/pulseaudio/modules
+%attr(755,root,root) %{_libdir}/pulseaudio/modules/libavahi-wrap.so
+%attr(755,root,root) %{_libdir}/pulseaudio/modules/libcli.so
+%attr(755,root,root) %{_libdir}/pulseaudio/modules/liboss-util.so
+%attr(755,root,root) %{_libdir}/pulseaudio/modules/libprotocol-cli.so
+%attr(755,root,root) %{_libdir}/pulseaudio/modules/libprotocol-http.so
+%attr(755,root,root) %{_libdir}/pulseaudio/modules/libprotocol-native.so
+%attr(755,root,root) %{_libdir}/pulseaudio/modules/libprotocol-simple.so
+%attr(755,root,root) %{_libdir}/pulseaudio/modules/libraop.so
+%attr(755,root,root) %{_libdir}/pulseaudio/modules/librtp.so
+%attr(755,root,root) %{_libdir}/pulseaudio/modules/libwebrtc-util.so
+%attr(755,root,root) %{_libdir}/pulseaudio/modules/module-allow-passthrough.so
+%attr(755,root,root) %{_libdir}/pulseaudio/modules/module-always-sink.so
+%attr(755,root,root) %{_libdir}/pulseaudio/modules/module-always-source.so
+%attr(755,root,root) %{_libdir}/pulseaudio/modules/module-augment-properties.so
+%attr(755,root,root) %{_libdir}/pulseaudio/modules/module-card-restore.so
+%attr(755,root,root) %{_libdir}/pulseaudio/modules/module-cli-protocol-tcp.so
+%attr(755,root,root) %{_libdir}/pulseaudio/modules/module-cli-protocol-unix.so
+%attr(755,root,root) %{_libdir}/pulseaudio/modules/module-cli.so
+%attr(755,root,root) %{_libdir}/pulseaudio/modules/module-combine-sink.so
+%attr(755,root,root) %{_libdir}/pulseaudio/modules/module-combine.so
+%attr(755,root,root) %{_libdir}/pulseaudio/modules/module-console-kit.so
+%attr(755,root,root) %{_libdir}/pulseaudio/modules/module-dbus-protocol.so
+%attr(755,root,root) %{_libdir}/pulseaudio/modules/module-default-device-restore.so
+%attr(755,root,root) %{_libdir}/pulseaudio/modules/module-detect.so
+%attr(755,root,root) %{_libdir}/pulseaudio/modules/module-device-manager.so
+%attr(755,root,root) %{_libdir}/pulseaudio/modules/module-device-restore.so
+%attr(755,root,root) %{_libdir}/pulseaudio/modules/module-echo-cancel.so
+%attr(755,root,root) %{_libdir}/pulseaudio/modules/module-equalizer-sink.so
+%attr(755,root,root) %{_libdir}/pulseaudio/modules/module-filter-apply.so
+%attr(755,root,root) %{_libdir}/pulseaudio/modules/module-filter-heuristics.so
+%attr(755,root,root) %{_libdir}/pulseaudio/modules/module-http-protocol-tcp.so
+%attr(755,root,root) %{_libdir}/pulseaudio/modules/module-http-protocol-unix.so
+%attr(755,root,root) %{_libdir}/pulseaudio/modules/module-intended-roles.so
+%attr(755,root,root) %{_libdir}/pulseaudio/modules/module-ladspa-sink.so
+%attr(755,root,root) %{_libdir}/pulseaudio/modules/module-loopback.so
+%attr(755,root,root) %{_libdir}/pulseaudio/modules/module-match.so
+%attr(755,root,root) %{_libdir}/pulseaudio/modules/module-mmkbd-evdev.so
+%attr(755,root,root) %{_libdir}/pulseaudio/modules/module-native-protocol-fd.so
+%attr(755,root,root) %{_libdir}/pulseaudio/modules/module-native-protocol-tcp.so
+%attr(755,root,root) %{_libdir}/pulseaudio/modules/module-native-protocol-unix.so
+%attr(755,root,root) %{_libdir}/pulseaudio/modules/module-null-sink.so
+%attr(755,root,root) %{_libdir}/pulseaudio/modules/module-null-source.so
+%attr(755,root,root) %{_libdir}/pulseaudio/modules/module-oss.so
+%attr(755,root,root) %{_libdir}/pulseaudio/modules/module-pipe-sink.so
+%attr(755,root,root) %{_libdir}/pulseaudio/modules/module-pipe-source.so
+%attr(755,root,root) %{_libdir}/pulseaudio/modules/module-position-event-sounds.so
+%attr(755,root,root) %{_libdir}/pulseaudio/modules/module-raop-discover.so
+%attr(755,root,root) %{_libdir}/pulseaudio/modules/module-raop-sink.so
+%attr(755,root,root) %{_libdir}/pulseaudio/modules/module-remap-sink.so
+%attr(755,root,root) %{_libdir}/pulseaudio/modules/module-remap-source.so
+%attr(755,root,root) %{_libdir}/pulseaudio/modules/module-rescue-streams.so
+%attr(755,root,root) %{_libdir}/pulseaudio/modules/module-role-cork.so
+%attr(755,root,root) %{_libdir}/pulseaudio/modules/module-role-ducking.so
+%attr(755,root,root) %{_libdir}/pulseaudio/modules/module-rtp-recv.so
+%attr(755,root,root) %{_libdir}/pulseaudio/modules/module-rtp-send.so
+%attr(755,root,root) %{_libdir}/pulseaudio/modules/module-rygel-media-server.so
+%attr(755,root,root) %{_libdir}/pulseaudio/modules/module-simple-protocol-tcp.so
+%attr(755,root,root) %{_libdir}/pulseaudio/modules/module-simple-protocol-unix.so
+%attr(755,root,root) %{_libdir}/pulseaudio/modules/module-sine-source.so
+%attr(755,root,root) %{_libdir}/pulseaudio/modules/module-sine.so
+%attr(755,root,root) %{_libdir}/pulseaudio/modules/module-stream-restore.so
+%attr(755,root,root) %{_libdir}/pulseaudio/modules/module-suspend-on-idle.so
+%attr(755,root,root) %{_libdir}/pulseaudio/modules/module-switch-on-connect.so
+%attr(755,root,root) %{_libdir}/pulseaudio/modules/module-switch-on-port-available.so
+%attr(755,root,root) %{_libdir}/pulseaudio/modules/module-systemd-login.so
+%attr(755,root,root) %{_libdir}/pulseaudio/modules/module-tunnel-sink.so
+%attr(755,root,root) %{_libdir}/pulseaudio/modules/module-tunnel-sink-new.so
+%attr(755,root,root) %{_libdir}/pulseaudio/modules/module-tunnel-source.so
+%attr(755,root,root) %{_libdir}/pulseaudio/modules/module-tunnel-source-new.so
+%attr(755,root,root) %{_libdir}/pulseaudio/modules/module-udev-detect.so
+%attr(755,root,root) %{_libdir}/pulseaudio/modules/module-virtual-sink.so
+%attr(755,root,root) %{_libdir}/pulseaudio/modules/module-virtual-source.so
+%attr(755,root,root) %{_libdir}/pulseaudio/modules/module-virtual-surround-sink.so
+%attr(755,root,root) %{_libdir}/pulseaudio/modules/module-volume-restore.so
+%attr(755,root,root) %{_libdir}/pulseaudio/modules/module-x11-bell.so
+%attr(755,root,root) %{_libdir}/pulseaudio/modules/module-x11-cork-request.so
+%attr(755,root,root) %{_libdir}/pulseaudio/modules/module-x11-publish.so
+%attr(755,root,root) %{_libdir}/pulseaudio/modules/module-x11-xsmp.so
+%attr(755,root,root) %{_libdir}/pulseaudio/modules/module-zeroconf-discover.so
+%attr(755,root,root) %{_libdir}/pulseaudio/modules/module-zeroconf-publish.so
 %{systemduserunitdir}/pulseaudio.service
 %{systemduserunitdir}/pulseaudio-x11.service
 %{systemduserunitdir}/pulseaudio.socket
@@ -662,10 +663,10 @@ fi
 
 %files alsa
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/pulse-*/modules/libalsa-util.so
-%attr(755,root,root) %{_libdir}/pulse-*/modules/module-alsa-card.so
-%attr(755,root,root) %{_libdir}/pulse-*/modules/module-alsa-sink.so
-%attr(755,root,root) %{_libdir}/pulse-*/modules/module-alsa-source.so
+%attr(755,root,root) %{_libdir}/pulseaudio/modules/libalsa-util.so
+%attr(755,root,root) %{_libdir}/pulseaudio/modules/module-alsa-card.so
+%attr(755,root,root) %{_libdir}/pulseaudio/modules/module-alsa-sink.so
+%attr(755,root,root) %{_libdir}/pulseaudio/modules/module-alsa-source.so
 %dir %{_datadir}/pulseaudio/alsa-mixer
 %dir %{_datadir}/pulseaudio/alsa-mixer/paths
 %{_datadir}/pulseaudio/alsa-mixer/paths/*.common
@@ -679,33 +680,33 @@ fi
 
 %files bluetooth
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/pulse-*/modules/libbluez5-util.so
-%attr(755,root,root) %{_libdir}/pulse-*/modules/module-bluetooth-discover.so
-%attr(755,root,root) %{_libdir}/pulse-*/modules/module-bluetooth-policy.so
-%attr(755,root,root) %{_libdir}/pulse-*/modules/module-bluez5-device.so
-%attr(755,root,root) %{_libdir}/pulse-*/modules/module-bluez5-discover.so
+%attr(755,root,root) %{_libdir}/pulseaudio/modules/libbluez5-util.so
+%attr(755,root,root) %{_libdir}/pulseaudio/modules/module-bluetooth-discover.so
+%attr(755,root,root) %{_libdir}/pulseaudio/modules/module-bluetooth-policy.so
+%attr(755,root,root) %{_libdir}/pulseaudio/modules/module-bluez5-device.so
+%attr(755,root,root) %{_libdir}/pulseaudio/modules/module-bluez5-discover.so
 
 %files gsettings
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_datadir}/GConf/gsettings/pulseaudio.convert
 %attr(755,root,root) %{_datadir}/glib-2.0/schemas/org.freedesktop.pulseaudio.gschema.xml
 %attr(755,root,root) %{_libexecdir}/pulse/gsettings-helper
-%attr(755,root,root) %{_libdir}/pulse-*/modules/module-gsettings.so
+%attr(755,root,root) %{_libdir}/pulseaudio/modules/module-gsettings.so
 
 %files hal
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/pulse-*/modules/module-hal-detect.so
+%attr(755,root,root) %{_libdir}/pulseaudio/modules/module-hal-detect.so
 
 %files jack
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/pulse-*/modules/module-jack-sink.so
-%attr(755,root,root) %{_libdir}/pulse-*/modules/module-jack-source.so
-%attr(755,root,root) %{_libdir}/pulse-*/modules/module-jackdbus-detect.so
+%attr(755,root,root) %{_libdir}/pulseaudio/modules/module-jack-sink.so
+%attr(755,root,root) %{_libdir}/pulseaudio/modules/module-jack-source.so
+%attr(755,root,root) %{_libdir}/pulseaudio/modules/module-jackdbus-detect.so
 
 %if %{with lirc}
 %files lirc
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/pulse-*/modules/module-lirc.so
+%attr(755,root,root) %{_libdir}/pulseaudio/modules/module-lirc.so
 %endif
 
 %files -n bash-completion-pulseaudio

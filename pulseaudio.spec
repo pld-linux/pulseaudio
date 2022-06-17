@@ -15,7 +15,7 @@ Summary:	Modular sound server
 Summary(pl.UTF-8):	Modularny serwer dźwięku
 Name:		pulseaudio
 Version:	16.0
-Release:	1
+Release:	2
 License:	GPL v2+ (server and libpulsecore), LGPL v2+ (libpulse)
 Group:		Libraries
 Source0:	https://freedesktop.org/software/pulseaudio/releases/%{name}-%{version}.tar.xz
@@ -25,6 +25,7 @@ Source2:	%{name}.sysconfig
 Source3:	%{name}.tmpfiles
 Patch0:		%{name}-pa-machine-id.patch
 Patch1:		mate-desktop.patch
+Patch2:		gst-ldac-aptx-crash.patch
 URL:		http://pulseaudio.org/
 BuildRequires:	alsa-lib-devel >= 1.0.24
 BuildRequires:	avahi-devel >= 0.6.0
@@ -375,6 +376,7 @@ Dokumentacja API PulseAudio.
 %setup -q
 %patch0 -p1
 %patch1 -p1
+%patch2 -p1
 
 %{__sed} -i -e '1s,#!/usr/bin/env python3,#!%{__python3},' src/utils/qpaeq
 

@@ -264,6 +264,10 @@ License:	GPL v2+
 Group:		Libraries
 Requires:	%{name} = %{version}-%{release}
 Requires:	sbc >= 1.0
+%if %{with gstreamer}
+Suggests:	gstreamer-ldac
+Suggests:	gstreamer-openaptx
+%endif
 
 %description bluetooth
 Bluetooth module for PulseAudio.

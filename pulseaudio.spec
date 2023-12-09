@@ -10,6 +10,7 @@
 %bcond_without	lirc		# lirc module
 %bcond_with	static_libs	# static libraries
 %bcond_without	apidocs		# Doxygen based API documentation
+%bcond_without	systemd		# systemd
 
 Summary:	Modular sound server
 Summary(pl.UTF-8):	Modularny serwer dźwięku
@@ -69,7 +70,11 @@ BuildRequires:	sbc-devel >= 1.0
 BuildRequires:	soxr-devel >= 0.1.1
 BuildRequires:	speex-devel >= 1:1.2-beta3
 BuildRequires:	speexdsp-devel >= 1.2-0.beta3
+%if %{with systemd}
 BuildRequires:	systemd-devel
+%else
+BuildRequires:	elogind-devel
+%endif
 BuildRequires:	tar >= 1:1.22
 BuildRequires:	udev-devel >= 1:143
 BuildRequires:	webrtc-audio-processing-devel >= 0.2
@@ -386,6 +391,7 @@ Dokumentacja API PulseAudio.
 	-Dgstreamer=%{__enabled_disabled gstreamer_rtp} \
 	-Dhal-compat=true \
 	%{!?with_lirc:-Dlirc=disabled} \
+	%{!?with_systemd:-Dsystemd=disabled} \
 	-Dwebrtc-aec=enabled \
 	-Dbashcompletiondir=%{bash_compdir} \
 	-Ddatabase=%{?with_gdbm:gdbm}%{!?with_gdbm:simple} \
@@ -571,9 +577,11 @@ fi
 %attr(755,root,root) %{_libdir}/pulseaudio/modules/module-x11-xsmp.so
 %attr(755,root,root) %{_libdir}/pulseaudio/modules/module-zeroconf-discover.so
 %attr(755,root,root) %{_libdir}/pulseaudio/modules/module-zeroconf-publish.so
+%if %{with systemd}
 %{systemduserunitdir}/pulseaudio.service
 %{systemduserunitdir}/pulseaudio-x11.service
 %{systemduserunitdir}/pulseaudio.socket
+%endif
 %{_mandir}/man1/pulseaudio.1*
 %{_mandir}/man1/start-pulseaudio-x11.1*
 %{_mandir}/man5/default.pa.5*

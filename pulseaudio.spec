@@ -5,6 +5,7 @@
 %bcond_with	gdbm		# use gdbm as backend for settings database
 				# see https://tango.0pointer.de/pipermail/pulseaudio-discuss/2009-May/003761.html
 				# thread, why it's a bad idea
+%bcond_without	avahi		# Avahi support
 %bcond_without	gstreamer	# BlueZ 5 GSstreamer support
 %bcond_without	gstreamer_rtp	# GSstreamer-based RTP module instead of native
 %bcond_without	lirc		# lirc module
@@ -28,7 +29,7 @@ Patch0:		%{name}-pa-machine-id.patch
 Patch1:		mate-desktop.patch
 URL:		http://pulseaudio.org/
 BuildRequires:	alsa-lib-devel >= 1.0.24
-BuildRequires:	avahi-devel >= 0.6.0
+%{?with_avahi:BuildRequires:	avahi-devel >= 0.6.0}
 # headers for bluez5-native-headset support
 BuildRequires:	bluez-libs-devel >= 5
 BuildRequires:	check-devel >= 0.9.10
@@ -85,7 +86,7 @@ BuildRequires:	xorg-lib-libXtst-devel
 BuildRequires:	xz
 Requires:	%{name}-libs = %{version}-%{release}
 Requires:	%{name}-tools = %{version}-%{release}
-Requires:	avahi >= 0.6.0
+%{?with_avahi:Requires:	avahi >= 0.6.0}
 Requires:	dbus >= 1.4.12
 Obsoletes:	polypaudio
 Obsoletes:	pulseaudio-esound-compat < 15.0
@@ -390,6 +391,7 @@ Dokumentacja API PulseAudio.
 	-Dgsettings=enabled \
 	-Dgstreamer=%{__enabled_disabled gstreamer_rtp} \
 	-Dhal-compat=true \
+	%{!?with_avahi:-Davahi=disabled} \
 	%{!?with_lirc:-Dlirc=disabled} \
 	%{!?with_systemd:-Dsystemd=disabled} \
 	-Dwebrtc-aec=enabled \
@@ -497,7 +499,7 @@ fi
 %dir %{_libexecdir}/pulse
 %dir %{_libdir}/pulseaudio
 %dir %{_libdir}/pulseaudio/modules
-%attr(755,root,root) %{_libdir}/pulseaudio/modules/libavahi-wrap.so
+%{?with_avahi:%attr(755,root,root) %{_libdir}/pulseaudio/modules/libavahi-wrap.so}
 %attr(755,root,root) %{_libdir}/pulseaudio/modules/libcli.so
 %attr(755,root,root) %{_libdir}/pulseaudio/modules/liboss-util.so
 %attr(755,root,root) %{_libdir}/pulseaudio/modules/libprotocol-cli.so
@@ -543,7 +545,7 @@ fi
 %attr(755,root,root) %{_libdir}/pulseaudio/modules/module-pipe-sink.so
 %attr(755,root,root) %{_libdir}/pulseaudio/modules/module-pipe-source.so
 %attr(755,root,root) %{_libdir}/pulseaudio/modules/module-position-event-sounds.so
-%attr(755,root,root) %{_libdir}/pulseaudio/modules/module-raop-discover.so
+%{?with_avahi:%attr(755,root,root) %{_libdir}/pulseaudio/modules/module-raop-discover.so}
 %attr(755,root,root) %{_libdir}/pulseaudio/modules/module-raop-sink.so
 %attr(755,root,root) %{_libdir}/pulseaudio/modules/module-remap-sink.so
 %attr(755,root,root) %{_libdir}/pulseaudio/modules/module-remap-source.so
@@ -575,8 +577,10 @@ fi
 %attr(755,root,root) %{_libdir}/pulseaudio/modules/module-x11-cork-request.so
 %attr(755,root,root) %{_libdir}/pulseaudio/modules/module-x11-publish.so
 %attr(755,root,root) %{_libdir}/pulseaudio/modules/module-x11-xsmp.so
+%if %{with avahi}
 %attr(755,root,root) %{_libdir}/pulseaudio/modules/module-zeroconf-discover.so
 %attr(755,root,root) %{_libdir}/pulseaudio/modules/module-zeroconf-publish.so
+%endif
 %if %{with systemd}
 %{systemduserunitdir}/pulseaudio.service
 %{systemduserunitdir}/pulseaudio-x11.service

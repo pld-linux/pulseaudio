@@ -78,7 +78,7 @@ BuildRequires:	elogind-devel
 %endif
 BuildRequires:	tar >= 1:1.22
 BuildRequires:	udev-devel >= 1:143
-BuildRequires:	webrtc-audio-processing-devel >= 0.2
+BuildRequires:	webrtc-audio-processing1-devel >= 1.0
 BuildRequires:	xorg-lib-libICE-devel
 BuildRequires:	xorg-lib-libSM-devel
 BuildRequires:	xorg-lib-libX11-devel >= 1.7

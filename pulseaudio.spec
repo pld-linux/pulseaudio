@@ -16,12 +16,12 @@
 Summary:	Modular sound server
 Summary(pl.UTF-8):	Modularny serwer dźwięku
 Name:		pulseaudio
-Version:	16.1
+Version:	17.0
 Release:	1
 License:	GPL v2+ (server and libpulsecore), LGPL v2+ (libpulse)
 Group:		Libraries
 Source0:	https://freedesktop.org/software/pulseaudio/releases/%{name}-%{version}.tar.xz
-# Source0-md5:	2c7b8ceb5d7337565c7314b4d6087ca8
+# Source0-md5:	c4a3596a26ff4b9dcd0c394dd1d4f8ee
 Source1:	%{name}.init
 Source2:	%{name}.sysconfig
 Source3:	%{name}.tmpfiles
@@ -51,7 +51,7 @@ BuildRequires:	libasyncns-devel >= 0.1
 BuildRequires:	libcap-devel
 BuildRequires:	libltdl-devel >= 2:2.4
 BuildRequires:	libsndfile-devel >= 1.0.20
-BuildRequires:	libstdc++-devel >= 6:4.7
+BuildRequires:	libstdc++-devel >= 6:8
 BuildRequires:	libwrap-devel
 BuildRequires:	libxcb-devel >= 1.6
 %{?with_lirc:BuildRequires:	lirc-devel}
@@ -482,7 +482,7 @@ fi
 
 %postun gsettings
 if [ "$1" = "0" ]; then
-        %glib_compile_schemas
+	%glib_compile_schemas
 fi
 
 %files -f %{name}.lang
@@ -624,7 +624,7 @@ fi
 %config(noreplace) %verify(not md5 mtime size) /etc/sysconfig/%{name}
 %dir %attr(750,pulse,pulse-access) /var/run/pulse
 %{systemdtmpfilesdir}/%{name}.conf
-/etc/dbus-1/system.d/pulseaudio-system.conf
+%{_datadir}/dbus-1/system.d/pulseaudio-system.conf
 
 %files qt
 %defattr(644,root,root,755)

@@ -385,7 +385,7 @@ Dokumentacja API PulseAudio.
 %{__sed} -i -e '1s,#!/usr/bin/env python3,#!%{__python3},' src/utils/qpaeq
 
 %build
-%meson build \
+%meson \
 	%{!?with_gstreamer:-Dbluez5-gstreamer=disabled} \
 	-Ddoxygen=%{__true_false apidocs} \
 	-Dgsettings=enabled \
@@ -403,7 +403,7 @@ Dokumentacja API PulseAudio.
 	-Dzshcompletiondir=%{zsh_compdir} \
 	%{!?with_static_libs:--default-library=shared}
 
-%ninja_build -C build
+%meson_build
 
 %if %{with apidocs}
 %__meson compile -C build doxygen
@@ -416,7 +416,7 @@ install -d $RPM_BUILD_ROOT/var/run/pulse \
 	$RPM_BUILD_ROOT%{zsh_compdir} \
 	$RPM_BUILD_ROOT%{_sysconfdir}/pulse/default.pa.d
 
-%ninja_install -C build
+%meson_install
 
 install -Dp %{SOURCE1} $RPM_BUILD_ROOT/etc/rc.d/init.d/%{name}
 install -Dp %{SOURCE2} $RPM_BUILD_ROOT/etc/sysconfig/%{name}

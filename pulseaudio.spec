@@ -66,7 +66,7 @@ BuildRequires:	perl-base
 BuildRequires:	pkgconfig
 BuildRequires:	rpm-build >= 4.6
 BuildRequires:	rpm-pythonprov
-BuildRequires:	rpmbuild(macros) >= 1.752
+BuildRequires:	rpmbuild(macros) >= 2.042
 BuildRequires:	sbc-devel >= 1.0
 BuildRequires:	soxr-devel >= 0.1.1
 BuildRequires:	speex-devel >= 1:1.2-beta3
